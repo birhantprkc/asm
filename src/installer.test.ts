@@ -8,7 +8,8 @@ import {
   lstat,
   symlink,
 } from "fs/promises";
-import { join, relative } from "path";
+import { existsSync } from "fs";
+import { join, relative, basename, dirname } from "path";
 import { tmpdir } from "os";
 import {
   parseSource,
@@ -30,6 +31,7 @@ import {
   findDuplicateInstallNames,
   buildRepoUrl,
   checkNpxAvailable,
+  resolveNpxCli,
   installScriptDependencies,
   checkCrossToolLink,
   linkExistingSkill,
@@ -1889,11 +1891,79 @@ describe("executeInstallAllProviders with project scope", () => {
   });
 });
 
+// ─── resolveNpxCli tests ────────────────────────────────────────────────────
+
+describe("resolveNpxCli", () => {
+  // Resolution is driven by the layout on disk relative to node's directory,
+  // which varies by installer. Test each known layout deterministically with a
+  // fixture tree and an injected nodeDir, so the result never depends on how
+  // the test runner's own Node happens to be installed (that env-dependence is
+  // what let a Homebrew-unversioned layout slip through — see issue #343).
+  let tmp: string;
+
+  beforeEach(async () => {
+    tmp = await mkdtemp(join(tmpdir(), "asm-npxcli-"));
+  });
+
+  afterEach(async () => {
+    await rm(tmp, { recursive: true, force: true });
+  });
+
+  // Create an npx-cli.js at `npxRel` under the fixture root and return the
+  // fake node-binary directory (what dirname(process.execPath) would yield).
+  async function layout(npxRel: string): Promise<string> {
+    const binDir = join(tmp, "bin");
+    await mkdir(binDir, { recursive: true });
+    const npxCli = join(tmp, npxRel);
+    await mkdir(dirname(npxCli), { recursive: true });
+    await writeFile(npxCli, "");
+    return binDir;
+  }
+
+  test("resolves the Windows layout (npm beside node)", async () => {
+    const binDir = await layout("bin/node_modules/npm/bin/npx-cli.js");
+    expect(resolveNpxCli(binDir)).toBe(
+      join(binDir, "node_modules", "npm", "bin", "npx-cli.js"),
+    );
+  });
+
+  test("resolves the standard POSIX layout (../lib/node_modules)", async () => {
+    const binDir = await layout("lib/node_modules/npm/bin/npx-cli.js");
+    expect(resolveNpxCli(binDir)).toBe(
+      join(tmp, "lib", "node_modules", "npm", "bin", "npx-cli.js"),
+    );
+  });
+
+  test("resolves Homebrew's unversioned layout (../libexec/lib) — issue #343", async () => {
+    const binDir = await layout("libexec/lib/node_modules/npm/bin/npx-cli.js");
+    expect(resolveNpxCli(binDir)).toBe(
+      join(tmp, "libexec", "lib", "node_modules", "npm", "bin", "npx-cli.js"),
+    );
+  });
+
+  test("returns null when no known layout matches (caller falls back to the shim)", async () => {
+    const binDir = join(tmp, "bin");
+    await mkdir(binDir, { recursive: true });
+    expect(resolveNpxCli(binDir)).toBeNull();
+  });
+
+  test("default nodeDir never throws: returns null or an existing npx-cli.js", () => {
+    // Contract check against the real runtime — must not assume a layout.
+    const cli = resolveNpxCli();
+    if (cli !== null) {
+      expect(basename(cli)).toBe("npx-cli.js");
+      expect(existsSync(cli)).toBe(true);
+    }
+  });
+});
+
 // ─── checkNpxAvailable tests ────────────────────────────────────────────────
 
 describe("checkNpxAvailable", () => {
   test("does not throw when npx is available", async () => {
-    // npx should be available in the test environment since node is present
+    // npx should be available in the test environment since node is present.
+    // On Windows this only passes because the runner invokes npx via node +
+    // npx-cli.js rather than the `npx.cmd` shim (which execFile cannot spawn).
     await expect(checkNpxAvailable()).resolves.toBeUndefined();
   });
 });
