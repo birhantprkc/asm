@@ -65,7 +65,7 @@ export default function CategoryPieChart({ entries }) {
     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
       <svg
         viewBox="0 0 160 160"
-        className="w-40 h-40 shrink-0"
+        className="w-80 h-80 shrink-0"
         role="img"
         aria-label={`Category distribution pie chart, ${total} category tags`}
       >

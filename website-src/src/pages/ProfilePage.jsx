@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import CopyButton from "../components/CopyButton";
+import CategoryPieChart from "../components/CategoryPieChart";
 import { Badge } from "../components/ui/badge";
 
 /**
@@ -9,18 +10,6 @@ import { Badge } from "../components/ui/badge";
  *
  * Data comes from the build-time author-stats.json artifact.
  */
-
-function cssBar(value, max) {
-  const pct = max > 0 ? Math.max(4, Math.round((value / max) * 100)) : 0;
-  return (
-    <span className="block h-2 min-w-0 rounded-full bg-[var(--bg-muted)]">
-      <span
-        className="block h-2 rounded-full bg-emerald-400"
-        style={{ width: `${pct}%` }}
-      />
-    </span>
-  );
-}
 
 function profileShareUrl(owner) {
   if (typeof window === "undefined") return `#/profile/${owner}`;
@@ -92,8 +81,6 @@ export default function ProfilePage() {
   const catEntries = Object.entries(author.categories || {}).sort(
     (a, b) => b[1] - a[1],
   );
-  const maxCatCount = catEntries.length > 0 ? catEntries[0][1] : 1;
-
   // Build shareable URL
   const shareUrl = profileShareUrl(author.owner);
 
@@ -142,25 +129,7 @@ export default function ProfilePage() {
       {catEntries.length > 0 && (
         <section>
           <SectionTitle>Category Distribution</SectionTitle>
-          <div className="space-y-1">
-            {catEntries.map(([cat, count]) => (
-              <div
-                key={cat}
-                className="grid grid-cols-[minmax(5rem,8rem)_minmax(0,1fr)_2.5rem] items-center gap-3 text-sm"
-              >
-                <span
-                  className="text-right text-[var(--fg)] truncate"
-                  title={cat}
-                >
-                  {cat}
-                </span>
-                <span className="min-w-0">{cssBar(count, maxCatCount)}</span>
-                <span className="text-right font-mono text-[var(--fg-dim)]">
-                  {count}
-                </span>
-              </div>
-            ))}
-          </div>
+          <CategoryPieChart entries={catEntries} />
         </section>
       )}
 
