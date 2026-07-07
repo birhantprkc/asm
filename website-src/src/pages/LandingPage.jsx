@@ -39,12 +39,77 @@ export default function LandingPage() {
         categoryCount={categoryCount}
         providerCount={PROVIDER_COUNT}
       />
+      <WhatsNew />
       <Problem />
       <Solution />
       <HowItWorks />
       <Build />
       <FinalCta skillsLabel={skillsLabel} />
     </div>
+  );
+}
+
+/* ─── What's New (v2.14) ───────────────────────────────────────────── */
+
+function WhatsNew() {
+  const highlights = [
+    {
+      tag: "New",
+      head: "Cross-tool skill linking",
+      body: "Installing a skill you already have in another agent? asm detects it and offers Link (symlink) or Reinstall — no duplicate copies.",
+    },
+    {
+      tag: "New",
+      head: "Library activation lifecycle",
+      body: "Activate skills from your local library into any provider, update in place, and deactivate without uninstalling the source.",
+    },
+    {
+      tag: "New",
+      head: "Author & repo stats on the web",
+      body: "Explore top repositories, author rankings, and category pie charts on the new Stats page — drill into any author profile.",
+    },
+    {
+      tag: "Improved",
+      head: "skill-creator v1.13",
+      body: "Exemplar-driven authoring, adversarial review, eval floor gates, and a predictability rubric raise the bar for publish-ready skills.",
+    },
+  ];
+  return (
+    <section className="flex flex-col gap-8" aria-label="What's new in v2.14">
+      <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div className="flex flex-col gap-3 max-w-[680px]">
+          <span className="lp-kicker">
+            <span className="dot" aria-hidden="true" />
+            what&apos;s new · v2.14
+          </span>
+          <h2 className="lp-section-title">
+            Link once. Activate anywhere. See who ships what.
+          </h2>
+          <p className="lp-lede">
+            v2.14 tightens the install loop across agents, adds a full library
+            activation lifecycle, and surfaces catalog intelligence on the web.
+          </p>
+        </div>
+        <Link
+          to="/changelog"
+          className="lp-cta-ghost shrink-0 self-start sm:self-auto"
+        >
+          Full release log
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      </header>
+      <div className="grid sm:grid-cols-2 gap-5">
+        {highlights.map((h) => (
+          <article key={h.head} className="lp-card">
+            <span className="text-[10px] font-[var(--lp-mono)] uppercase tracking-wider text-[var(--brand)]">
+              {h.tag}
+            </span>
+            <h3>{h.head}</h3>
+            <p>{h.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -65,8 +130,8 @@ function Hero({ skillsLabel, repoCount, providerCount }) {
           Stop juggling skill directories across Claude Code, Codex, Cursor,
           Windsurf and {providerCount - 4}+ other agents.{" "}
           <strong className="text-[var(--fg)] font-semibold">asm</strong> gives
-          you a single TUI and CLI to install, search, audit, and organize all
-          your agent skills — everywhere.
+          you a single TUI and CLI to install, link across agents, search,
+          audit, and organize all your agent skills — everywhere.
         </p>
 
         <div className="flex flex-col gap-3 max-w-[520px]">
@@ -128,8 +193,8 @@ function HeroTerminal({ repoCount }) {
         <span className="dim"> — no risky patterns</span>
         {"\n"}
         <span className="dim"> ↳ </span>
-        <span className="c">✓ installed 7 skills</span>
-        <span className="dim"> → claude, codex</span>
+        <span className="c">✓ linked 7 skills</span>
+        <span className="dim"> → claude, codex (cross-tool link)</span>
         {"\n\n"}
         <span className="c">$</span> <span className="fg">asm audit</span>{" "}
         duplicates
@@ -241,7 +306,7 @@ function Solution() {
     {
       icon: "02",
       head: "Install from GitHub in one command",
-      body: "asm install github:user/repo handles cloning, validation, and placement — single skills, multi-skill collections, subfolders, and private repos over SSH.",
+      body: "asm install github:user/repo handles cloning, validation, and placement — and when a skill already lives in another agent, offers cross-tool Link or Reinstall instead of duplicating it. Supports single skills, collections, subfolders, and private repos over SSH.",
     },
     {
       icon: "03",
@@ -251,7 +316,7 @@ function Solution() {
     {
       icon: "04",
       head: "Create, test, and publish",
-      body: "Scaffold with asm init, symlink for live reload with asm link, audit and verify metadata, then publish to the ASM Registry — one command each.",
+      body: "Scaffold with asm init, symlink for live reload with asm link, activate library skills into any provider, audit with the upgraded skill-creator v1.13 toolchain, then publish to the ASM Registry — one command each.",
     },
     {
       icon: "05",
@@ -261,7 +326,7 @@ function Solution() {
     {
       icon: "06",
       head: "Two interfaces, one tool",
-      body: "A full interactive TUI with keyboard navigation and detail views — or the CLI with --json for scripting, CI, and automation.",
+      body: "A full interactive TUI with keyboard navigation and detail views — or the CLI with --json for scripting, CI, and automation. The companion site adds a Stats dashboard with repo rankings, author profiles, and category charts.",
     },
   ];
   return (
@@ -362,9 +427,10 @@ function Build() {
         </h2>
         <p className="lp-lede">
           asm isn&apos;t just for consuming skills — it&apos;s the complete
-          toolkit for creating, developing, auditing, and testing them locally
-          before you share. Scaffold, symlink for live reload, scan for risks,
-          then publish to the registry with a single command.
+          toolkit for creating, developing, activating from your library,
+          auditing, and testing them locally before you share. Scaffold, symlink
+          for live reload, scan for risks, then publish to the registry with a
+          single command.
         </p>
         <div className="flex flex-wrap items-center gap-3">
           <a
@@ -411,6 +477,15 @@ function Build() {
           <span className="dim"> ↳ </span>
           <span className="c">✓ no dangerous patterns</span>
           {"\n\n"}
+          <span className="dim"># activate from your local library</span>
+          {"\n"}
+          <span className="c">$</span> <span className="fg">asm activate</span>{" "}
+          my-skill -p cursor
+          {"\n"}
+          <span className="dim"> ↳ </span>
+          <span className="c">✓ symlinked</span>
+          <span className="dim"> — update or deactivate anytime</span>
+          {"\n\n"}
           <span className="dim"># publish to the registry</span>
           {"\n"}
           <span className="c">$</span> <span className="fg">asm publish</span>{" "}
@@ -438,8 +513,9 @@ function FinalCta({ skillsLabel }) {
         Bring order to your skills today.
       </h2>
       <p className="lp-lede mx-auto">
-        Install once, manage every agent. Or browse {skillsLabel} skills in your
-        browser first — no signup required.
+        Install once, link across every agent. Browse {skillsLabel} skills or
+        explore author and repo stats in your browser first — no signup
+        required.
       </p>
 
       <div className="flex flex-col gap-3 w-full max-w-[480px]">
@@ -455,6 +531,9 @@ function FinalCta({ skillsLabel }) {
           />
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3">
+          <Link to="/stats" className="lp-cta-ghost">
+            View catalog stats
+          </Link>
           <Link to="/skills" className="lp-cta">
             Browse the catalog
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

@@ -27,6 +27,106 @@ function issue(n) {
 
 const ENTRIES = [
   {
+    version: "2.14.0",
+    date: "2026-07-07",
+    sections: [
+      {
+        tag: "added",
+        items: [
+          <>
+            Cross-tool skill linking on install — when a skill already exists in
+            another agent, <code>asm install</code> detects it and offers Link
+            (symlink into the target provider) or Reinstall (fresh copy) instead
+            of silently duplicating ({issue(322)}, {issue(323)})
+          </>,
+          <>
+            Local library activation lifecycle — <code>asm activate</code>,{" "}
+            <code>asm deactivate</code>, and <code>asm library update</code>{" "}
+            manage symlinks from your central library into provider skill
+            folders without deleting source copies ({issue(320)})
+          </>,
+          <>
+            Website Stats dashboard — per-repo and per-author skill rankings,
+            category pie charts, and drill-down author profile pages (
+            {issue(344)}, {issue(351)})
+          </>,
+          <>
+            <code>skill-creator</code> v1.13 — exemplar-driven authoring,
+            adversarial review pass, eval floor gates, misfire log, and a
+            predictability rubric for publish-ready skills ({issue(339)},{" "}
+            {issue(332)})
+          </>,
+          <>
+            Add <code>davidondrej/skills</code> and <code>luongnv89/idd</code>{" "}
+            to the curated skill index; publish <code>find-me-skills</code> and{" "}
+            <code>skill-creator</code> from <code>asm/skills</code> (
+            {issue(345)}, {issue(325)})
+          </>,
+        ],
+      },
+      {
+        tag: "fixed",
+        items: [
+          <>
+            Resolve <code>crossToolLink</code> ReferenceError in{" "}
+            <code>inspectSkillForInstall</code> that broke the install prompt (
+            {issue(326)})
+          </>,
+          <>
+            Harden library <code>activate --force</code> and skip unchanged
+            updates ({issue(327)}, {issue(328)}, {issue(329)})
+          </>,
+          <>
+            Fix <code>skill-creator</code> stale validator pointer and drop{" "}
+            <code>SKILL.md.bak</code> artifacts ({issue(341)})
+          </>,
+          <>
+            Run <code>npx</code> via <code>node + npx-cli.js</code> so Vercel
+            install works on Windows ({issue(343)})
+          </>,
+        ],
+      },
+      {
+        tag: "changed",
+        items: [
+          <>
+            Refresh indexed skill sources — re-ingested all enabled repos in{" "}
+            <code>data/skill-index-resources.json</code> ({issue(350)})
+          </>,
+        ],
+      },
+    ],
+  },
+  {
+    version: "2.13.0",
+    date: "2026-06-18",
+    sections: [
+      {
+        tag: "added",
+        items: [
+          <>
+            Marketing landing page at <code>/</code> with hero, problem/solution
+            narrative, and install CTAs — skill catalog moves to{" "}
+            <code>/skills</code> ({issue(313)})
+          </>,
+          <>
+            iOS Swift skill packs and five top-starred agent skill repositories
+            added to the curated index ({issue(315)}, {issue(316)})
+          </>,
+        ],
+      },
+      {
+        tag: "fixed",
+        items: [
+          <>
+            Raster OG image, trimmed meta description, and noscript hero
+            fallback for the marketing site ({issue(314)})
+          </>,
+        ],
+      },
+    ],
+  },
+  {
     version: "2.12.0",
     date: "2026-06-17",
     sections: [

@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.14.0] - 2026-07-07
+
+### Added
+
+- Cross-tool skill linking on install — Link (symlink) or Reinstall when a skill already exists in another agent (#322, #323)
+- Local library lifecycle — `asm install --library`, `asm library list|update`, `asm activate`, `asm deactivate` (#320)
+- Per-repo and per-author indexed stats — `asm stats repo|author|index` CLI plus website `/stats` and `/profile/:owner` pages with pie charts (#344, #349, #351)
+- `skill-creator` v1.13.x — exemplar-driven authoring, adversarial review, eval floor, predictability rubric (#332, #333, #335, #339)
+- New index sources — `luongnv89/idd`, `davidondrej/skills`, and built-in `find-me-skills` / `skill-creator` from `asm/skills` (#324, #325, #345)
+
+### Fixed
+
+- `crossToolLink` ReferenceError in `inspectSkillForInstall` (#326, #330)
+- Library `activate --force` and skip-unchanged update hardening (#327, #328, #329, #338)
+- Windows Vercel install via `node + npx-cli.js` (#343)
+- `skill-creator` stale validator pointer and `SKILL.md.bak` cleanup (#341)
+
+### Changed
+
+- Refresh indexed skill sources — re-ingested all enabled repos in `data/skill-index-resources.json` (#331, #350)
+
 ## [2.13.0] - 2026-06-18
 
 ### Added

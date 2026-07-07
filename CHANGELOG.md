@@ -1,5 +1,37 @@
 # Changelog
 
+## v2.14.0 — 2026-07-07
+
+### Features
+
+- Add cross-tool skill linking on install — when `asm install <skill>` finds the skill already installed for another provider, ASM now offers **Reinstall** (fresh download) or **Link** (symlink from the existing install, no duplication); local-folder installs always reinstall and skip the Link path ([#322](https://github.com/luongnv89/asm/issues/322), [#323](https://github.com/luongnv89/asm/issues/323)) — @luongnv89
+- Add a neutral local skill library with explicit activation lifecycle — skills install once under the ASM config root via `asm install --library`, then link into provider scopes with `asm activate` / `asm deactivate`; `asm library list`, `asm library update <skill>`, and `asm library update --all` manage and refresh centrally stored skills from recorded source metadata ([#320](https://github.com/luongnv89/asm/issues/320)) — @ngaurav
+- Add per-repo and per-author skill stats with visualization — new `asm stats repo`, `asm stats author`, and `asm stats index` CLI commands; build-time `repo-stats.json` / `author-stats.json` artifacts; website `/stats` overview and shareable `/profile/:owner` author pages with CSS bar charts ([#344](https://github.com/luongnv89/asm/issues/344), [#349](https://github.com/luongnv89/asm/issues/349)) — @luongnv89
+- Improve the stats and author profile website — Top Authors rows link to profile pages, skill detail pages link to the author's stats, and Category Distribution adds a pie chart on author profiles ([#351](https://github.com/luongnv89/asm/issues/351), [#352](https://github.com/luongnv89/asm/issues/352)) — @luongnv89
+- Raise the `skill-creator` authoring bar — exemplar library, adversarial review pass, eval floor, and misfire log so new skills are publish-ready by construction; adds a predictability rubric reference and creation hooks, and clarifies `skill-auto-improver` as the retrofit path for legacy skills ([#332](https://github.com/luongnv89/asm/issues/332), [#333](https://github.com/luongnv89/asm/issues/333), [#335](https://github.com/luongnv89/asm/issues/335), [#336](https://github.com/luongnv89/asm/issues/336), [#340](https://github.com/luongnv89/asm/issues/340)) — @luongnv89
+- Improve the `find-me-skills` skill — align frontmatter and structure with the skill-creator standard, move catalog/bundle detail into references, and add checkable acceptance criteria (v1.2.0) ([#337](https://github.com/luongnv89/asm/issues/337)) — @luongnv89
+- Publish `find-me-skills` and `skill-creator` from `asm/skills` in the curated index alongside featured `skill-auto-improver` ([#325](https://github.com/luongnv89/asm/issues/325)) — @luongnv89
+- Add `luongnv89/idd` to the curated skill index — 7 skills for turning GitHub issues into structured, agent-ready work orders ([#324](https://github.com/luongnv89/asm/issues/324)) — @luongnv89
+- Add `davidondrej/skills` to the curated skill index — 29 skills from the public MIT-licensed repository ([#345](https://github.com/luongnv89/asm/issues/345), [#348](https://github.com/luongnv89/asm/issues/348)) — @luongnv89
+
+### Bug Fixes
+
+- Fix `crossToolLink is not defined` crash in `inspectSkillForInstall` that caused every `asm install` on a new skill to exit 1 ([#326](https://github.com/luongnv89/asm/issues/326), [#330](https://github.com/luongnv89/asm/issues/330)) — @luongnv89
+- Harden library activation and updates — `asm activate --force` removes only symlinks and refuses real directories; `asm library update` skips unchanged skills and propagates permission errors instead of treating them as missing ([#327](https://github.com/luongnv89/asm/issues/327), [#328](https://github.com/luongnv89/asm/issues/328), [#329](https://github.com/luongnv89/asm/issues/329), [#338](https://github.com/luongnv89/asm/issues/338)) — @luongnv89
+- Fix `asm install --method vercel` on Windows — resolve npm's bundled `npx-cli.js` and launch it via the current Node binary so `execFile("npx")` no longer fails on `.cmd` shims ([#342](https://github.com/luongnv89/asm/issues/342), [#343](https://github.com/luongnv89/asm/issues/343)) — @Mordris
+- Fix `skill-creator` follow-ups — update a stale validator pointer, remove `SKILL.md.bak`, and bump to v1.13.1 ([#341](https://github.com/luongnv89/asm/issues/341)) — @luongnv89
+
+### Chores
+
+- Align the skill authoring toolchain with great-skills predictability principles across `refresh-index`, `skill-index-updater`, `skill-creator`, and `skill-auto-improver` ([#339](https://github.com/luongnv89/asm/issues/339)) — @luongnv89
+- Refresh indexed skill sources — re-ingested all enabled repos in `data/skill-index-resources.json` ([#331](https://github.com/luongnv89/asm/issues/331), [#350](https://github.com/luongnv89/asm/issues/350)) — @luongnv89
+
+### New Contributors
+
+- @ngaurav made their first contribution in [#320](https://github.com/luongnv89/asm/issues/320)
+
+**Full Changelog**: https://github.com/luongnv89/asm/compare/v2.13.0...v2.14.0
+
 ## v2.13.0 — 2026-06-18
 
 ### Features

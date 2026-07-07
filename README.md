@@ -15,693 +15,485 @@
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Node.js-%E2%89%A5%2018-339933.svg" alt="Node.js" /></a>
 </p>
 
-<h1 align="center">One tool to manage every AI agent's skills</h1>
+# CLI to install and manage agent skills
 
-<p align="center">
-  Stop juggling skill directories across Claude Code, Codex, Cursor, Windsurf, and 10+ other AI agents.<br/>
-  <strong>agent-skill-manager</strong> (<code>asm</code>) gives you a single TUI and CLI to install, search, audit, and organize all your agent skills — everywhere.
-</p>
+**agent-skill-manager** (`asm`) is a scriptable CLI built for AI agents and automation — install, search, audit, and organize skills across Claude Code, Codex, Cursor, and 16 more tools. Every command supports `--json` and `--yes` for non-interactive use. An optional TUI (`asm`) is available for local browsing.
 
-<p align="center">
-  <a href="#get-started-in-30-seconds"><strong>Get Started in 30 Seconds &rarr;</strong></a>
-  &nbsp;&nbsp;|&nbsp;&nbsp;
-  <a href="https://luongnv.com/asm/#/skills"><strong>Browse 3,800+ Skills Online &rarr;</strong></a>
-</p>
+[**Get Started**](#getting-started) · [**Browse 4,300+ skills**](https://luongnv.com/asm/#/skills) · [**Full docs**](#documentation)
 
----
+## Problems `asm` solves
 
-### 🌐 ASM Catalog — Browse Skills in Your Browser
+| Pain                    | Without `asm`                                                                                                           | With `asm`                                                                 |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Scattered installs      | Same skill copied into `~/.claude/skills/`, `~/.codex/skills/`, `~/.cursor/rules/` — different versions, no single view | One `asm list` across all 19 providers and scopes                          |
+| No inventory            | `ls` through hidden dirs; no idea what is installed, duplicated, or outdated                                            | `asm search`, `asm inspect`, `asm stats`, `asm audit`                      |
+| Risky manual installs   | Clone repos, copy folders, hope `SKILL.md` is valid                                                                     | `asm install` validates frontmatter, scans security, pins registry commits |
+| Agent-unfriendly output | Human-only copy-paste workflows                                                                                         | Structured JSON via `--json`; skip prompts with `--yes`                    |
+| New agent, new chore    | Every tool adds another skill directory to track                                                                        | Add or disable providers in one config file                                |
 
-Don't want to install anything yet? **[Explore the full skill catalog online &rarr;](https://luongnv.com/asm/#/skills)**
+## At a glance
 
-Search, filter by category or repo, and copy install commands — all from a single page. No signup, no backend, no tracking. Share filtered views via URL (e.g. `#/skills?q=code-review&cat=development`).
-
----
-
-<p align="center">
-  <img src="assets/screenshots/tui.png" alt="agent-skill-manager TUI dashboard" width="800" />
-</p>
-
----
-
-## Your AI agent skills are a mess
-
-You use Claude Code at work, Codex for side projects, and OpenClaw for experiments. Each tool keeps skills in its own hidden directory with its own conventions. Here's what that looks like in practice:
-
-- **Skills scattered everywhere** — `~/.claude/skills/`, `~/.codex/skills/`, `~/.openclaw/skills/`, project-level `.claude/skills/`... you have the same skill installed three times and can't remember which version is where
-- **No visibility** — there's no quick way to see what's installed, what's duplicated, or what's outdated across all your agents
-- **Installing is manual and risky** — you clone repos, copy folders, hope the SKILL.md is valid, and pray you didn't just install something that exfiltrates your codebase
-
-The more AI agents you use, the worse this gets. Every new tool adds another skill directory to babysit.
-
-## `asm` brings order to the chaos
-
-**agent-skill-manager** is a single command that manages skills across every AI coding agent you use. One TUI. One CLI. Every agent.
-
-- **See everything at once** — List, search, and filter skills across all providers and scopes from one dashboard. No more `ls`-ing through hidden directories.
-- **Install from GitHub in one command** — `asm install github:user/repo` handles cloning, validation, and placement. Supports single-skill repos, multi-skill collections, subfolder URLs, and private repos via SSH.
-- **Catch problems before they bite** — Built-in security scanning flags dangerous patterns (shell execution, network access, credential exposure, obfuscation) before you install. Duplicate audit finds and cleans redundant skills across providers.
-- **Create, test, and publish skills** — Scaffold new skills with `asm init`, symlink them for live development with `asm link`, audit for security issues, verify metadata, and publish to the [ASM Registry](https://github.com/luongnv89/asm-registry) with a single command. [See the full local dev workflow &darr;](#build-test-and-ship-your-own-skills)
-- **Works with every major agent** — 19 providers built-in: Claude Code, Codex, OpenClaw, Cursor, Windsurf, Cline, Roo Code, Continue, GitHub Copilot, Aider, OpenCode, Zed, Augment, Amp, Gemini CLI, Google Antigravity, Pi, Hermes, and a generic Agents provider. Add custom providers in seconds via config.
-- **Two interfaces, one tool** — Full interactive TUI with keyboard navigation, search, and detail views. Or use the CLI with `--json` for scripting and automation.
-
-<p align="center">
-  <img src="assets/screenshots/asm-stats.png" alt="asm stats — skill statistics across all providers" width="700" />
-  <br/><em>asm stats — totals, disk usage, and per-provider breakdown at a glance</em>
-</p>
+|                     |                                                                                |
+| ------------------- | ------------------------------------------------------------------------------ |
+| **Catalog**         | 4,394 skills from 54 repos — [browse online](https://luongnv.com/asm/#/skills) |
+| **Providers**       | 19 agents (Claude, Codex, Cursor, Windsurf, Copilot, …)                        |
+| **Agent-ready CLI** | `--json`, `--yes`, `--machine` on list, search, install, audit, eval           |
+| **Security**        | Pre-install scan for shell exec, network access, credential exposure           |
+| **License**         | MIT — no accounts, no telemetry                                                |
 
 ## How it works
 
-1. **Install `asm`** — one command via npm or curl
-2. **Run `asm`** — it auto-discovers skills across all configured agent directories
-3. **Manage everything** — install, search, inspect, audit, and uninstall skills from the TUI or CLI
-4. **Stay safe** — security scan skills before installing, detect duplicates, and clean up with confidence
-
-<p align="center">
-  <a href="#get-started-in-30-seconds"><strong>Start Managing Your Skills &rarr;</strong></a>
-</p>
-
-<p align="center">
-  <img src="assets/screenshots/asm-search-code-review.png" alt="asm search — find installed and available skills" width="700" />
-  <br/><em>asm search code-review — finds installed skills and suggests new ones from indexed repos</em>
-</p>
-
----
-
-## Build, Test, and Ship Your Own Skills
-
-`asm` isn't just for consuming skills — it's the complete toolkit for **creating, developing, auditing, and testing skills locally** before you share them.
-
-### 1. Scaffold a new skill
-
-Interactive mode — pick a target tool:
-
-```bash
-asm init my-skill
+```mermaid
+graph LR
+    A[AI agent / script] --> B["asm command --json"]
+    B --> C[Discover skill dirs]
+    B --> D[Install / audit / search]
+    D --> E{Security scan}
+    E --> F[Validate SKILL.md]
+    F --> G[Agent provider paths]
+    H[GitHub / Registry] --> D
 ```
 
-Scaffold directly into Claude Code:
-
-```bash
-asm init my-skill -p claude
-```
-
-Scaffold in a custom directory:
-
-```bash
-asm init my-skill --path ./skills
-```
-
-This creates a `my-skill/SKILL.md` with valid YAML frontmatter and a markdown template ready to fill in.
-
-### 2. Develop with live reload via symlink
-
-`asm link` creates a symlink from your local skill directory into an agent's skill folder. Because it's a symlink, every edit you make to the source is immediately visible to the agent — no reinstall needed.
-
-#### Target a specific tool
-
-```bash
-# Link into Claude Code
-asm link ./my-skill -p claude
-
-# Link into Codex
-asm link ./my-skill -p codex
-
-# Interactive — pick the tool from a prompt
-asm link ./my-skill
-```
-
-#### Link multiple skills at once
-
-Pass several paths in a single command to link them all in one step:
-
-```bash
-asm link ./skill-a ./skill-b ./skill-c -p claude
-```
-
-You can also point at a folder that contains multiple skills (each in its own subdirectory with a `SKILL.md`):
-
-```bash
-# Link every skill found inside ./my-skills-folder
-asm link ./my-skills-folder -p claude
-```
-
-#### Override the symlink name
-
-```bash
-asm link ./my-skill --name my-alias -p claude
-```
-
-#### Force-overwrite an existing symlink
-
-```bash
-asm link ./my-skill -p claude --force
-```
-
-Edit the source files — changes are reflected immediately in the agent. This is the fastest iteration loop for skill development.
-
-### 3. Audit your skill for security issues
-
-Audit an installed skill by name:
-
-```bash
-asm audit security my-skill
-```
-
-Audit a local directory:
-
-```bash
-asm audit security ./path/to/my-skill
-```
-
-Audit every installed skill:
-
-```bash
-asm audit security --all
-```
-
-The security scanner flags dangerous patterns — shell execution, network access, credential exposure, obfuscation, and external URLs — so you can catch problems before users install your skill.
-
-### 4. Inspect and verify metadata
-
-Check name, version, description, file count:
-
-```bash
-asm inspect my-skill
-```
-
-Machine-readable output for CI:
-
-```bash
-asm inspect my-skill --json
-```
-
-### 5. Test the install flow locally
-
-Once your skill is on GitHub, verify that end users can install it cleanly.
-
-Install your own skill as a user would:
-
-```bash
-asm install github:you/awesome-skill
-```
-
-Install to a specific tool:
-
-```bash
-asm install github:you/awesome-skill -p claude
-```
-
-Install a specific skill from a multi-skill repo:
-
-```bash
-asm install github:you/skills --path skills/awesome-skill
-```
-
-Force reinstall to test upgrades:
-
-```bash
-asm install github:you/awesome-skill --force
-```
-
-Non-interactive install (useful for CI):
-
-```bash
-asm install github:you/awesome-skill -p claude --yes --json
-```
-
-This catches issues that local development misses — broken repo structure, missing files, invalid frontmatter in a clean install context.
-
-### 6. Publish to the ASM Registry
-
-Once your skill is ready and on GitHub, submit it to the [ASM Registry](https://github.com/luongnv89/asm-registry) so anyone can install it by name:
-
-```bash
-asm publish ./my-skill
-```
-
-This runs a security audit, generates a signed manifest, forks the registry, and opens a pull request automatically. Once merged, your skill is globally discoverable:
-
-```bash
-# Anyone can install it by name — no URL needed
-asm install my-skill
-```
-
-Preview what the manifest will look like before submitting:
-
-```bash
-asm publish --dry-run ./my-skill
-```
-
-Override security warnings (caution: review findings first):
-
-```bash
-asm publish --force ./my-skill
-```
-
-Skip confirmation in CI:
-
-```bash
-asm publish --yes ./my-skill
-```
-
-> **Requires:** [`gh` CLI](https://cli.github.com) authenticated with `gh auth login`. The publish command uses `gh` to fork the registry, create a branch, write the manifest, and open the PR — all without leaving your terminal.
-
-### Typical local development workflow
-
-1. **Scaffold** — `asm init awesome-skill -p claude`
-2. Edit your `SKILL.md`
-3. **Link for live testing** — `asm link ./awesome-skill -p claude`
-4. Test with your AI agent
-5. **Security audit** — `asm audit security awesome-skill`
-6. **Verify metadata** — `asm inspect awesome-skill`
-7. **Score quality** — `asm eval ./awesome-skill`
-8. Push to GitHub
-9. **Verify install flow** — `asm install github:you/awesome-skill`
-10. **Publish to registry** — `asm publish ./awesome-skill`
-
-Whether you're building skills for yourself or publishing them for the community, `asm` gives you the full create → develop → audit → ship pipeline in one tool.
-
----
-
-## Skill Verification
-
-Skills indexed by `asm` are automatically evaluated against a set of verification criteria. Skills that pass all criteria receive a **verified** badge in the catalog and `"verified": true` in the index JSON. Skills that fail any criterion are still indexed but marked as unverified.
-
-### Verification Criteria
-
-A skill must satisfy **all four** of the following to be verified:
-
-1. **Valid frontmatter** -- The SKILL.md file must contain YAML frontmatter with both a `name` and a `description` field. Empty or whitespace-only values fail this check.
-
-2. **Meaningful body content** -- The markdown body (everything after the frontmatter block) must contain at least 20 characters of instruction text. A SKILL.md that is only frontmatter with no real guidance for the agent will fail.
-
-3. **No malicious patterns** -- The full SKILL.md content is scanned for dangerous code patterns:
-   - `atob()` calls (runtime base64 decoding / obfuscation)
-   - Suspicious base64-encoded strings (40+ character base64 blocks with padding)
-   - Hex-escape sequences (4+ consecutive `\xNN` escapes)
-   - Hardcoded credentials (`API_KEY`, `SECRET_KEY`, or `PASSWORD` assignments)
-
-4. **Proper structure** -- The skill directory must exist and contain a `SKILL.md` file that the ingestion pipeline can read.
-
-### How to Reproduce Locally
-
-You can verify your skill before publishing:
-
-```bash
-# Index your repo -- verification runs automatically during ingestion
-asm index ingest github:your-user/your-repo
-
-# Check the output JSON for the verified field
-asm index search "your-skill" --json
-```
-
-Each indexed skill in the output JSON includes `"verified": true` or `"verified": false`. If verification fails, the ingestion debug log (set `ASM_DEBUG=1`) prints the specific reasons.
-
-### Quality Evaluation (`asm eval`)
-
-Static verification tells you the SKILL.md is well-formed. `asm eval` goes further: the built-in `quality` provider runs a scored rubric over structure, frontmatter, clarity, prompt engineering, context efficiency, safety, testability, and naming — and emits per-category scores plus concrete suggestions for improvement. Zero setup, zero API keys, zero external binaries.
-
-```bash
-# Score the skill and print recommendations
-asm eval ./my-skill
-
-# CI-friendly machine-readable output
-asm eval ./my-skill --machine
-
-# Apply deterministic auto-fixes to SKILL.md
-asm eval ./my-skill --fix
-
-# List registered eval providers
-asm eval-providers list
-```
-
-The eval surface is a pluggable provider framework: each provider implements a common `EvalProvider` contract and resolves via semver range. See [`docs/eval-providers.md`](./docs/eval-providers.md) for the provider model.
-
----
-
-## ASM Registry — Install and Publish Skills by Name
-
-The [ASM Registry](https://github.com/luongnv89/asm-registry) is the curated index of community-published skills. Once a skill is listed, anyone can install it by name — no GitHub URL needed.
-
-### Install from the registry
-
-```bash
-# Install by bare name (searches the registry)
-asm install code-review
-
-# Install by scoped name (author/skill — always unambiguous)
-asm install luongnv89/code-review
-
-# Force a fresh registry fetch (bypasses the 1-hour cache)
-asm install code-review --no-cache
-```
-
-`asm install` resolves the name against the registry index, downloads the manifest, clones the exact pinned commit, and installs the skill to your agent.
-
-### Publish your skill to the registry
-
-```bash
-asm publish ./my-skill
-```
-
-The publish pipeline:
-
-1. **Validates** your `SKILL.md` frontmatter (name, description, version)
-2. **Security audit** — blocks dangerous skills automatically; warns on risky patterns
-3. **Generates a manifest** with the current commit SHA and a `skill_path` for multi-skill repos
-4. **Opens a PR** against [luongnv89/asm-registry](https://github.com/luongnv89/asm-registry) via the `gh` CLI
-
-The registry CI validates schema, checks author identity, runs a duplicate check, typosquat detection, and an independent security scan before any maintainer reviews. Once merged, the index rebuilds automatically and your skill is live.
-
-| Flag        | Description                                |
-| ----------- | ------------------------------------------ |
-| `--dry-run` | Preview the manifest without creating a PR |
-| `--force`   | Override warning-level security findings   |
-| `--yes`     | Skip the confirmation prompt               |
-| `--machine` | Output as a machine-readable JSON envelope |
-
-### How registry resolution works
-
-When you run `asm install code-review`:
-
-1. `asm` fetches the registry index (cached for 1 hour at `~/.config/agent-skill-manager/registry-cache.json`)
-2. Finds the manifest for `code-review` — including the pinned `commit` and `skill_path`
-3. Clones the repository at that exact commit and navigates to the skill subdirectory
-4. Installs as if you had run `asm install github:author/repo#commit:skill_path`
-
-If multiple authors publish a skill with the same name, `asm` shows a disambiguation prompt. Use a scoped name (`author/skill`) to skip it.
-
----
-
-## Get Started in 30 Seconds
-
-### npm (recommended)
+1. Install `asm` once (npm or curl).
+2. Run commands from your agent, shell, or CI — no prompts when you pass `--yes`.
+3. Parse JSON output to decide what to install, remove, or audit next.
+
+## Features
+
+| Feature                  | What you get                                                        |
+| ------------------------ | ------------------------------------------------------------------- |
+| Cross-provider inventory | `asm list --json` — every skill, every agent, one response          |
+| One-command install      | `asm install github:user/repo` or `asm install skill-name`          |
+| Agent-parseable output   | `--json` on list, search, inspect, install, audit                   |
+| Duplicate audit          | `asm audit --yes` removes redundant skills non-interactively        |
+| Security scan            | `asm audit security` before install                                 |
+| Authoring pipeline       | `asm init`, `asm link`, `asm eval`, `asm publish`                   |
+| Bundles                  | `asm bundle install` — curated sets in one pass                     |
+| Local library            | `asm install --library` — install once, `asm activate` per provider |
+| Cross-tool linking       | Reinstall or symlink when a skill already exists in another tool    |
+
+## Getting started
+
+Install (npm):
 
 ```bash
 npm install -g agent-skill-manager
 ```
 
-> Runs on **Node.js ≥ 18** for both the CLI and the interactive TUI. No other runtime required.
-
-### One-liner install
+List installed skills (JSON for agents):
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/luongnv89/agent-skill-manager/main/install.sh | bash
+asm list --json
 ```
 
-This installs `agent-skill-manager` globally. Then just run:
+Install a skill:
 
 ```bash
-asm
+asm install github:anthropics/skills --yes
 ```
 
-<p align="center">
-  <a href="#cli-commands"><strong>See All Commands &rarr;</strong></a>
-</p>
-
-<a id="troubleshooting"></a>
-
-### Shadowed installs
-
-If you have multiple `asm` binaries on `PATH` (for example, a leftover install from an older package manager), shells resolve whichever appears first and a fresh upgrade can be silently shadowed.
-
-**Diagnose:** `asm --version` detects and warns when it sees multiple `asm` binaries on `PATH`. For a full report, run `asm doctor` — it lists the resolved path and any shadowed installs.
-
-**Fix:** remove the stale install with your package manager, then re-run `asm --version` to confirm only one binary is left.
-
----
-
-## Open-Source Skill Collections
-
-A curated list of skill repositories you can install with a single command. Over **2,800 skills** available across these collections:
-
-### Top agent skills repositories
-
-ASM now indexes the requested top starred agent-skill collections: [`obra/superpowers`](https://github.com/obra/superpowers), [`anthropics/skills`](https://github.com/anthropics/skills), [`garrytan/gstack`](https://github.com/garrytan/gstack), [`Egonex-AI/Understand-Anything`](https://github.com/Egonex-AI/Understand-Anything), [`addyosmani/agent-skills`](https://github.com/addyosmani/agent-skills), [`mattpocock/skills`](https://github.com/mattpocock/skills), [`santifer/career-ops`](https://github.com/santifer/career-ops), [`nextlevelbuilder/ui-ux-pro-max-skill`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), [`Leonxlnx/taste-skill`](https://github.com/Leonxlnx/taste-skill), and [`mvanhorn/last30days-skill`](https://github.com/mvanhorn/last30days-skill). Use `asm search <term>` to discover individual skills, then install a collection with `asm install github:owner/repo`.
-
-> **Last updated:** 2026-06-18
-
-| Repository                                                                          | Description                                                         |  Stars | Skills |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------- | -----: | -----: |
-| [anthropic-skills](https://github.com/anthropics/skills)                            | Official Agent Skills from Anthropic                                | 95,957 |     18 |
-| [superpowers](https://github.com/obra/superpowers)                                  | Agentic skills framework & development methodology                  | 89,816 |     14 |
-| [everything-claude-code](https://github.com/affaan-m/everything-claude-code)        | Performance optimization system for Claude Code, Codex, and beyond  | 81,392 |    183 |
-| [agency-agents](https://github.com/msitarzewski/agency-agents)                      | Specialized expert agents with personality and proven deliverables  | 50,749 |      — |
-| [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)      | Design intelligence for building professional UI/UX                 | 43,112 |      7 |
-| [antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills) | 1,000+ battle-tested skills for Claude Code, Cursor, and more       | 25,047 |  1,322 |
-| [marketingskills](https://github.com/coreyhaines31/marketingskills)                 | Marketing skills — CRO, copywriting, SEO, analytics, growth         | 14,099 |     33 |
-| [agentskills](https://github.com/agentskills/agentskills)                           | Specification and documentation for Agent Skills                    | 13,342 |      — |
-| [claude-skills](https://github.com/alirezarezvani/claude-skills)                    | 192 skills for engineering, marketing, product, compliance, C-level |  7,434 |    451 |
-| [taste-skill](https://github.com/Leonxlnx/taste-skill)                              | Gives your AI good taste — stops generic, boring output             |  3,389 |      7 |
-| [affiliate-skills](https://github.com/Affitor/affiliate-skills)                     | Full affiliate marketing funnel: research to deploy                 |     99 |     48 |
-| [skills](https://github.com/luongnv89/skills)                                       | Reusable skills to supercharge your AI agents                       |      1 |     35 |
-
-Install any collection with an interactive picker:
-
-```bash
-asm install github:anthropics/skills
-```
-
-Or install everything at once:
-
-```bash
-asm install github:anthropics/skills --all
-```
-
-<p align="center">
-  <img src="assets/screenshots/asm-inspect-oss-ready.png" alt="asm inspect — detailed skill information" width="700" />
-  <br/><em>asm inspect oss-ready — version, creator, and every tool installation at once</em>
-</p>
-
----
-
-## Supported Agent Tools
-
-`asm` ships with **19 built-in providers**, all enabled by default. Disable any you don't need via `asm config edit`.
-
-| Tool               | Global Path                       | Project Path            | Default |
-| ------------------ | --------------------------------- | ----------------------- | :-----: |
-| Claude Code        | `~/.claude/skills/`               | `.claude/skills/`       | enabled |
-| Codex              | `~/.codex/skills/`                | `.codex/skills/`        | enabled |
-| OpenClaw           | `~/.openclaw/skills/`             | `.openclaw/skills/`     | enabled |
-| Agents (generic)   | `~/.agents/skills/`               | `.agents/skills/`       | enabled |
-| Cursor             | `~/.cursor/rules/`                | `.cursor/rules/`        | enabled |
-| Windsurf           | `~/.windsurf/rules/`              | `.windsurf/rules/`      | enabled |
-| Cline              | `~/Documents/Cline/Rules/`        | `.clinerules/`          | enabled |
-| Roo Code           | `~/.roo/rules/`                   | `.roo/rules/`           | enabled |
-| Continue           | `~/.continue/rules/`              | `.continue/rules/`      | enabled |
-| GitHub Copilot     | `~/.github/instructions/`         | `.github/instructions/` | enabled |
-| Aider              | `~/.aider/skills/`                | `.aider/skills/`        | enabled |
-| OpenCode           | `~/.config/opencode/skills/`      | `.opencode/skills/`     | enabled |
-| Zed                | `~/.config/zed/prompt_overrides/` | `.zed/rules/`           | enabled |
-| Augment            | `~/.augment/rules/`               | `.augment/rules/`       | enabled |
-| Amp                | `~/.amp/skills/`                  | `.amp/skills/`          | enabled |
-| Gemini CLI         | `~/.gemini/skills/`               | `.gemini/skills/`       | enabled |
-| Google Antigravity | `~/.antigravity/skills/`          | `.antigravity/skills/`  | enabled |
-| Pi                 | `~/.pi/skills/`                   | `.pi/skills/`           | enabled |
-| Hermes             | `~/.hermes/skills/`               | `.hermes/skills/`       | enabled |
-
-Disable a provider — opens config in `$EDITOR`, set `"enabled": false` for any provider:
-
-```bash
-asm config edit
-```
-
-Need a tool not listed? Add a custom provider entry to the config.
-
----
-
-## FAQ
-
-**Is it free?**
-Yes. `asm` is MIT licensed and free forever. No accounts, no telemetry, no paywalls.
-
-**Is it actively maintained?**
-Yes — actively developed with frequent tagged releases (46 and counting, latest v2.11.0). Check the [changelog](docs/CHANGELOG.md) for the full history.
-
-**Which AI agents does it support?**
-19 providers built-in: Claude Code, Codex, OpenClaw, Cursor, Windsurf, Cline, Roo Code, Continue, GitHub Copilot, Aider, OpenCode, Zed, Augment, Amp, Gemini CLI, Google Antigravity, Pi, Hermes, and a generic Agents provider. All 19 are enabled by default; disable any you don't need via `asm config edit`. You can also add any custom agent that stores skills as directories with a `SKILL.md` file.
-
-**How does it compare to managing skills manually?**
-Manual management means remembering where each agent stores skills, cloning repos by hand, checking for duplicates yourself, and having no security scanning. `asm` automates all of that with one command.
-
-<p align="center">
-  <img src="assets/screenshots/asm-audit.png" alt="asm audit — duplicate detection across providers" width="700" />
-  <br/><em>asm audit — finds duplicate groups and tells you exactly which to keep</em>
-</p>
-
-**Can I use it with private repos?**
-Yes. Use `--transport ssh` or `--transport auto` to clone private repos via SSH.
-
-**Is it safe to install skills from GitHub?**
-`asm` includes built-in security scanning that flags dangerous patterns (shell execution, network access, credential exposure, obfuscation) before installation. Run `asm audit security github:user/repo` to scan any skill before installing.
-
-<p align="center">
-  <img src="assets/screenshots/asm-audit-security-oss-ready.png" alt="asm audit security — security scanning report" width="700" />
-  <br/><em>asm audit security oss-ready — flags external URLs, shell execution, and credential access</em>
-</p>
-
-**What's the SKILL.md format?**
-Every skill is a directory containing a `SKILL.md` file with YAML frontmatter (name, description, version) followed by markdown instructions the AI agent loads at runtime. Run `asm init my-skill` to scaffold one.
-
----
-
-## Start Managing Your Skills Today
-
-You're already using AI agents. You're already installing skills. The only question is whether you keep doing it manually — or let `asm` handle it.
-
-MIT licensed. Free forever. One install command.
-
-<p align="center">
-  <a href="#get-started-in-30-seconds"><strong>Install agent-skill-manager &rarr;</strong></a>
-</p>
-
----
-
-<details>
-<summary><strong>CLI Commands</strong></summary>
-
-### Interactive TUI
-
-```bash
-asm
-```
-
-### Commands
-
-| Command                         | Description                                           |
-| ------------------------------- | ----------------------------------------------------- |
-| `asm list`                      | List all discovered skills                            |
-| `asm search <query>`            | Search by name/description/provider                   |
-| `asm inspect <skill-name>`      | Show detailed info for a skill                        |
-| `asm install <source>`          | Install a skill from GitHub or the registry           |
-| `asm publish [path]`            | Publish a skill to the ASM Registry                   |
-| `asm uninstall <skill-name>`    | Remove a skill (with confirmation)                    |
-| `asm init <name>`               | Scaffold a new skill with SKILL.md template           |
-| `asm link <path> [<path2> ...]` | Symlink one or more local skills for live development |
-| `asm audit`                     | Detect duplicate skills                               |
-| `asm audit security <name>`     | Run security audit on a skill                         |
-| `asm eval <skill>`              | Score a skill and print improvement suggestions       |
-| `asm eval-providers list`       | List registered eval providers and versions           |
-| `asm stats`                     | Show aggregate skill metrics dashboard                |
-| `asm export`                    | Export skill inventory as JSON manifest               |
-| `asm index ingest <repo>`       | Index a skill repo for searching                      |
-| `asm index search <query>`      | Search indexed skills                                 |
-| `asm index list`                | List indexed repositories                             |
-| `asm index remove <owner/repo>` | Remove a repo from the index                          |
-| `asm bundle list`               | List saved or pre-defined bundles (`--predefined`)    |
-| `asm bundle install <name>`     | Install every skill in a bundle in one pass           |
-| `asm bundle create <name>`      | Create a bundle from installed skills                 |
-| `asm bundle show <name>`        | Show bundle details and skill list                    |
-| `asm bundle modify <name>`      | Add/remove skills or update bundle metadata           |
-| `asm bundle export <name>`      | Export a bundle to a JSON file                        |
-| `asm bundle remove <name>`      | Remove a saved bundle                                 |
-| `asm config show`               | Print current config                                  |
-| `asm config path`               | Print config file path                                |
-| `asm config reset`              | Reset config to defaults                              |
-| `asm config edit`               | Open config in $EDITOR                                |
-
-### Global Options
-
-```text
--h, --help             Show help for any command
--v, --version          Print version and exit
---json                 Output as JSON (list, search, inspect, audit)
--s, --scope <scope>    Filter: global, project, or both (default: both)
---sort <field>         Sort by: name, version, or location (default: name)
--y, --yes              Skip confirmation prompts
---no-color             Disable ANSI colors
-```
-
-### Examples
-
-List all global skills sorted by provider location:
-
-```bash
-asm list --scope global --sort location
-```
-
-When you have many skills installed, `asm list` offers condensed views:
-
-```bash
-asm list --summary            # counts by tool/scope/effort only
-asm list --compact            # one line per skill
-asm list --group-by tool      # group rows under tool headers
-asm list --limit 20           # show only the first 20 rows
-```
-
-Search for skills and output JSON:
+Search installed and catalog skills:
 
 ```bash
 asm search "code review" --json
 ```
 
-Inspect a specific skill:
+Alternative install: `curl -sSL https://raw.githubusercontent.com/luongnv89/agent-skill-manager/main/install.sh | bash`
+
+Node.js 18+ required. Optional TUI: run `asm` with no arguments.
+
+## Common tasks
+
+| Task                       | Command                                          |
+| -------------------------- | ------------------------------------------------ |
+| Machine-readable inventory | `asm list --json`                                |
+| Skill metadata for agents  | `asm inspect my-skill --json`                    |
+| Non-interactive install    | `asm install code-review -p claude --yes --json` |
+| Remove duplicates          | `asm audit --yes`                                |
+| Scan before install        | `asm audit security github:user/repo`            |
+| Scaffold a new skill       | `asm init my-skill -p claude`                    |
+| Live dev via symlink       | `asm link ./my-skill -p claude`                  |
+| Publish to registry        | `asm publish ./my-skill --yes`                   |
+| Install a bundle           | `asm bundle install frontend-dev --yes`          |
+
+Full command reference, flags, and examples: [CLI Commands](#cli-commands). Catalog UI and bundles: [luongnv.com/asm](https://luongnv.com/asm/).
+
+## FAQ
+
+**Is it free?**
+MIT licensed. No accounts or paywalls.
+
+**Is this built for AI agents?**
+Yes. Commands return structured JSON (`--json`), accept non-interactive flags (`--yes`, `--machine`), and map to discrete actions an agent can chain — list inventory, search catalog, install, audit, uninstall.
+
+**Which agents are supported?**
+19 providers: Claude Code, Codex, OpenClaw, Cursor, Windsurf, Cline, Roo Code, Continue, GitHub Copilot, Aider, OpenCode, Zed, Augment, Amp, Gemini CLI, Google Antigravity, Pi, Hermes, and a generic Agents provider. Disable any via `asm config edit`.
+
+**What about the TUI?**
+Run `asm` with no args for an optional local browser. The CLI is the primary interface for scripts, CI, and agent tool calls.
+
+**Private repos?**
+`asm install github:user/repo --transport ssh --yes`
+
+**SKILL.md format?**
+A directory with `SKILL.md` (YAML frontmatter + markdown body). Run `asm init my-skill` to scaffold one.
+
+## Get started
 
 ```bash
-asm inspect my-skill
+npm install -g agent-skill-manager
 ```
-
-Remove duplicates automatically:
 
 ```bash
-asm audit --yes
+asm list --json
 ```
 
-Security audit a skill before installing:
+[**Browse catalog**](https://luongnv.com/asm/#/skills) · [**Documentation**](#documentation) · [**Contributing**](CONTRIBUTING.md) · MIT Licensed
+
+---
+
+<details>
+<summary><strong>Build, test, and ship skills</strong></summary>
+
+### Scaffold
 
 ```bash
-asm audit security github:user/repo
+asm init my-skill
 ```
-
-Audit all installed skills:
-
-```bash
-asm audit security --all
-```
-
-Score a skill with the static quality provider:
-
-```bash
-asm eval ./my-skill
-```
-
-List registered eval providers:
-
-```bash
-asm eval-providers list
-```
-
-Scaffold a skill, link it for live testing, audit, and inspect:
 
 ```bash
 asm init my-skill -p claude
 ```
 
 ```bash
-# Link globally (available in all projects)
-asm link ./my-skill -p claude
-
-# Link multiple skills at once
-asm link ./skill-a ./skill-b -p claude
+asm init my-skill --path ./skills
 ```
+
+### Develop with live reload
+
+```bash
+asm link ./my-skill -p claude
+```
+
+```bash
+asm link ./skill-a ./skill-b ./skill-c -p claude
+```
+
+```bash
+asm link ./my-skills-folder -p claude
+```
+
+```bash
+asm link ./my-skill --name my-alias -p claude --force
+```
+
+### Audit and inspect
 
 ```bash
 asm audit security my-skill
 ```
 
 ```bash
+asm audit security ./path/to/my-skill
+```
+
+```bash
+asm audit security --all
+```
+
+```bash
+asm inspect my-skill
+```
+
+```bash
 asm inspect my-skill --json
 ```
 
-Uninstall without confirmation:
+### Test install flow
+
+```bash
+asm install github:you/awesome-skill
+```
+
+```bash
+asm install github:you/awesome-skill -p claude --force --yes --json
+```
+
+### Publish to ASM Registry
+
+```bash
+asm publish ./my-skill
+```
+
+```bash
+asm publish --dry-run ./my-skill
+```
+
+Requires [`gh` CLI](https://cli.github.com) authenticated with `gh auth login`.
+
+### Typical workflow
+
+1. `asm init awesome-skill -p claude`
+2. Edit `SKILL.md`
+3. `asm link ./awesome-skill -p claude`
+4. Test with your agent
+5. `asm audit security awesome-skill`
+6. `asm inspect awesome-skill`
+7. `asm eval ./awesome-skill`
+8. Push to GitHub
+9. `asm install github:you/awesome-skill`
+10. `asm publish ./awesome-skill`
+
+</details>
+
+<details>
+<summary><strong>Skill verification and quality eval</strong></summary>
+
+Indexed skills are evaluated automatically. Skills passing all criteria get a **verified** badge in the catalog.
+
+**Verification criteria (all required):**
+
+1. Valid frontmatter with `name` and `description`
+2. Body content with at least 20 characters of instruction text
+3. No malicious patterns (`atob()`, suspicious base64, hex escapes, hardcoded credentials)
+4. Directory contains a readable `SKILL.md`
+
+```bash
+asm index ingest github:your-user/your-repo
+```
+
+```bash
+asm index search "your-skill" --json
+```
+
+**Quality scoring** (`asm eval`) runs a rubric over structure, clarity, safety, and naming:
+
+```bash
+asm eval ./my-skill
+```
+
+```bash
+asm eval ./my-skill --machine
+```
+
+```bash
+asm eval ./my-skill --fix
+```
+
+```bash
+asm eval-providers list
+```
+
+See [`docs/eval-providers.md`](./docs/eval-providers.md) for the provider model.
+
+</details>
+
+<details>
+<summary><strong>ASM Registry</strong></summary>
+
+The [ASM Registry](https://github.com/luongnv89/asm-registry) lists community-published skills. Install by name — no GitHub URL needed.
+
+```bash
+asm install code-review
+```
+
+```bash
+asm install luongnv89/code-review
+```
+
+```bash
+asm install code-review --no-cache
+```
+
+```bash
+asm publish ./my-skill
+```
+
+| Flag        | Description                              |
+| ----------- | ---------------------------------------- |
+| `--dry-run` | Preview manifest without creating a PR   |
+| `--force`   | Override warning-level security findings |
+| `--yes`     | Skip confirmation                        |
+| `--machine` | JSON output                              |
+
+**Resolution flow:** fetch index (1-hour cache) → find manifest with pinned commit → clone at exact commit → install.
+
+</details>
+
+<details>
+<summary><strong>Open-source skill collections</strong></summary>
+
+Over **2,800 skills** across curated repositories. Use `asm search <term>` to discover, then `asm install github:owner/repo`.
+
+> Last updated: 2026-07-07
+
+| Repository                                                                          | Description                                     |  Stars | Skills |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------- | -----: | -----: |
+| [anthropic-skills](https://github.com/anthropics/skills)                            | Official Agent Skills from Anthropic            | 95,957 |     18 |
+| [superpowers](https://github.com/obra/superpowers)                                  | Agentic skills framework                        | 89,816 |     14 |
+| [everything-claude-code](https://github.com/affaan-m/everything-claude-code)        | Performance optimization for Claude Code, Codex | 81,392 |    183 |
+| [agency-agents](https://github.com/msitarzewski/agency-agents)                      | Specialized expert agents                       | 50,749 |      — |
+| [ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)      | Design intelligence for UI/UX                   | 43,112 |      7 |
+| [antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills) | 1,000+ skills for Claude Code, Cursor           | 25,047 |  1,322 |
+| [marketingskills](https://github.com/coreyhaines31/marketingskills)                 | Marketing — CRO, SEO, growth                    | 14,099 |     33 |
+| [agentskills](https://github.com/agentskills/agentskills)                           | Agent Skills specification                      | 13,342 |      — |
+| [claude-skills](https://github.com/alirezarezvani/claude-skills)                    | 192 skills across engineering, marketing        |  7,434 |    451 |
+| [taste-skill](https://github.com/Leonxlnx/taste-skill)                              | Stops generic AI output                         |  3,389 |      7 |
+| [affiliate-skills](https://github.com/Affitor/affiliate-skills)                     | Affiliate marketing funnel                      |     99 |     48 |
+| [skills](https://github.com/luongnv89/skills)                                       | Reusable agent skills                           |      1 |     35 |
+
+```bash
+asm install github:anthropics/skills
+```
+
+```bash
+asm install github:anthropics/skills --all
+```
+
+</details>
+
+<details>
+<summary><strong>Supported agent tools</strong></summary>
+
+19 built-in providers, all enabled by default. Disable via `asm config edit`.
+
+| Tool               | Global Path                       | Project Path            |
+| ------------------ | --------------------------------- | ----------------------- |
+| Claude Code        | `~/.claude/skills/`               | `.claude/skills/`       |
+| Codex              | `~/.codex/skills/`                | `.codex/skills/`        |
+| OpenClaw           | `~/.openclaw/skills/`             | `.openclaw/skills/`     |
+| Agents (generic)   | `~/.agents/skills/`               | `.agents/skills/`       |
+| Cursor             | `~/.cursor/rules/`                | `.cursor/rules/`        |
+| Windsurf           | `~/.windsurf/rules/`              | `.windsurf/rules/`      |
+| Cline              | `~/Documents/Cline/Rules/`        | `.clinerules/`          |
+| Roo Code           | `~/.roo/rules/`                   | `.roo/rules/`           |
+| Continue           | `~/.continue/rules/`              | `.continue/rules/`      |
+| GitHub Copilot     | `~/.github/instructions/`         | `.github/instructions/` |
+| Aider              | `~/.aider/skills/`                | `.aider/skills/`        |
+| OpenCode           | `~/.config/opencode/skills/`      | `.opencode/skills/`     |
+| Zed                | `~/.config/zed/prompt_overrides/` | `.zed/rules/`           |
+| Augment            | `~/.augment/rules/`               | `.augment/rules/`       |
+| Amp                | `~/.amp/skills/`                  | `.amp/skills/`          |
+| Gemini CLI         | `~/.gemini/skills/`               | `.gemini/skills/`       |
+| Google Antigravity | `~/.antigravity/skills/`          | `.antigravity/skills/`  |
+| Pi                 | `~/.pi/skills/`                   | `.pi/skills/`           |
+| Hermes             | `~/.hermes/skills/`               | `.hermes/skills/`       |
+
+Add custom providers in config.
+
+</details>
+
+<details>
+<summary><strong>Troubleshooting: shadowed installs</strong></summary>
+
+Multiple `asm` binaries on `PATH` can shadow a fresh upgrade.
+
+**Diagnose:** `asm --version` warns about multiple binaries. Run `asm doctor` for a full report.
+
+**Fix:** Remove the stale install with your package manager, then confirm with `asm --version`.
+
+</details>
+
+<details id="cli-commands">
+<summary><strong>CLI Commands</strong></summary>
+
+### Commands
+
+| Command                         | Description                          |
+| ------------------------------- | ------------------------------------ | ----------------------------------------- |
+| `asm list`                      | List all discovered skills           |
+| `asm search <query>`            | Search by name/description/provider  |
+| `asm inspect <skill-name>`      | Show detailed info for a skill       |
+| `asm install <source>`          | Install from GitHub or registry      |
+| `asm publish [path]`            | Publish to ASM Registry              |
+| `asm uninstall <skill-name>`    | Remove a skill                       |
+| `asm init <name>`               | Scaffold a new skill                 |
+| `asm link <path> [<path2> ...]` | Symlink skills for live dev          |
+| `asm audit`                     | Detect duplicate skills              |
+| `asm audit security <name>`     | Security audit                       |
+| `asm eval <skill>`              | Score skill quality                  |
+| `asm eval-providers list`       | List eval providers                  |
+| `asm stats`                     | Aggregate installed skill metrics    |
+| `asm stats repo <repo>`         | Per-repo indexed skill stats         |
+| `asm stats author <owner>`      | Per-author indexed skill stats       |
+| `asm stats index`               | Indexed catalog stats summary        |
+| `asm activate <skill>`          | Link a library skill into a provider |
+| `asm deactivate <skill>`        | Remove a library activation symlink  |
+| `asm library list               | update`                              | Manage centrally installed library skills |
+| `asm export`                    | Export inventory as JSON             |
+| `asm index ingest <repo>`       | Index a skill repo                   |
+| `asm index search <query>`      | Search indexed skills                |
+| `asm index list`                | List indexed repos                   |
+| `asm index remove <owner/repo>` | Remove repo from index               |
+| `asm bundle list`               | List bundles (`--predefined`)        |
+| `asm bundle install <name>`     | Install every skill in a bundle      |
+| `asm bundle create <name>`      | Create bundle from installed skills  |
+| `asm bundle show <name>`        | Show bundle details                  |
+| `asm bundle modify <name>`      | Add/remove skills                    |
+| `asm bundle export <name>`      | Export bundle to JSON                |
+| `asm bundle remove <name>`      | Remove saved bundle                  |
+| `asm config show`               | Print config                         |
+| `asm config path`               | Print config path                    |
+| `asm config reset`              | Reset to defaults                    |
+| `asm config edit`               | Open config in `$EDITOR`             |
+
+### Global options
+
+```text
+-h, --help             Show help
+-v, --version          Print version
+--json                 JSON output
+-s, --scope <scope>    global, project, or both
+--sort <field>         name, version, or location
+-y, --yes              Skip confirmations
+--no-color             Disable ANSI colors
+```
+
+### Examples
+
+```bash
+asm list --scope global --sort location
+```
+
+```bash
+asm list --summary
+```
+
+```bash
+asm list --compact --group-by tool --limit 20
+```
+
+```bash
+asm search "code review" --json
+```
+
+```bash
+asm audit --yes
+```
+
+```bash
+asm audit security github:user/repo
+```
+
+```bash
+asm audit security --all
+```
+
+```bash
+asm eval ./my-skill
+```
+
+```bash
+asm init my-skill -p claude
+```
+
+```bash
+asm link ./my-skill -p claude
+```
 
 ```bash
 asm uninstall old-skill --yes
 ```
-
-Index a skill repo and search it:
 
 ```bash
 asm index ingest github:anthropics/skills
@@ -711,43 +503,33 @@ asm index ingest github:anthropics/skills
 asm index search "frontend design" --json
 ```
 
-**Skill bundles** — install a curated set of skills in one command. Pre-defined bundles ship with ASM for common workflows (frontend, devops, iOS release, content writing). Browse them at [luongnv.com/asm/#/bundles](https://luongnv.com/asm/#/bundles) or list them locally:
+**Bundles** — pre-defined sets for common workflows. Browse at [luongnv.com/asm/#/bundles](https://luongnv.com/asm/#/bundles):
 
 ```bash
 asm bundle list --predefined
 ```
 
-Install every skill in a pre-defined bundle:
-
 ```bash
 asm bundle install frontend-dev
 ```
 
-Install from a bundle file (custom or shared):
-
 ```bash
 asm bundle install ./my-bundle.json
 ```
-
-Build a custom bundle from your installed skills, then export it to share:
 
 ```bash
 asm bundle create my-workflow
 asm bundle export my-workflow ./my-workflow.json
 ```
 
-A bundle is a JSON file with a `name`, `description`, `author`, and a list of `skills` (each with `name` + `installUrl`). The schema is validated on install — see `src/utils/types.ts` (`BundleManifest`). You can also assemble a custom bundle visually on the website's [/bundles](https://luongnv.com/asm/#/bundles) page and export it as JSON.
-
-**iOS/Swift catalog note:** ASM indexes public, installable Swift and Apple-platform skill repos from maintainers such as Hacking with Swift (`twostraws`), Antoine van der Lee (`AvdLee`), Dimillian, Rudrank Riyam, and Ivan Magda. Use `asm bundle install ios-release` for a curated SwiftUI, concurrency, testing, persistence, Xcode build, App Store, and release-management starter set, or search the catalog for `swift`, `swiftui`, `swift testing`, `uikit`, `swiftdata`, or `app store connect` to install individual skills. Sources that are private, landing-page-only, or do not expose discoverable `SKILL.md` content are not added as enabled catalog entries.
+**iOS/Swift catalog:** ASM indexes public Swift/Apple skill repos. Use `asm bundle install ios-release` or search for `swift`, `swiftui`, `swift testing`, `uikit`, `swiftdata`, `app store connect`.
 
 </details>
 
 <details>
-<summary><strong>Installing Skills from GitHub</strong></summary>
+<summary><strong>Installing skills from GitHub</strong></summary>
 
-Install skills directly from GitHub repositories — supports both single-skill repos and multi-skill collections.
-
-**Single-skill repo** (SKILL.md at root):
+**Single-skill repo:**
 
 ```bash
 asm install github:user/my-skill
@@ -757,7 +539,7 @@ asm install github:user/my-skill
 asm install github:user/my-skill#v1.0.0 -p claude
 ```
 
-**Multi-skill repo** (skills in subdirectories):
+**Multi-skill repo:**
 
 ```bash
 asm install github:user/skills --path skills/code-review
@@ -767,13 +549,7 @@ asm install github:user/skills --path skills/code-review
 asm install github:user/skills --all -p claude -y
 ```
 
-Interactive picker:
-
-```bash
-asm install github:user/skills
-```
-
-**Subfolder URL** (auto-detects branch and path):
+**Subfolder URL:**
 
 ```bash
 asm install https://github.com/user/skills/tree/main/skills/agent-config
@@ -783,91 +559,67 @@ asm install https://github.com/user/skills/tree/main/skills/agent-config
 asm install github:user/skills#main:skills/agent-config
 ```
 
-**Private repos** (SSH transport):
+**Private repos:**
 
 ```bash
 asm install github:user/private-skill --transport ssh
 ```
 
-Try HTTPS, fallback to SSH:
-
 ```bash
 asm install github:user/private-skill -t auto
 ```
 
-**Vercel skills CLI** (delegates to `npx skills add`, then registers in asm):
+**Vercel skills CLI:**
 
 ```bash
 asm install github:user/skills --method vercel --skill my-skill
 ```
 
-```bash
-asm install https://github.com/user/skills -m vercel --skill my-skill -y
-```
+| Flag                     | Description                    |
+| ------------------------ | ------------------------------ |
+| `-p, --tool <name>`      | Target agent                   |
+| `--name <name>`          | Override directory name        |
+| `--path <subdir>`        | Install from subdirectory      |
+| `--all`                  | Install all skills in repo     |
+| `-m, --method <method>`  | `default` or `vercel`          |
+| `-t, --transport <mode>` | `https`, `ssh`, or `auto`      |
+| `--library`              | Install into the local library |
+| `-f, --force`            | Overwrite existing             |
+| `-y, --yes`              | Skip confirmation              |
+| `--json`                 | JSON output                    |
 
-**Other options:**
-
-```bash
-asm install github:user/my-skill --name custom-name
-```
-
-```bash
-asm install github:user/my-skill --force
-```
-
-```bash
-asm install github:user/my-skill -p claude --yes --json
-```
-
-**Source format:** `github:owner/repo[#branch-or-tag]` or `github:owner/repo#ref:path` for subfolder installs. HTTPS GitHub URLs with `/tree/` paths are also supported — the branch and subfolder are auto-detected.
-
-**Install flags:**
-
-| Flag                     | Description                                                |
-| ------------------------ | ---------------------------------------------------------- |
-| `-p, --tool <name>`      | Target tool (claude, codex, cursor, windsurf, etc.)        |
-| `--name <name>`          | Override skill directory name                              |
-| `--path <subdir>`        | Install a specific skill from a subdirectory               |
-| `--all`                  | Install all skills found in the repo                       |
-| `-m, --method <method>`  | Install method: `default` or `vercel` (default: `default`) |
-| `--skill <name>`         | Alias for `--path` (Vercel skills CLI compatibility)       |
-| `-t, --transport <mode>` | Transport: `https`, `ssh`, or `auto` (default: `auto`)     |
-| `-f, --force`            | Overwrite if skill already exists                          |
-| `-y, --yes`              | Skip confirmation prompt                                   |
-| `--json`                 | Output result as JSON                                      |
-
-**Multi-skill repo support:** `asm` scans for skills in subdirectories (up to 5 levels deep). Repos with only nested skills use that scan by default. Repos with **both** a root `SKILL.md` and nested skills install the root skill by default; use `--all` to install every discovered skill (root plus nested). In interactive mode, discovery shows a numbered picker. Use `--path` to target a specific skill.
-
-**Indexing (`asm index ingest` / `npm run preindex`):** Discovery always includes a root `SKILL.md` when present **and** any nested skills in subdirectories, so curated indexes do not silently drop skills when a repo adds a root-level skill.
-
-The install command clones the repository, validates `SKILL.md` files, scans for security warnings, previews skill metadata, and installs to the selected provider's global skill directory. Requires `git` on PATH.
+Multi-skill repos: scans up to 5 levels deep. Root `SKILL.md` installs by default; use `--all` for every skill. Requires `git` on PATH.
 
 </details>
 
 <details>
-<summary><strong>TUI Keyboard Shortcuts</strong></summary>
+<summary><strong>Optional TUI (run <code>asm</code> with no args)</strong></summary>
 
-| Key            | Action                                |
-| -------------- | ------------------------------------- |
-| `↑/↓` or `j/k` | Navigate skill list                   |
-| `Enter`        | View skill details                    |
-| `d`            | Uninstall selected skill              |
-| `/`            | Search / filter skills                |
-| `Esc`          | Back / clear filter / close dialog    |
-| `Tab`          | Cycle scope: Global → Project → Both  |
-| `s`            | Cycle sort: Name → Version → Location |
-| `r`            | Refresh / rescan skills               |
-| `c`            | Open configuration                    |
-| `a`            | Audit duplicates                      |
-| `q`            | Quit                                  |
-| `?`            | Toggle help overlay                   |
+Local browser for skills. The CLI above is the primary interface for agents and automation.
+
+### Keyboard shortcuts
+
+| Key            | Action           |
+| -------------- | ---------------- |
+| `↑/↓` or `j/k` | Navigate list    |
+| `Enter`        | View details     |
+| `d`            | Uninstall        |
+| `/`            | Search / filter  |
+| `Esc`          | Back / clear     |
+| `Tab`          | Cycle scope      |
+| `s`            | Cycle sort       |
+| `r`            | Refresh          |
+| `c`            | Configuration    |
+| `a`            | Audit duplicates |
+| `q`            | Quit             |
+| `?`            | Help             |
 
 </details>
 
 <details>
 <summary><strong>Configuration</strong></summary>
 
-On first run, a config file is created at `~/.config/agent-skill-manager/config.json` with 19 default providers, all enabled:
+On first run, config is created at `~/.config/agent-skill-manager/config.json`:
 
 ```json
 {
@@ -1001,26 +753,22 @@ On first run, a config file is created at `~/.config/agent-skill-manager/config.
 }
 ```
 
-- **Enable providers** — Set `"enabled": true` to start scanning a provider
-- **Custom paths** — Add arbitrary directories via `customPaths`
-- **Disable providers** — Set `"enabled": false` to skip scanning a provider
-- **Preferences** — Set default scope and sort order
-
-Manage config from the CLI (`asm config show|path|reset|edit`) or toggle providers in the TUI by pressing `c`.
+- Set `"enabled": true` to start scanning a provider
+- Add arbitrary directories via `customPaths`
+- Set `"enabled": false` to skip a provider
+- Manage via `asm config show|path|reset|edit` or press `c` in the TUI
 
 </details>
 
 <details>
-<summary><strong>SKILL.md Format</strong></summary>
+<summary><strong>SKILL.md format</strong></summary>
 
-Every skill is a directory containing a `SKILL.md` file. The file starts with a YAML frontmatter block followed by markdown instructions that the AI agent loads at runtime.
-
-### Frontmatter
+Every skill is a directory with a `SKILL.md` file — YAML frontmatter plus markdown instructions.
 
 ```yaml
 ---
 name: my-skill
-description: "A short description of what this skill does"
+description: "What this skill does"
 license: "MIT"
 compatibility: "Claude Code, Codex"
 allowed-tools: Bash Read Grep Glob WebFetch
@@ -1031,46 +779,20 @@ metadata:
 ---
 ```
 
-| Field              | Required | Description                                         |
-| ------------------ | :------: | --------------------------------------------------- |
-| `name`             |   yes    | Unique skill identifier (used in list/search)       |
-| `description`      |   yes    | One-line summary shown in listings                  |
-| `license`          |    no    | SPDX license identifier (e.g., `MIT`, `Apache-2.0`) |
-| `compatibility`    |    no    | Comma-separated list of compatible AI agents        |
-| `allowed-tools`    |    no    | Space or comma-delimited tool names the skill uses  |
-| `effort`           |    no    | Effort level: `low`, `medium`, `high`, or `max`     |
-| `metadata.version` |    no    | Semver version string (defaults to `0.0.0`)         |
-| `metadata.creator` |    no    | Author name and optional email                      |
-
-> **Version resolution:** `asm` prefers `metadata.version` over a top-level `version` field. If neither is present, the version defaults to `0.0.0`. Both formats are supported for backward compatibility.
-
-### Body
-
-The markdown body after the frontmatter is loaded by the AI agent as the skill's instructions. A typical structure:
-
-```markdown
-# my-skill
-
-Describe what this skill does here.
-
-## When to Use
-
-- Trigger conditions for this skill
-
-## Instructions
-
-- Step-by-step instructions for the agent
-```
-
-### Scaffold a new skill
-
-Creates `my-skill/SKILL.md` in the default provider:
+| Field              | Required | Description                    |
+| ------------------ | -------- | ------------------------------ |
+| `name`             | yes      | Unique identifier              |
+| `description`      | yes      | One-line summary               |
+| `license`          | no       | SPDX identifier                |
+| `compatibility`    | no       | Compatible agents              |
+| `allowed-tools`    | no       | Tools the skill uses           |
+| `effort`           | no       | `low`, `medium`, `high`, `max` |
+| `metadata.version` | no       | Semver (default `0.0.0`)       |
+| `metadata.creator` | no       | Author                         |
 
 ```bash
 asm init my-skill
 ```
-
-Creates in Claude Code's skill directory:
 
 ```bash
 asm init my-skill -p claude
@@ -1079,7 +801,7 @@ asm init my-skill -p claude
 </details>
 
 <details>
-<summary><strong>From Source</strong></summary>
+<summary><strong>From source</strong></summary>
 
 ```bash
 git clone https://github.com/luongnv89/agent-skill-manager.git
@@ -1087,120 +809,80 @@ cd agent-skill-manager
 npm install
 ```
 
-Bundle to `dist/`:
-
 ```bash
 npm run build
 ```
-
-Run from source (development):
 
 ```bash
 npm start
 ```
 
-### Advanced Install
-
-Download and inspect the install script before running:
+Inspect install script before running:
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/luongnv89/agent-skill-manager/main/install.sh -o install.sh
-```
-
-```bash
 less install.sh
-```
-
-```bash
 bash install.sh
 ```
 
 </details>
 
 <details>
-<summary><strong>Project Structure</strong></summary>
+<summary><strong>Project structure</strong></summary>
 
 ```text
 agent-skill-manager/
-├── bin/                       # CLI entry point (source)
-│   └── agent-skill-manager.ts
-├── dist/                      # Built bundle (npm package ships this)
-│   └── agent-skill-manager.js
-├── scripts/
-│   └── build.ts               # Build script with version injection
+├── bin/                       # CLI entry point
+├── dist/                      # Built bundle (npm ships this)
+├── scripts/                   # Build, preindex, catalog
 ├── src/
-│   ├── index.tsx              # TUI app bootstrap & keyboard handling (ink)
-│   ├── cli.ts                 # CLI command parser & dispatcher
-│   ├── config.ts              # Config loading & saving
-│   ├── scanner.ts             # Skill directory scanning & filtering
-│   ├── auditor.ts             # Duplicate detection & reporting
-│   ├── installer.ts           # GitHub skill installation pipeline
-│   ├── uninstaller.ts         # Safe skill removal logic
-│   ├── formatter.ts           # Output formatting (tables, detail, JSON)
-│   ├── utils/
-│   │   ├── types.ts           # Shared TypeScript types
-│   │   ├── colors.ts          # TUI color palette
-│   │   ├── version.ts         # Version constant
-│   │   ├── frontmatter.ts     # SKILL.md frontmatter parser
-│   │   └── editor.ts          # $EDITOR command parser
-│   └── views/
-│       ├── dashboard.tsx      # Main dashboard layout
-│       ├── skill-list.tsx     # Scrollable skill list
-│       ├── skill-detail.tsx   # Skill detail view
-│       ├── confirm.tsx        # Uninstall confirmation dialog
-│       ├── duplicates.tsx     # Duplicate audit view
-│       ├── config.tsx         # In-TUI config editor
-│       └── help.tsx           # Help view
+│   ├── index.tsx              # TUI (ink)
+│   ├── cli.ts                 # CLI dispatcher
+│   ├── scanner.ts             # Skill discovery
+│   ├── installer.ts           # GitHub install pipeline
+│   └── views/                 # TUI views
 ├── docs/                      # Extended documentation
-│   ├── ARCHITECTURE.md        # System design & data flow
-│   ├── DEVELOPMENT.md         # Local setup & debugging
-│   ├── DEPLOYMENT.md          # Publishing & CI pipeline
-│   ├── CHANGELOG.md           # Version history
-│   └── brand_kit.md           # Logo, colors, typography
-├── assets/
-│   ├── logo/                  # SVG logos (full, mark, wordmark, icon, favicon)
-│   └── screenshots/           # TUI screenshots
-├── install.sh                 # One-command installer (curl | bash)
-├── package.json
-├── tsconfig.json
-└── README.md
+├── assets/                    # Logos and screenshots
+├── install.sh                 # curl installer
+└── package.json
 ```
 
 </details>
 
 <details>
-<summary><strong>Tech Stack</strong></summary>
+<summary><strong>Tech stack</strong></summary>
 
-- **Runtime:** Node.js ≥ 18 (CLI and TUI both run on Node alone)
-- **Language:** TypeScript + TSX (ESNext, strict mode)
-- **Build:** esbuild (ships pre-built via npm)
-- **TUI Framework:** [Ink](https://github.com/vadimdemedes/ink) + [@inkjs/ui](https://github.com/vadimdemedes/ink-ui)
-- **Testing:** Vitest (+ ink-testing-library for TUI)
+- **Runtime:** Node.js 18+
+- **Language:** TypeScript + TSX
+- **Build:** esbuild
+- **TUI:** [Ink](https://github.com/vadimdemedes/ink) + [@inkjs/ui](https://github.com/vadimdemedes/ink-ui)
+- **Testing:** Vitest
 - **CI:** GitHub Actions + pre-commit hooks
 
 </details>
 
-<details>
+<details id="documentation">
 <summary><strong>Documentation</strong></summary>
 
-| Document                                 | Description                                        |
-| ---------------------------------------- | -------------------------------------------------- |
-| [Architecture](docs/ARCHITECTURE.md)     | System design, components, and data flow           |
-| [Eval Providers](docs/eval-providers.md) | Pluggable eval framework and how to add a provider |
-| [Development](docs/DEVELOPMENT.md)       | Local setup, testing, and debugging                |
-| [Deployment](docs/DEPLOYMENT.md)         | Publishing and CI pipeline                         |
-| [Changelog](docs/CHANGELOG.md)           | Version history                                    |
-| [Brand Kit](docs/brand_kit.md)           | Logo, colors, and typography                       |
-| [Contributing](CONTRIBUTING.md)          | How to contribute                                  |
-| [Security](SECURITY.md)                  | Vulnerability reporting                            |
-| [Code of Conduct](CODE_OF_CONDUCT.md)    | Community guidelines                               |
+| Document                                 | Description                 |
+| ---------------------------------------- | --------------------------- |
+| [Architecture](docs/ARCHITECTURE.md)     | System design and data flow |
+| [Eval Providers](docs/eval-providers.md) | Pluggable eval framework    |
+| [Development](docs/DEVELOPMENT.md)       | Local setup and debugging   |
+| [Deployment](docs/DEPLOYMENT.md)         | Publishing and CI           |
+| [Changelog](docs/CHANGELOG.md)           | Version history             |
+| [Brand Kit](docs/brand_kit.md)           | Logo, colors, typography    |
+| [Contributing](CONTRIBUTING.md)          | How to contribute           |
+| [Security](SECURITY.md)                  | Vulnerability reporting     |
+| [Code of Conduct](CODE_OF_CONDUCT.md)    | Community guidelines        |
+
+**Landing page:** [luongnv.com/asm](https://luongnv.com/asm/) — catalog, bundles, author/repo stats, filtered search.
 
 </details>
 
 ---
 
-<!-- NOTE: The single source of truth for acknowledgements data is website/data/acknowledgements.json.
-     When updating contributors or dependencies, edit that JSON file first, then sync this section and website/index.html. -->
+<!-- NOTE: Single source of truth for acknowledgements is website/data/acknowledgements.json -->
 
 ## Acknowledgements
 
@@ -1213,25 +895,23 @@ agent-skill-manager/
 
 ### Dependencies
 
-| Library                                                 | Description                                                                     |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [ink](https://github.com/vadimdemedes/ink)              | React renderer for interactive command-line apps — powers the asm TUI           |
-| [@inkjs/ui](https://github.com/vadimdemedes/ink-ui)     | Prebuilt ink components (inputs, spinners, lists) used across the TUI views     |
-| [react](https://github.com/facebook/react)              | UI library backing the ink TUI components and the web catalog                   |
-| [react-dom](https://github.com/facebook/react)          | React DOM renderer for the browser-based skill catalog                          |
-| [react-window](https://github.com/bvaughn/react-window) | Windowed list virtualization for the browser-based skill catalog                |
-| [yaml](https://github.com/eemeli/yaml)                  | JavaScript parser and stringifier for YAML — used to parse SKILL.md frontmatter |
-
----
+| Library                                                 | Description                     |
+| ------------------------------------------------------- | ------------------------------- |
+| [ink](https://github.com/vadimdemedes/ink)              | React renderer for the TUI      |
+| [@inkjs/ui](https://github.com/vadimdemedes/ink-ui)     | Prebuilt ink components         |
+| [react](https://github.com/facebook/react)              | UI for TUI and web catalog      |
+| [react-dom](https://github.com/facebook/react)          | DOM renderer for catalog        |
+| [react-window](https://github.com/bvaughn/react-window) | List virtualization for catalog |
+| [yaml](https://github.com/eemeli/yaml)                  | SKILL.md frontmatter parser     |
 
 ## Roadmap
 
-Track our progress and upcoming features on the [project kanban board](https://github.com/users/luongnv89/projects/6). See [prd.md](prd.md) for the full product requirements and [tasks.md](tasks.md) for the sprint-based development plan.
+[Project kanban](https://github.com/users/luongnv89/projects/6) · [prd.md](prd.md) · [tasks.md](tasks.md)
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-[MIT](LICENSE) — free to use, modify, and distribute. See the [LICENSE](LICENSE) file for details.
+[MIT](LICENSE)
