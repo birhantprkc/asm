@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Github } from "lucide-react";
 import { useCatalog } from "../hooks/useCatalog.jsx";
 import CopyButton from "../components/CopyButton.jsx";
+import Reveal from "../components/Reveal.jsx";
+import { useInViewReveal } from "../hooks/useInViewReveal.js";
+import { cn } from "../lib/cn.js";
+import { prefersReducedMotion } from "../lib/motion.js";
 
 const REPO_URL = "https://github.com/luongnv89/asm";
 const NPM_CMD = "npm install -g agent-skill-manager";
@@ -9,14 +14,6 @@ const PROVIDER_COUNT = 19;
 
 /**
  * Marketing landing page (route `/`). The catalog lives at `/skills`.
- *
- * Copy follows a Problem → Agitate → Solution arc mirroring the README:
- * "your skills are a mess" → "asm brings order". Visual language reuses
- * the editorial/terminal system already established on the changelog
- * page (Fraunces serif headlines, JetBrains Mono accents, hacker-green
- * `--brand`). Headline stats (`skills`, `repos`, `categories`) are read
- * live from the loaded catalog so they never drift from reality, with
- * static fallbacks for the brief window before the catalog hydrates.
  */
 export default function LandingPage() {
   const { catalog } = useCatalog();
@@ -75,7 +72,11 @@ function WhatsNew() {
     },
   ];
   return (
-    <section className="flex flex-col gap-8" aria-label="What's new in v2.14">
+    <Reveal
+      as="section"
+      className="flex flex-col gap-8"
+      aria-label="What's new in v2.14"
+    >
       <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="flex flex-col gap-3 max-w-[680px]">
           <span className="lp-kicker">
@@ -98,7 +99,7 @@ function WhatsNew() {
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </header>
-      <div className="grid sm:grid-cols-2 gap-5">
+      <Reveal stagger className="grid sm:grid-cols-2 gap-5">
         {highlights.map((h) => (
           <article key={h.head} className="lp-card">
             <span className="text-[10px] font-[var(--lp-mono)] uppercase tracking-wider text-[var(--brand)]">
@@ -108,8 +109,8 @@ function WhatsNew() {
             <p>{h.body}</p>
           </article>
         ))}
-      </div>
-    </section>
+      </Reveal>
+    </Reveal>
   );
 }
 
@@ -118,7 +119,7 @@ function WhatsNew() {
 function Hero({ skillsLabel, repoCount, providerCount }) {
   return (
     <section className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center pt-2 sm:pt-6">
-      <div className="flex flex-col gap-7">
+      <Reveal immediate className="flex flex-col gap-7">
         <span className="lp-kicker">
           <span className="dot" aria-hidden="true" />
           agent-skill-manager
@@ -166,7 +167,7 @@ function Hero({ skillsLabel, repoCount, providerCount }) {
             no tracking
           </p>
         </div>
-      </div>
+      </Reveal>
 
       <HeroTerminal repoCount={repoCount} />
     </section>
@@ -174,8 +175,65 @@ function Hero({ skillsLabel, repoCount, providerCount }) {
 }
 
 function HeroTerminal({ repoCount }) {
+  const reducedMotion = prefersReducedMotion();
+  const [linesLive, setLinesLive] = useState(() => prefersReducedMotion());
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setLinesLive(true);
+      return undefined;
+    }
+    const t = window.setTimeout(() => setLinesLive(true), 280);
+    return () => window.clearTimeout(t);
+  }, [reducedMotion]);
+
+  const lines = [
+    <span key="install">
+      <span className="c">$</span> <span className="fg">asm install</span>{" "}
+      github:anthropics/skills
+    </span>,
+    <span key="clone" className="dim">
+      {" "}
+      ↳ cloning anthropics/skills…
+    </span>,
+    <span key="scan">
+      <span className="dim"> ↳ </span>
+      <span className="c">✓ security scan passed</span>
+      <span className="dim"> — no risky patterns</span>
+    </span>,
+    <span key="link">
+      <span className="dim"> ↳ </span>
+      <span className="c">✓ linked 7 skills</span>
+      <span className="dim"> → claude, codex (cross-tool link)</span>
+    </span>,
+    null,
+    <span key="audit-cmd">
+      <span className="c">$</span> <span className="fg">asm audit</span>{" "}
+      duplicates
+    </span>,
+    <span key="dups">
+      <span className="dim"> ↳ </span>
+      <span className="warn">⚠ 3 duplicates</span>
+      <span className="dim"> across claude / cursor — </span>
+      <span className="fg">asm clean</span>
+    </span>,
+    null,
+    <span key="stats-cmd">
+      <span className="c">$</span> <span className="fg">asm stats</span>
+    </span>,
+    <span key="stats-out" className="dim">
+      {" "}
+      142 skills · {repoCount} repos · 6 providers
+    </span>,
+  ];
+
   return (
-    <div className="lp-term shadow-xl shadow-black/10">
+    <div
+      className={cn(
+        "lp-term lp-term-hero shadow-xl shadow-black/10",
+        linesLive && "is-visible",
+      )}
+    >
       <div className="lp-term-bar">
         <span className="tdot" aria-hidden="true" />
         <span className="tdot" aria-hidden="true" />
@@ -183,35 +241,26 @@ function HeroTerminal({ repoCount }) {
         <span className="tlabel">asm — ~/projects</span>
       </div>
       <div className="lp-term-body">
-        <span className="c">$</span> <span className="fg">asm install</span>{" "}
-        github:anthropics/skills
-        {"\n"}
-        <span className="dim"> ↳ cloning anthropics/skills…</span>
-        {"\n"}
-        <span className="dim"> ↳ </span>
-        <span className="c">✓ security scan passed</span>
-        <span className="dim"> — no risky patterns</span>
-        {"\n"}
-        <span className="dim"> ↳ </span>
-        <span className="c">✓ linked 7 skills</span>
-        <span className="dim"> → claude, codex (cross-tool link)</span>
-        {"\n\n"}
-        <span className="c">$</span> <span className="fg">asm audit</span>{" "}
-        duplicates
-        {"\n"}
-        <span className="dim"> ↳ </span>
-        <span className="warn">⚠ 3 duplicates</span>
-        <span className="dim"> across claude / cursor — </span>
-        <span className="fg">asm clean</span>
-        {"\n\n"}
-        <span className="c">$</span> <span className="fg">asm stats</span>
-        {"\n"}
-        <span className="dim">
-          {" "}
-          142 skills · {repoCount} repos · 6 providers
+        {lines.map((line, i) =>
+          line === null ? (
+            <br key={`br-${i}`} />
+          ) : (
+            <div
+              key={i}
+              className={cn("lp-term-line", linesLive && "is-visible")}
+              style={
+                reducedMotion
+                  ? undefined
+                  : { transitionDelay: `${120 + i * 65}ms` }
+              }
+            >
+              {line}
+            </div>
+          ),
+        )}
+        <span className="lp-cursor" aria-hidden="true">
+          ▍
         </span>
-        {"\n"}
-        <span className="c">▍</span>
       </div>
     </div>
   );
@@ -227,7 +276,9 @@ function Stats({ skillsLabel, repoCount, categoryCount, providerCount }) {
     { num: providerCount, label: "agents supported" },
   ];
   return (
-    <section
+    <Reveal
+      as="section"
+      stagger
       aria-label="Catalog at a glance"
       className="grid grid-cols-2 sm:grid-cols-4 gap-y-8 gap-x-4 py-2"
     >
@@ -237,7 +288,7 @@ function Stats({ skillsLabel, repoCount, categoryCount, providerCount }) {
           <span className="lp-stat-label">{it.label}</span>
         </div>
       ))}
-    </section>
+    </Reveal>
   );
 }
 
@@ -259,7 +310,7 @@ function Problem() {
     },
   ];
   return (
-    <section className="flex flex-col gap-10">
+    <Reveal as="section" className="flex flex-col gap-10">
       <header className="flex flex-col gap-4 max-w-[680px]">
         <span className="lp-kicker">
           <span className="dot" aria-hidden="true" />
@@ -275,11 +326,11 @@ function Problem() {
           one is another folder to babysit.
         </p>
       </header>
-      <div className="grid sm:grid-cols-3 gap-5">
+      <Reveal stagger className="grid sm:grid-cols-3 gap-5">
         {pains.map((p) => (
           <div
             key={p.head}
-            className="border-l-2 border-[var(--warn)] pl-5 py-1 flex flex-col gap-2"
+            className="lp-pain border-l-2 border-[var(--warn)] pl-5 py-1 flex flex-col gap-2"
           >
             <h3 className="text-[var(--fg)] font-semibold text-base">
               {p.head}
@@ -289,8 +340,8 @@ function Problem() {
             </p>
           </div>
         ))}
-      </div>
-    </section>
+      </Reveal>
+    </Reveal>
   );
 }
 
@@ -330,7 +381,7 @@ function Solution() {
     },
   ];
   return (
-    <section className="flex flex-col gap-10">
+    <Reveal as="section" className="flex flex-col gap-10">
       <header className="flex flex-col gap-4 max-w-[680px]">
         <span className="lp-kicker">
           <span className="dot" aria-hidden="true" />
@@ -347,7 +398,7 @@ function Solution() {
           One TUI. One CLI. Every agent.
         </p>
       </header>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <Reveal stagger className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {features.map((f) => (
           <article key={f.icon} className="lp-card">
             <span className="lp-card-icon">{f.icon}</span>
@@ -355,8 +406,8 @@ function Solution() {
             <p>{f.body}</p>
           </article>
         ))}
-      </div>
-    </section>
+      </Reveal>
+    </Reveal>
   );
 }
 
@@ -386,7 +437,7 @@ function HowItWorks() {
     },
   ];
   return (
-    <section className="flex flex-col gap-10">
+    <Reveal as="section" className="flex flex-col gap-10">
       <header className="flex flex-col gap-4 max-w-[680px]">
         <span className="lp-kicker">
           <span className="dot" aria-hidden="true" />
@@ -394,11 +445,14 @@ function HowItWorks() {
         </span>
         <h2 className="lp-section-title">From chaos to clean in four steps.</h2>
       </header>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
+      <Reveal
+        stagger
+        className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10"
+      >
         {steps.map((s) => (
           <div key={s.n} className="flex flex-col gap-3">
             <span className="lp-step-num">{s.n}</span>
-            <div className="lp-rule" />
+            <StepRule />
             <h3 className="text-[var(--fg)] font-semibold text-base mt-1">
               {s.head}
             </h3>
@@ -407,9 +461,14 @@ function HowItWorks() {
             </p>
           </div>
         ))}
-      </div>
-    </section>
+      </Reveal>
+    </Reveal>
   );
+}
+
+function StepRule() {
+  const { ref, visible } = useInViewReveal();
+  return <div ref={ref} className={cn("lp-rule", visible && "is-visible")} />;
 }
 
 /* ─── Build your own ────────────────────────────────────────────────── */
@@ -417,7 +476,7 @@ function HowItWorks() {
 function Build() {
   return (
     <section className="grid lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-16 items-center">
-      <div className="flex flex-col gap-5 max-w-[560px]">
+      <Reveal className="flex flex-col gap-5 max-w-[560px]">
         <span className="lp-kicker">
           <span className="dot" aria-hidden="true" />
           for skill authors
@@ -449,9 +508,9 @@ function Build() {
             Explore bundles →
           </Link>
         </div>
-      </div>
+      </Reveal>
 
-      <div className="lp-term">
+      <Reveal delay={80} className="lp-term">
         <div className="lp-term-bar">
           <span className="tdot" aria-hidden="true" />
           <span className="tdot" aria-hidden="true" />
@@ -495,7 +554,7 @@ function Build() {
           <span className="c">✓ PR opened</span>
           <span className="dim"> — installable by name once merged</span>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -504,7 +563,10 @@ function Build() {
 
 function FinalCta({ skillsLabel }) {
   return (
-    <section className="flex flex-col items-center text-center gap-7 py-6 sm:py-10 border-t border-[var(--border)]">
+    <Reveal
+      as="section"
+      className="flex flex-col items-center text-center gap-7 py-6 sm:py-10 border-t border-[var(--border)]"
+    >
       <span className="lp-kicker">
         <span className="dot" aria-hidden="true" />
         get started in 30 seconds
@@ -549,6 +611,6 @@ function FinalCta({ skillsLabel }) {
           </a>
         </div>
       </div>
-    </section>
+    </Reveal>
   );
 }

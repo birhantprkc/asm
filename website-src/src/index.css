@@ -627,6 +627,8 @@ mark.hl {
 .lp {
   --lp-serif: "Fraunces", "Instrument Serif", ui-serif, Georgia, serif;
   --lp-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --lp-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --lp-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 /* Monospace eyebrow / kicker shared by every section */
@@ -740,6 +742,17 @@ mark.hl {
   color: var(--fg-dim);
   white-space: pre-wrap;
 }
+.lp-term-line {
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 320ms var(--lp-ease-out),
+    transform 320ms var(--lp-ease-out);
+}
+.lp-term-line.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 .lp-term-body .c {
   color: var(--brand);
 }
@@ -760,12 +773,14 @@ mark.hl {
   border-radius: 12px;
   padding: 22px 22px 24px;
   transition:
-    border-color 180ms ease,
-    transform 180ms ease;
+    border-color 200ms var(--lp-ease-out),
+    transform 200ms var(--lp-ease-out);
 }
-.lp-card:hover {
-  border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .lp-card:hover {
+    border-color: color-mix(in srgb, var(--brand) 45%, var(--border));
+    transform: translateY(-2px);
+  }
 }
 .lp-card-icon {
   font-family: var(--lp-mono);
@@ -829,12 +844,20 @@ mark.hl {
   color: #06120a;
   border: 1px solid var(--brand);
   transition:
-    filter 160ms ease,
-    transform 160ms ease;
+    filter 160ms var(--lp-ease-out),
+    transform 160ms var(--lp-ease-out);
 }
-.lp-cta:hover {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
+.lp-cta:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lp-cta:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+  .lp-cta:active {
+    transform: scale(0.97);
+  }
 }
 .lp-cta-ghost {
   display: inline-flex;
@@ -848,12 +871,18 @@ mark.hl {
   color: var(--fg);
   border: 1px solid var(--border);
   transition:
-    border-color 160ms ease,
-    color 160ms ease;
+    border-color 160ms var(--lp-ease-out),
+    color 160ms var(--lp-ease-out),
+    transform 160ms var(--lp-ease-out);
 }
-.lp-cta-ghost:hover {
-  border-color: var(--brand);
-  color: var(--brand);
+.lp-cta-ghost:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lp-cta-ghost:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+  }
 }
 
 /* Section divider rule with a node */
@@ -871,9 +900,112 @@ mark.hl {
   height: 7px;
   border-radius: 50%;
   background: var(--brand);
+  transform: scale(0.85);
+  opacity: 0.6;
+  transition:
+    transform 400ms var(--lp-ease-out),
+    opacity 400ms var(--lp-ease-out);
+}
+
+/* Scroll reveal — transform + opacity only */
+.lp-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 520ms var(--lp-ease-out),
+    transform 520ms var(--lp-ease-out);
+  transition-delay: var(--lp-reveal-delay, 0ms);
+}
+.lp-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.lp-stagger > * {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 420ms var(--lp-ease-out),
+    transform 420ms var(--lp-ease-out);
+}
+.lp-reveal.is-visible.lp-stagger > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.lp-stagger > *:nth-child(1) {
+  transition-delay: calc(var(--lp-reveal-delay, 0ms) + 0ms);
+}
+.lp-stagger > *:nth-child(2) {
+  transition-delay: calc(var(--lp-reveal-delay, 0ms) + 55ms);
+}
+.lp-stagger > *:nth-child(3) {
+  transition-delay: calc(var(--lp-reveal-delay, 0ms) + 110ms);
+}
+.lp-stagger > *:nth-child(4) {
+  transition-delay: calc(var(--lp-reveal-delay, 0ms) + 165ms);
+}
+.lp-stagger > *:nth-child(5) {
+  transition-delay: calc(var(--lp-reveal-delay, 0ms) + 220ms);
+}
+.lp-stagger > *:nth-child(6) {
+  transition-delay: calc(var(--lp-reveal-delay, 0ms) + 275ms);
+}
+.lp-stagger > *:nth-child(n + 7) {
+  transition-delay: calc(var(--lp-reveal-delay, 0ms) + 330ms);
+}
+
+.lp-term-hero {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  transition:
+    opacity 600ms var(--lp-ease-out),
+    transform 600ms var(--lp-ease-out);
+}
+.lp-term-hero.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.lp-cursor {
+  display: inline-block;
+  color: var(--brand);
+  animation: lp-cursor-blink 1.05s step-end infinite;
+}
+
+@keyframes lp-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.lp-rule.is-visible::before {
+  transform: scale(1);
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .lp-reveal,
+  .lp-stagger > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .lp-term-hero {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .lp-cursor {
+    animation: none;
+  }
+  .lp-term-line {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
   .lp-card:hover,
   .lp-cta:hover,
   .lp-cta-ghost:hover {
@@ -881,5 +1013,9 @@ mark.hl {
   }
   .lp-kicker .dot {
     animation: none;
+  }
+  .lp-rule::before {
+    transform: none;
+    opacity: 1;
   }
 }
