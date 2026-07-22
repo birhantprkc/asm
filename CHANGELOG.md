@@ -1,5 +1,25 @@
 # Changelog
 
+## v2.15.0 — 2026-07-22
+
+### Features
+
+- Add landing page scroll reveals and hero terminal motion ([#363](https://github.com/luongnv89/asm/pull/363)) — @luongnv89
+- Detect conflicts, show diffs, and make overwrites safe on `asm import` ([#355](https://github.com/luongnv89/asm/issues/355)) — @yunusemre
+- Index emilkowalski/skills in the ASM catalog ([#356](https://github.com/luongnv89/asm/issues/356), [#357](https://github.com/luongnv89/asm/issues/357)) — @luongnv89
+
+### Bug Fixes
+
+- Reject `--force` on import when there are diffs and test conflicts ([#359](https://github.com/luongnv89/asm/issues/359), [#362](https://github.com/luongnv89/asm/issues/362)) — @luongnv89
+- Guard file collection against symlink cycles on import ([#358](https://github.com/luongnv89/asm/issues/358), [#361](https://github.com/luongnv89/asm/issues/361)) — @luongnv89
+- Use a directory junction on Windows so `link`/`activate` work without admin ([#347](https://github.com/luongnv89/asm/issues/347)) — @yunusemre
+
+### New Contributors
+
+- @yunusemre made their first contribution in [#347](https://github.com/luongnv89/asm/issues/347)
+
+**Full Changelog**: https://github.com/luongnv89/asm/compare/v2.14.0...v2.15.0
+
 ## v2.14.0 — 2026-07-07
 
 ### Features
