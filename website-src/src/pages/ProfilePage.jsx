@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import CopyButton from "../components/CopyButton";
 import CategoryPieChart from "../components/CategoryPieChart";
 import { Badge } from "../components/ui/badge";
+import { encodeSkillId } from "../lib/utils.js";
 
 /**
  * Author profile page — shows an author's skills across all indexed repos,
@@ -38,7 +39,6 @@ export default function ProfilePage() {
   const { owner } = useParams();
   const [author, setAuthor] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetch("author-stats.json")
@@ -155,12 +155,21 @@ export default function ProfilePage() {
                 key={`${s.name}-${s.repo}`}
                 className="grid grid-cols-[1.5rem_minmax(0,1fr)] sm:grid-cols-[1.5rem_minmax(0,1fr)_minmax(6rem,auto)] items-center gap-3 text-sm py-2 border-b border-[var(--border)] last:border-0"
               >
-                <span className="w-6 text-right font-mono text-[var(--fg-muted)]">
+                <span className="w-6 text-right font-mono text-[var(--fg-dim)]">
                   {i + 1}
                 </span>
-                <span className="min-w-0 font-medium text-[var(--fg)] truncate">
-                  {s.name}
-                </span>
+                {s.id ? (
+                  <Link
+                    to={`/skills/${encodeSkillId(s.id)}`}
+                    className="min-w-11 min-h-11 -mx-2 px-2 inline-flex items-center font-medium text-[var(--fg)] hover:text-[var(--brand)] transition-colors truncate"
+                  >
+                    {s.name}
+                  </Link>
+                ) : (
+                  <span className="min-w-0 font-medium text-[var(--fg)] truncate">
+                    {s.name}
+                  </span>
+                )}
                 <span className="hidden sm:inline text-[var(--fg-dim)] text-xs truncate">
                   {s.repo}
                 </span>
