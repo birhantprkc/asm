@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T00:09:55.461Z",
+  "generatedAt": "2026-08-06T08:57:20.648Z",
   "stats": [
     {
       "owner": "sickn33",
@@ -979,6 +979,22 @@
       "verifiedCount": 1,
       "totalTokens": 1233,
       "avgEvalScore": 73
+    },
+    {
+      "owner": "ParthJadhav",
+      "repo": "app-store-screenshots",
+      "repoUrl": "https://github.com/ParthJadhav/app-store-screenshots.git",
+      "skillCount": 1,
+      "categories": {
+        "frontend": 1,
+        "testing": 1,
+        "coding": 1,
+        "mobile": 1,
+        "marketing": 1
+      },
+      "verifiedCount": 0,
+      "totalTokens": 10647,
+      "avgEvalScore": 67
     },
     {
       "owner": "antonbabenko",
