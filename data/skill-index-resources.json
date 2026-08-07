@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-06T00:00:00Z",
+  "updatedAt": "2026-08-07T00:00:00Z",
   "repos": [
     {
       "source": "github:luongnv89/asm",
@@ -503,6 +503,15 @@
       "repo": "app-store-screenshots",
       "description": "end to end app store screenshot creation using AI",
       "maintainer": "@ParthJadhav",
+      "enabled": true
+    },
+    {
+      "source": "github:cloudai-x/threejs-skills",
+      "url": "https://github.com/cloudai-x/threejs-skills",
+      "owner": "cloudai-x",
+      "repo": "threejs-skills",
+      "description": "Three.js skills for AI agents — animation, geometry, lighting, shaders, materials, and more",
+      "maintainer": "@cloudai-x",
       "enabled": true
     }
   ]
