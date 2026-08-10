@@ -418,6 +418,57 @@ describe("updateSkill", () => {
     expect(result.status).toBe("failed");
     expect(result.reason).toContain("Clone failed");
   });
+
+  test("skips a known current commit before cloning", async () => {
+    const { updateSkill } = await import("./updater");
+    const commitHash = "abcdef0123456789abcdef0123456789abcdef01";
+    const entry: LockEntry = {
+      source: "file:///path/that/does/not/exist.git",
+      commitHash,
+      ref: "main",
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+
+    const result = await updateSkill(
+      "current-skill",
+      entry,
+      false,
+      undefined,
+      commitHash,
+    );
+    expect(result).toEqual({
+      name: "current-skill",
+      status: "skipped",
+      reason: "Already up to date",
+    });
+  });
+
+  test("rejects an invalid known commit without cloning", async () => {
+    const { updateSkill } = await import("./updater");
+    const entry: LockEntry = {
+      source: "file:///path/that/does/not/exist.git",
+      commitHash: "abcdef0123456789abcdef0123456789abcdef01",
+      ref: "main",
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+
+    const result = await updateSkill(
+      "invalid-commit-skill",
+      entry,
+      false,
+      undefined,
+      "not-a-full-oid",
+    );
+    expect(result).toEqual({
+      name: "invalid-commit-skill",
+      status: "failed",
+      reason: "Invalid known commit OID",
+    });
+  });
 });
 
 // ─── getLatestRemoteCommit ────────────────────────────────────────────────
@@ -434,6 +485,112 @@ describe("getLatestRemoteCommit", () => {
   test("returns null for invalid URL", async () => {
     const result = await getLatestRemoteCommit("not-a-url", null);
     expect(result).toBeNull();
+  });
+
+  test("resolves an annotated tag to its commit OID", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "asm-tag-resolution-"));
+    try {
+      const { execFile } = await import("child_process");
+      const { promisify } = await import("util");
+      const exec = promisify(execFile);
+      const { bareRepoPath, commitHash } = await createBareGitRepo(
+        tempDir,
+        "tagged-skill",
+        "# Tagged version",
+      );
+      await exec("git", [
+        `--git-dir=${bareRepoPath}`,
+        "config",
+        "user.email",
+        "test@test.com",
+      ]);
+      await exec("git", [
+        `--git-dir=${bareRepoPath}`,
+        "config",
+        "user.name",
+        "Test",
+      ]);
+      await exec("git", [
+        `--git-dir=${bareRepoPath}`,
+        "tag",
+        "-a",
+        "v1",
+        commitHash,
+        "-m",
+        "version 1",
+      ]);
+
+      expect(await getLatestRemoteCommit(`file://${bareRepoPath}`, "v1")).toBe(
+        commitHash,
+      );
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  test("prefers a short branch ref over an ambiguous annotated tag", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "asm-ambiguous-ref-"));
+    try {
+      const { execFile } = await import("child_process");
+      const { promisify } = await import("util");
+      const exec = promisify(execFile);
+      const { bareRepoPath, commitHash: branchCommit } =
+        await createBareGitRepo(tempDir, "ambiguous-skill", "# Branch");
+      const workDir = join(tempDir, "ambiguous-skill-work");
+
+      await writeFile(join(workDir, "skill.md"), "# Tag\n");
+      await exec("git", ["-C", workDir, "add", "skill.md"]);
+      await exec("git", ["-C", workDir, "commit", "-m", "tag target"]);
+      const { stdout } = await exec("git", [
+        "-C",
+        workDir,
+        "rev-parse",
+        "HEAD",
+      ]);
+      const tagCommit = stdout.trim();
+      await exec("git", [
+        "-C",
+        workDir,
+        "push",
+        `file://${bareRepoPath}`,
+        "HEAD:refs/heads/tag-target",
+      ]);
+      await exec("git", [
+        `--git-dir=${bareRepoPath}`,
+        "update-ref",
+        "refs/heads/shared",
+        branchCommit,
+      ]);
+      await exec("git", [
+        `--git-dir=${bareRepoPath}`,
+        "config",
+        "user.email",
+        "test@test.com",
+      ]);
+      await exec("git", [
+        `--git-dir=${bareRepoPath}`,
+        "config",
+        "user.name",
+        "Test",
+      ]);
+      await exec("git", [
+        `--git-dir=${bareRepoPath}`,
+        "tag",
+        "-a",
+        "shared",
+        tagCommit,
+        "-m",
+        "shared tag",
+      ]);
+
+      const repoUrl = `file://${bareRepoPath}`;
+      expect(await getLatestRemoteCommit(repoUrl, "shared")).toBe(branchCommit);
+      expect(await getLatestRemoteCommit(repoUrl, "refs/tags/shared")).toBe(
+        tagCommit,
+      );
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
   });
 });
 
@@ -616,6 +773,55 @@ describe("checkOutdated with injectable overrides", () => {
     expect(summary.outdatedCount).toBe(1);
   });
 
+  test("keeps the resolved full OID out of public outdated output", async () => {
+    const installedHash = "a1b2c3d4e5f6789012345678901234567890abcd";
+    const latestHash = "f9e8d7c6b5a4321098765432109876543210fedc";
+
+    const { checkOutdated } = await import("./updater");
+    const summary = await checkOutdated({
+      readLockFn: async () => ({
+        version: 1,
+        skills: {
+          "code-review": {
+            source: "github:user/code-review",
+            commitHash: installedHash,
+            ref: "main",
+            installedAt: "2026-01-01T00:00:00.000Z",
+            provider: "claude",
+            sourceType: "registry",
+            registryName: "code-review",
+          },
+        },
+      }),
+      fetchRegistryIndexFn: async () =>
+        ({
+          manifests: [
+            {
+              name: "code-review",
+              commit: latestHash,
+              repo: "user/code-review",
+            },
+          ],
+        }) as any,
+    });
+
+    expect(summary.entries[0]).toEqual({
+      name: "code-review",
+      installedCommit: shortHash(installedHash),
+      latestCommit: shortHash(latestHash),
+      source: "github:user/code-review",
+      sourceType: "registry",
+      status: "outdated",
+    });
+    expect(JSON.parse(formatOutdatedJSON(summary)).skills[0]).toEqual({
+      name: "code-review",
+      installed: shortHash(installedHash),
+      latest: shortHash(latestHash),
+      source: "registry",
+      status: "outdated",
+    });
+  });
+
   test("reports registry skill as up-to-date when commit matches manifest", async () => {
     const commitHash = "a1b2c3d4e5f6789012345678901234567890abcd";
 
@@ -672,7 +878,9 @@ async function createBareGitRepo(
   const bareDir = join(parentDir, `${repoName}.git`);
 
   await mkdir(workDir, { recursive: true });
-  await exec("git", ["init", workDir]);
+  await exec("git", ["init", workDir], {
+    env: { ...process.env, GIT_DEFAULT_HASH: "sha1" },
+  });
   await exec("git", ["-C", workDir, "config", "user.email", "test@test.com"]);
   await exec("git", ["-C", workDir, "config", "user.name", "Test"]);
   await writeFile(join(workDir, "skill.md"), content);
@@ -760,6 +968,281 @@ describe("updateSkill happy path", () => {
       "utf-8",
     );
     expect(installedContent).toContain("New version");
+  });
+
+  test("installs and locks the exact known commit despite a stale OID ref", async () => {
+    const { bareRepoPath, commitHash: knownCommit } = await createBareGitRepo(
+      tempDir,
+      "pinned-skill",
+      "# Pinned version\nExact content",
+    );
+    const skillsDir = join(tempDir, "pinned-skills");
+    const installedDir = join(skillsDir, "pinned-skill");
+    await mkdir(installedDir, { recursive: true });
+    await writeFile(join(installedDir, "skill.md"), "# Old version");
+
+    let writtenCommit: string | undefined;
+    const oldCommit = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    const { updateSkill } = await import("./updater");
+    const entry: LockEntry = {
+      source: `file://${bareRepoPath}`,
+      commitHash: oldCommit,
+      // Registry locks retain the previously installed OID here; it is not a branch.
+      ref: oldCommit,
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+
+    const result = await updateSkill(
+      "pinned-skill",
+      entry,
+      false,
+      {
+        auditFn: async () => ({ verdict: "safe" }),
+        loadConfigFn: async () =>
+          ({ providers: [{ name: "claude", global: skillsDir }] }) as any,
+        resolveProviderPathFn: (p: string) => p,
+        writeLockEntryFn: async (_name: string, lockEntry: LockEntry) => {
+          writtenCommit = lockEntry.commitHash;
+        },
+      },
+      knownCommit.toUpperCase(),
+    );
+
+    expect(result).toEqual({
+      name: "pinned-skill",
+      status: "updated",
+      oldCommit: "aaaaaaa",
+      newCommit: shortHash(knownCommit),
+      securityVerdict: "safe",
+    });
+    expect(writtenCommit).toBe(knownCommit);
+    expect(await readFile(join(installedDir, "skill.md"), "utf-8")).toBe(
+      "# Pinned version\nExact content",
+    );
+  });
+
+  test("isolates pinned Git operations from ambient repository routing", async () => {
+    const { execFile } = await import("child_process");
+    const { promisify } = await import("util");
+    const exec = promisify(execFile);
+    const { bareRepoPath, commitHash: knownCommit } = await createBareGitRepo(
+      tempDir,
+      "isolated-pinned-skill",
+      "# Isolated pinned version",
+    );
+
+    const ambientDir = join(tempDir, "ambient-repo");
+    await mkdir(ambientDir, { recursive: true });
+    await exec("git", ["init", ambientDir], {
+      env: { ...process.env, GIT_DEFAULT_HASH: "sha1" },
+    });
+    await exec("git", [
+      "-C",
+      ambientDir,
+      "config",
+      "user.email",
+      "test@test.com",
+    ]);
+    await exec("git", ["-C", ambientDir, "config", "user.name", "Test"]);
+    const sentinelPath = join(ambientDir, "sentinel.txt");
+    const sentinelContent = "ambient repository content\n";
+    await writeFile(sentinelPath, sentinelContent);
+    await exec("git", ["-C", ambientDir, "add", "sentinel.txt"]);
+    await exec("git", ["-C", ambientDir, "commit", "-m", "ambient state"]);
+
+    const ambientHead = (
+      await exec("git", ["-C", ambientDir, "rev-parse", "HEAD"])
+    ).stdout.trim();
+    const ambientBranch = (
+      await exec("git", ["-C", ambientDir, "symbolic-ref", "--short", "HEAD"])
+    ).stdout.trim();
+    const ambientStatus = (
+      await exec("git", [
+        "-C",
+        ambientDir,
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all",
+      ])
+    ).stdout;
+
+    const skillsDir = join(tempDir, "isolated-pinned-skills");
+    const installedDir = join(skillsDir, "isolated-pinned-skill");
+    await mkdir(installedDir, { recursive: true });
+    await writeFile(join(installedDir, "skill.md"), "# Old version");
+
+    const { updateSkill } = await import("./updater");
+    const entry: LockEntry = {
+      source: `file://${bareRepoPath}`,
+      commitHash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      ref: null,
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+    const routingVariables = ["GIT_DIR", "GIT_WORK_TREE"] as const;
+    const previousValues = new Map(
+      routingVariables.map((variable) => [variable, process.env[variable]]),
+    );
+    let result: Awaited<ReturnType<typeof updateSkill>> | undefined;
+
+    process.env.GIT_DIR = join(ambientDir, ".git");
+    process.env.GIT_WORK_TREE = ambientDir;
+    try {
+      result = await updateSkill(
+        "isolated-pinned-skill",
+        entry,
+        false,
+        {
+          auditFn: async () => ({ verdict: "safe" }),
+          loadConfigFn: async () =>
+            ({ providers: [{ name: "claude", global: skillsDir }] }) as any,
+          resolveProviderPathFn: (p: string) => p,
+          writeLockEntryFn: async () => {},
+        },
+        knownCommit,
+      );
+    } finally {
+      for (const variable of routingVariables) {
+        const previousValue = previousValues.get(variable);
+        if (previousValue === undefined) {
+          delete process.env[variable];
+        } else {
+          process.env[variable] = previousValue;
+        }
+      }
+    }
+
+    expect(result?.status).toBe("updated");
+    expect(await readFile(join(installedDir, "skill.md"), "utf-8")).toBe(
+      "# Isolated pinned version",
+    );
+    expect(
+      (
+        await exec("git", ["-C", ambientDir, "rev-parse", "HEAD"])
+      ).stdout.trim(),
+    ).toBe(ambientHead);
+    expect(
+      (
+        await exec("git", ["-C", ambientDir, "symbolic-ref", "--short", "HEAD"])
+      ).stdout.trim(),
+    ).toBe(ambientBranch);
+    expect(
+      (
+        await exec("git", [
+          "-C",
+          ambientDir,
+          "status",
+          "--porcelain=v1",
+          "--untracked-files=all",
+        ])
+      ).stdout,
+    ).toBe(ambientStatus);
+    expect(await readFile(sentinelPath, "utf-8")).toBe(sentinelContent);
+  });
+
+  test("fetches a SHA-1 known commit when GIT_DEFAULT_HASH requests SHA-256", async () => {
+    const { bareRepoPath, commitHash: knownCommit } = await createBareGitRepo(
+      tempDir,
+      "sha1-pinned-skill",
+      "# SHA-1 pinned version",
+    );
+    expect(knownCommit).toMatch(/^[0-9a-f]{40}$/);
+
+    const skillsDir = join(tempDir, "sha1-pinned-skills");
+    const installedDir = join(skillsDir, "sha1-pinned-skill");
+    await mkdir(installedDir, { recursive: true });
+    await writeFile(join(installedDir, "skill.md"), "# Old version");
+
+    const { updateSkill } = await import("./updater");
+    const entry: LockEntry = {
+      source: `file://${bareRepoPath}`,
+      commitHash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      ref: null,
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+    const previousDefaultHash = process.env.GIT_DEFAULT_HASH;
+    process.env.GIT_DEFAULT_HASH = "sha256";
+
+    try {
+      const result = await updateSkill(
+        "sha1-pinned-skill",
+        entry,
+        false,
+        {
+          auditFn: async () => ({ verdict: "safe" }),
+          loadConfigFn: async () =>
+            ({ providers: [{ name: "claude", global: skillsDir }] }) as any,
+          resolveProviderPathFn: (p: string) => p,
+          writeLockEntryFn: async () => {},
+        },
+        knownCommit,
+      );
+
+      expect(result.status).toBe("updated");
+      expect(await readFile(join(installedDir, "skill.md"), "utf-8")).toBe(
+        "# SHA-1 pinned version",
+      );
+    } finally {
+      if (previousDefaultHash === undefined) {
+        delete process.env.GIT_DEFAULT_HASH;
+      } else {
+        process.env.GIT_DEFAULT_HASH = previousDefaultHash;
+      }
+    }
+  });
+
+  test("does not mutate the installation when the known commit is unavailable", async () => {
+    const { bareRepoPath } = await createBareGitRepo(
+      tempDir,
+      "stale-skill",
+      "# Remote version",
+    );
+    const skillsDir = join(tempDir, "stale-skills");
+    const installedDir = join(skillsDir, "stale-skill");
+    const oldContent = "# Installed version\nKeep this";
+    await mkdir(installedDir, { recursive: true });
+    await writeFile(join(installedDir, "skill.md"), oldContent);
+
+    let auditCalls = 0;
+    let lockWrites = 0;
+    const { updateSkill } = await import("./updater");
+    const entry: LockEntry = {
+      source: `file://${bareRepoPath}`,
+      commitHash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      ref: null,
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+
+    const result = await updateSkill(
+      "stale-skill",
+      entry,
+      false,
+      {
+        auditFn: async () => {
+          auditCalls++;
+          return { verdict: "safe" };
+        },
+        writeLockEntryFn: async () => {
+          lockWrites++;
+        },
+      },
+      "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    );
+
+    expect(result.status).toBe("failed");
+    expect(result.reason).toContain("unavailable");
+    expect(auditCalls).toBe(0);
+    expect(lockWrites).toBe(0);
+    expect(await readFile(join(installedDir, "skill.md"), "utf-8")).toBe(
+      oldContent,
+    );
   });
 
   test("updates nested skills from their recorded skillPath and project scope", async () => {
@@ -982,6 +1465,66 @@ describe("updateSkill happy path", () => {
 // ─── updateSkills orchestrator ──────────────────────────────────────────────
 
 describe("updateSkills orchestrator", () => {
+  test("forwards the full OID resolved by checkOutdated", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "asm-update-propagation-"));
+    try {
+      const { bareRepoPath, commitHash: latestCommit } =
+        await createBareGitRepo(
+          tempDir,
+          "propagated-skill",
+          "# Latest version",
+        );
+      const lockEntry: LockEntry = {
+        source: `file://${bareRepoPath}`,
+        commitHash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        ref: null,
+        installedAt: "2026-01-01T00:00:00.000Z",
+        provider: "claude",
+        sourceType: "github",
+      };
+      let receivedCommit: string | undefined;
+
+      const summary = await updateSkills(null, false, {
+        readLockFn: async () => ({
+          version: 1,
+          skills: { "propagated-skill": lockEntry },
+        }),
+        updateSkillFn: async (
+          name,
+          _entry,
+          _skipConfirm,
+          _overrides,
+          knownLatestCommit,
+        ) => {
+          receivedCommit = knownLatestCommit;
+          return {
+            name,
+            status: "updated",
+            oldCommit: "aaaaaaa",
+            newCommit: shortHash(knownLatestCommit ?? ""),
+          };
+        },
+      });
+
+      expect(receivedCommit).toBe(latestCommit);
+      expect(summary).toEqual({
+        results: [
+          {
+            name: "propagated-skill",
+            status: "updated",
+            oldCommit: "aaaaaaa",
+            newCommit: shortHash(latestCommit),
+          },
+        ],
+        updatedCount: 1,
+        skippedCount: 0,
+        failedCount: 0,
+      });
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
   test("filters only outdated entries for update", async () => {
     const updatedNames: string[] = [];
     const summary = await updateSkills(null, false, {
