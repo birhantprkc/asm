@@ -48,6 +48,143 @@ interface ScanLocation {
   providerLabel: string;
 }
 
+const SCAN_ENTRY_CONCURRENCY = 16;
+// A single stalled scan must not consume every process-wide slot.
+const SCAN_ENTRY_PER_SCAN_CONCURRENCY = SCAN_ENTRY_CONCURRENCY - 1;
+const pendingScanEntries: Array<() => void> = [];
+let pendingScanEntryIndex = 0;
+let activeScanEntries = 0;
+
+function drainScanEntries(): void {
+  while (
+    activeScanEntries < SCAN_ENTRY_CONCURRENCY &&
+    pendingScanEntryIndex < pendingScanEntries.length
+  ) {
+    const start = pendingScanEntries[pendingScanEntryIndex++];
+    activeScanEntries++;
+    start();
+  }
+
+  if (pendingScanEntryIndex === pendingScanEntries.length) {
+    pendingScanEntries.length = 0;
+    pendingScanEntryIndex = 0;
+  } else if (
+    pendingScanEntryIndex >= 1024 &&
+    pendingScanEntryIndex * 2 >= pendingScanEntries.length
+  ) {
+    pendingScanEntries.splice(0, pendingScanEntryIndex);
+    pendingScanEntryIndex = 0;
+  }
+}
+
+function withScanEntryLimit<T>(task: () => Promise<T>): Promise<T> {
+  return new Promise<T>((resolveTask, rejectTask) => {
+    pendingScanEntries.push(() => {
+      const completed = Promise.resolve()
+        .then(task)
+        .finally(() => {
+          activeScanEntries--;
+          drainScanEntries();
+        });
+      void completed.then(resolveTask, rejectTask);
+    });
+    drainScanEntries();
+  });
+}
+
+interface ScanEntryBatch {
+  entries: string[];
+  nextIndex: number;
+  inFlight: number;
+  results: Array<[number, SkillInfo]>;
+  task: (entry: string, index: number) => Promise<SkillInfo | undefined>;
+  resolve: (skills: SkillInfo[]) => void;
+}
+
+interface ScanEntryScheduler {
+  run(
+    entries: string[],
+    task: (entry: string, index: number) => Promise<SkillInfo | undefined>,
+  ): Promise<SkillInfo[]>;
+}
+
+function createScanEntryScheduler(): ScanEntryScheduler {
+  const batches: ScanEntryBatch[] = [];
+  let active = 0;
+  let cursor = 0;
+
+  const drain = (): void => {
+    while (active < SCAN_ENTRY_PER_SCAN_CONCURRENCY) {
+      let batch: ScanEntryBatch | undefined;
+
+      for (let checked = 0; checked < batches.length; checked++) {
+        const candidate = batches[cursor];
+        cursor = (cursor + 1) % batches.length;
+        if (candidate.nextIndex < candidate.entries.length) {
+          batch = candidate;
+          break;
+        }
+      }
+
+      if (!batch) return;
+
+      const index = batch.nextIndex++;
+      const entry = batch.entries[index];
+      batch.inFlight++;
+      active++;
+
+      void withScanEntryLimit(() => batch.task(entry, index))
+        .then(
+          (skill) => {
+            if (skill) batch.results.push([index, skill]);
+          },
+          () => undefined,
+        )
+        .finally(() => {
+          active--;
+          batch.inFlight--;
+
+          if (
+            batch.nextIndex === batch.entries.length &&
+            batch.inFlight === 0
+          ) {
+            const batchIndex = batches.indexOf(batch);
+            batches.splice(batchIndex, 1);
+            if (batches.length === 0) {
+              cursor = 0;
+            } else {
+              if (batchIndex < cursor) cursor--;
+              cursor %= batches.length;
+            }
+
+            batch.results.sort(([a], [b]) => a - b);
+            batch.resolve(batch.results.map(([, skill]) => skill));
+          }
+
+          drain();
+        });
+    }
+  };
+
+  return {
+    run(entries, task) {
+      if (entries.length === 0) return Promise.resolve([]);
+
+      return new Promise<SkillInfo[]>((resolveSkills) => {
+        batches.push({
+          entries,
+          nextIndex: 0,
+          inFlight: 0,
+          results: [],
+          task,
+          resolve: resolveSkills,
+        });
+        drain();
+      });
+    },
+  };
+}
+
 function buildScanLocations(config: AppConfig, scope: Scope): ScanLocation[] {
   const locations: ScanLocation[] = [];
 
@@ -110,9 +247,10 @@ export async function countFiles(dir: string): Promise<number> {
   }
 }
 
-async function scanDirectory(loc: ScanLocation): Promise<SkillInfo[]> {
-  const skills: SkillInfo[] = [];
-
+async function scanDirectory(
+  loc: ScanLocation,
+  scheduler: ScanEntryScheduler,
+): Promise<SkillInfo[]> {
   debug(`scanning: ${loc.dir} (${loc.location})`);
 
   let entries: string[];
@@ -120,76 +258,81 @@ async function scanDirectory(loc: ScanLocation): Promise<SkillInfo[]> {
     entries = await readdir(loc.dir);
   } catch {
     debug(`scanning: ${loc.dir} — not found, skipping`);
-    return skills;
+    return [];
   }
 
-  for (const entry of entries) {
-    const entryPath = join(loc.dir, entry);
-
+  const skills = await scheduler.run(entries, async (entry) => {
     try {
-      const entryStat = await stat(entryPath);
-      if (!entryStat.isDirectory()) {
-        debug(`  skip: "${entry}" — not a directory`);
-        continue;
+      const entryPath = join(loc.dir, entry);
+
+      try {
+        const entryStat = await stat(entryPath);
+        if (!entryStat.isDirectory()) {
+          debug(`  skip: "${entry}" — not a directory`);
+          return;
+        }
+      } catch {
+        debug(`  skip: "${entry}" — stat failed`);
+        return;
       }
-    } catch {
-      debug(`  skip: "${entry}" — stat failed`);
-      continue;
-    }
 
-    const skillMdPath = join(entryPath, "SKILL.md");
-    let content: string;
-    try {
-      content = await readFile(skillMdPath, "utf-8");
-    } catch {
-      debug(`  skip: "${entry}" — no SKILL.md`);
-      continue;
-    }
-
-    const fm = parseFrontmatter(content);
-
-    let isSymlink = false;
-    let symlinkTarget: string | null = null;
-    try {
-      const lstats = await lstat(entryPath);
-      if (lstats.isSymbolicLink()) {
-        isSymlink = true;
-        symlinkTarget = await readlink(entryPath);
+      const skillMdPath = join(entryPath, "SKILL.md");
+      let content: string;
+      try {
+        content = await readFile(skillMdPath, "utf-8");
+      } catch {
+        debug(`  skip: "${entry}" — no SKILL.md`);
+        return;
       }
-    } catch {
-      // not a symlink
-    }
 
-    const resolvedPath = resolve(entryPath);
-    let resolvedRealPath: string;
-    try {
-      resolvedRealPath = await realpath(entryPath);
-    } catch {
-      resolvedRealPath = resolvedPath;
-    }
+      const fm = parseFrontmatter(content);
 
-    skills.push({
-      name: fm.name || entry,
-      version: resolveVersion(fm),
-      description: (fm.description || "").replace(/\s*\n\s*/g, " ").trim(),
-      creator: fm["metadata.creator"] || "",
-      license: (fm.license || "").trim(),
-      compatibility: (fm.compatibility || "").trim(),
-      allowedTools: resolveAllowedTools(fm),
-      effort: fm.effort || fm["metadata.effort"] || undefined,
-      dirName: entry,
-      path: resolvedPath,
-      originalPath: entryPath,
-      location: loc.location,
-      scope: loc.scope,
-      provider: loc.providerName,
-      providerLabel: loc.providerLabel,
-      isSymlink,
-      symlinkTarget,
-      realPath: resolvedRealPath,
-      tokenCount: estimateTokenCount(content),
-    });
-  }
+      let isSymlink = false;
+      let symlinkTarget: string | null = null;
+      try {
+        const lstats = await lstat(entryPath);
+        if (lstats.isSymbolicLink()) {
+          isSymlink = true;
+          symlinkTarget = await readlink(entryPath);
+        }
+      } catch {
+        // not a symlink
+      }
+
+      const resolvedPath = resolve(entryPath);
+      let resolvedRealPath: string;
+      try {
+        resolvedRealPath = await realpath(entryPath);
+      } catch {
+        resolvedRealPath = resolvedPath;
+      }
+
+      return {
+        name: fm.name || entry,
+        version: resolveVersion(fm),
+        description: (fm.description || "").replace(/\s*\n\s*/g, " ").trim(),
+        creator: fm["metadata.creator"] || "",
+        license: (fm.license || "").trim(),
+        compatibility: (fm.compatibility || "").trim(),
+        allowedTools: resolveAllowedTools(fm),
+        effort: fm.effort || fm["metadata.effort"] || undefined,
+        dirName: entry,
+        path: resolvedPath,
+        originalPath: entryPath,
+        location: loc.location,
+        scope: loc.scope,
+        provider: loc.providerName,
+        providerLabel: loc.providerLabel,
+        isSymlink,
+        symlinkTarget,
+        realPath: resolvedRealPath,
+        tokenCount: estimateTokenCount(content),
+      };
+    } catch {
+      debug(`  skip: "${entry}" — scan failed`);
+      return;
+    }
+  });
 
   debug(`found ${skills.length} skill(s) in ${loc.dir}`);
   return skills;
@@ -611,9 +754,10 @@ export async function scanAllSkills(
 ): Promise<SkillInfo[]> {
   const locations = buildScanLocations(config, scope);
   const isGlobal = scope === "global" || scope === "both";
+  const scheduler = createScanEntryScheduler();
 
   const [providerResults, pluginSkills, codexPluginSkills] = await Promise.all([
-    Promise.all(locations.map(scanDirectory)),
+    Promise.all(locations.map((location) => scanDirectory(location, scheduler))),
     isGlobal
       ? scanPluginMarketplaces(pluginBaseDir)
       : Promise.resolve([] as SkillInfo[]),
