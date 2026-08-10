@@ -1,5 +1,13 @@
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
-import { mkdtemp, writeFile, mkdir, rm, readFile } from "fs/promises";
+import {
+  access,
+  mkdtemp,
+  writeFile,
+  mkdir,
+  rm,
+  readFile,
+  readdir,
+} from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
 import {
@@ -1245,6 +1253,104 @@ describe("updateSkill happy path", () => {
     );
   });
 
+  test("restores an existing target when the lock write rejects", async () => {
+    const { bareRepoPath } = await createBareGitRepo(
+      tempDir,
+      "rollback-existing-skill",
+      "# New version\nNew content",
+    );
+    const skillsDir = join(tempDir, "rollback-existing-skills");
+    const installedDir = join(skillsDir, "rollback-existing-skill");
+    await mkdir(installedDir, { recursive: true });
+    await writeFile(
+      join(installedDir, "skill.md"),
+      "# Old version\nOld content",
+    );
+    await writeFile(join(installedDir, "old-only.txt"), "keep me");
+
+    let lockWriteCount = 0;
+    const entry: LockEntry = {
+      source: `file://${bareRepoPath}`,
+      commitHash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      ref: null,
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+
+    const { updateSkill } = await import("./updater");
+    const result = await updateSkill("rollback-existing-skill", entry, false, {
+      auditFn: async () => ({ verdict: "safe" }),
+      loadConfigFn: async () =>
+        ({ providers: [{ name: "claude", global: skillsDir }] }) as any,
+      resolveProviderPathFn: (p: string) => p,
+      writeLockEntryFn: async () => {
+        lockWriteCount++;
+        throw new Error("disk unavailable");
+      },
+    });
+
+    expect(result).toEqual({
+      name: "rollback-existing-skill",
+      status: "failed",
+      reason: "Lock file update failed: disk unavailable",
+    });
+    expect(lockWriteCount).toBe(1);
+    await expect(
+      readFile(join(installedDir, "skill.md"), "utf-8"),
+    ).resolves.toContain("# Old version");
+    await expect(
+      readFile(join(installedDir, "old-only.txt"), "utf-8"),
+    ).resolves.toBe("keep me");
+    expect(
+      (await readdir(skillsDir)).filter((name) => name.includes(".bak-")),
+    ).toEqual([]);
+  });
+
+  test("removes a newly copied target when the lock write rejects", async () => {
+    const { bareRepoPath } = await createBareGitRepo(
+      tempDir,
+      "rollback-absent-skill",
+      "# New version\nNew content",
+    );
+    const skillsDir = join(tempDir, "rollback-absent-skills");
+    const installedDir = join(skillsDir, "rollback-absent-skill");
+    const entry: LockEntry = {
+      source: `file://${bareRepoPath}`,
+      commitHash: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      ref: null,
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+
+    let lockWriteCount = 0;
+    const { updateSkill } = await import("./updater");
+    const result = await updateSkill("rollback-absent-skill", entry, false, {
+      auditFn: async () => ({ verdict: "safe" }),
+      loadConfigFn: async () =>
+        ({ providers: [{ name: "claude", global: skillsDir }] }) as any,
+      resolveProviderPathFn: (p: string) => p,
+      writeLockEntryFn: async () => {
+        lockWriteCount++;
+        throw new Error("disk unavailable");
+      },
+    });
+
+    expect(result).toEqual({
+      name: "rollback-absent-skill",
+      status: "failed",
+      reason: "Lock file update failed: disk unavailable",
+    });
+    expect(lockWriteCount).toBe(1);
+    await expect(access(installedDir)).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+    expect(
+      (await readdir(skillsDir)).filter((name) => name.includes(".bak-")),
+    ).toEqual([]);
+  });
+
   test("updates nested skills from their recorded skillPath and project scope", async () => {
     const { execFile } = await import("child_process");
     const { promisify } = await import("util");
@@ -1464,6 +1570,45 @@ describe("updateSkill happy path", () => {
 
 // ─── updateSkills orchestrator ──────────────────────────────────────────────
 
+function deferred() {
+  let resolve!: () => void;
+  const promise = new Promise<void>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+  return { promise, resolve };
+}
+
+function createUpdateFixture(names: string[]) {
+  const skills: Record<string, LockEntry> = {};
+  for (const name of names) {
+    skills[name] = {
+      source: `github:user/${name}`,
+      commitHash: `${name}-old`,
+      ref: "main",
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+  }
+
+  const outdated: OutdatedSummary = {
+    entries: names.map((name) => ({
+      name,
+      installedCommit: `${name}-old`,
+      latestCommit: `${name}-new`,
+      source: `github:user/${name}`,
+      sourceType: "github",
+      status: "outdated",
+    })),
+    outdatedCount: names.length,
+    upToDateCount: 0,
+    untrackedCount: 0,
+    errorCount: 0,
+  };
+
+  return { lock: { version: 1 as const, skills }, outdated };
+}
+
 describe("updateSkills orchestrator", () => {
   test("forwards the full OID resolved by checkOutdated", async () => {
     const tempDir = await mkdtemp(join(tmpdir(), "asm-update-propagation-"));
@@ -1630,87 +1775,328 @@ describe("updateSkills orchestrator", () => {
     expect(summary.results).toHaveLength(0);
   });
 
-  test("returns results array with correct counts", async () => {
+  test("preserves mixed results and normalizes rejected workers", async () => {
+    const names = ["skill-a", "skill-b", "skill-c", "skill-d"];
+    const { lock, outdated } = createUpdateFixture(names);
     const summary = await updateSkills(null, false, {
-      readLockFn: async () => ({
-        version: 1,
-        skills: {
-          "skill-a": {
-            source: "github:user/skill-a",
-            commitHash: "aaa",
-            ref: "main",
-            installedAt: "2026-01-01T00:00:00.000Z",
-            provider: "claude",
-            sourceType: "github",
-          },
-          "skill-b": {
-            source: "github:user/skill-b",
-            commitHash: "bbb",
-            ref: "main",
-            installedAt: "2026-01-01T00:00:00.000Z",
-            provider: "claude",
-            sourceType: "github",
-          },
-          "skill-c": {
-            source: "github:user/skill-c",
-            commitHash: "ccc",
-            ref: "main",
-            installedAt: "2026-01-01T00:00:00.000Z",
-            provider: "claude",
-            sourceType: "github",
-          },
-        },
-      }),
-      checkOutdatedFn: async () => ({
-        entries: [
-          {
-            name: "skill-a",
-            installedCommit: "aaa",
-            latestCommit: "aaa2",
-            source: "github:user/skill-a",
-            sourceType: "github" as const,
-            status: "outdated" as const,
-          },
-          {
-            name: "skill-b",
-            installedCommit: "bbb",
-            latestCommit: "bbb2",
-            source: "github:user/skill-b",
-            sourceType: "github" as const,
-            status: "outdated" as const,
-          },
-          {
-            name: "skill-c",
-            installedCommit: "ccc",
-            latestCommit: "ccc2",
-            source: "github:user/skill-c",
-            sourceType: "github" as const,
-            status: "outdated" as const,
-          },
-        ],
-        outdatedCount: 3,
-        upToDateCount: 0,
-        untrackedCount: 0,
-        errorCount: 0,
-      }),
+      readLockFn: async () => lock,
+      checkOutdatedFn: async () => outdated,
       updateSkillFn: async (name) => {
-        if (name === "skill-a")
+        if (name === "skill-a") {
           return {
             name,
             status: "updated",
             oldCommit: "aaa",
             newCommit: "aaa2",
           };
-        if (name === "skill-b")
+        }
+        if (name === "skill-b") {
           return { name, status: "skipped", reason: "Security warning" };
-        return { name, status: "failed", reason: "Clone failed" };
+        }
+        if (name === "skill-c") {
+          return { name, status: "failed", reason: "Clone failed" };
+        }
+        throw new Error("worker crashed");
       },
     });
 
-    expect(summary.results).toHaveLength(3);
+    expect(summary.results.map((result) => result.name)).toEqual(names);
+    expect(summary.results.map((result) => result.status)).toEqual([
+      "updated",
+      "skipped",
+      "failed",
+      "failed",
+    ]);
+    expect(summary.results[3].reason).toBe(
+      "Unexpected update failure: worker crashed",
+    );
     expect(summary.updatedCount).toBe(1);
     expect(summary.skippedCount).toBe(1);
+    expect(summary.failedCount).toBe(2);
+  });
+
+  test("bounds updates, drains after rejection, and preserves order", async () => {
+    const names = ["skill-a", "skill-b", "skill-c", "skill-d", "skill-e"];
+    const { lock, outdated } = createUpdateFixture(names);
+    const gates = Object.fromEntries(names.map((name) => [name, deferred()]));
+    const started = Object.fromEntries(names.map((name) => [name, deferred()]));
+    const startedNames: string[] = [];
+    let active = 0;
+    let maxActive = 0;
+
+    const summaryPromise = updateSkills(null, false, {
+      readLockFn: async () => lock,
+      checkOutdatedFn: async () => outdated,
+      updateSkillFn: async (name) => {
+        active++;
+        maxActive = Math.max(maxActive, active);
+        startedNames.push(name);
+        started[name].resolve();
+        await gates[name].promise;
+        active--;
+        if (name === "skill-d") throw new Error("worker crashed after start");
+        return { name, status: "updated" };
+      },
+    });
+
+    await Promise.all(names.slice(0, 4).map((name) => started[name].promise));
+    expect(startedNames).toEqual(names.slice(0, 4));
+    expect(active).toBe(4);
+    expect(maxActive).toBe(4);
+
+    gates["skill-d"].resolve();
+    await started["skill-e"].promise;
+    expect(startedNames).toEqual(names);
+    expect(active).toBe(4);
+    expect(maxActive).toBe(4);
+
+    for (const name of ["skill-c", "skill-b", "skill-e", "skill-a"]) {
+      gates[name].resolve();
+    }
+
+    const summary = await summaryPromise;
+    expect(summary.results.map((result) => result.name)).toEqual(names);
+    expect(summary.results.map((result) => result.status)).toEqual([
+      "updated",
+      "updated",
+      "updated",
+      "failed",
+      "updated",
+    ]);
+    expect(summary.updatedCount).toBe(4);
     expect(summary.failedCount).toBe(1);
+  });
+
+  test("serializes case-folded and Unicode-normalized target aliases", async () => {
+    const names = ["Foo", "foo", "CAFÉ", "cafe\u0301"];
+    const { lock, outdated } = createUpdateFixture(names);
+    const gates = Object.fromEntries(names.map((name) => [name, deferred()]));
+    const started = Object.fromEntries(names.map((name) => [name, deferred()]));
+    const startedNames: string[] = [];
+    const activeByIdentity = new Map<string, number>();
+    let maxSameIdentityActive = 0;
+
+    const summaryPromise = updateSkills(null, false, {
+      readLockFn: async () => lock,
+      checkOutdatedFn: async () => outdated,
+      updateSkillFn: async (name) => {
+        const identity = name.normalize("NFC").toLowerCase().normalize("NFC");
+        const active = (activeByIdentity.get(identity) ?? 0) + 1;
+        activeByIdentity.set(identity, active);
+        maxSameIdentityActive = Math.max(maxSameIdentityActive, active);
+        startedNames.push(name);
+        started[name].resolve();
+        await gates[name].promise;
+        activeByIdentity.set(identity, active - 1);
+        return { name, status: "updated" };
+      },
+    });
+
+    await Promise.all([started.Foo.promise, started["CAFÉ"].promise]);
+    expect(startedNames).toEqual(["Foo", "CAFÉ"]);
+
+    gates.Foo.resolve();
+    await started.foo.promise;
+    expect(startedNames).toEqual(["Foo", "CAFÉ", "foo"]);
+    gates.foo.resolve();
+
+    gates["CAFÉ"].resolve();
+    await started["cafe\u0301"].promise;
+    expect(startedNames).toEqual(["Foo", "CAFÉ", "foo", "cafe\u0301"]);
+    gates["cafe\u0301"].resolve();
+
+    const summary = await summaryPromise;
+    expect(maxSameIdentityActive).toBe(1);
+    expect(summary.results.map((result) => result.name)).toEqual(names);
+  });
+
+  test("queued aliases do not consume worker slots and results stay ordered", async () => {
+    const names = ["Foo", "Bar", "foo", "Baz", "Qux"];
+    const { lock, outdated } = createUpdateFixture(names);
+    const gates = Object.fromEntries(names.map((name) => [name, deferred()]));
+    const started = Object.fromEntries(names.map((name) => [name, deferred()]));
+    const startedNames: string[] = [];
+    let active = 0;
+    let maxActive = 0;
+    let aliasActive = 0;
+    let maxAliasActive = 0;
+
+    const summaryPromise = updateSkills(null, false, {
+      readLockFn: async () => lock,
+      checkOutdatedFn: async () => outdated,
+      updateSkillFn: async (name) => {
+        active++;
+        maxActive = Math.max(maxActive, active);
+        if (name.toLowerCase() === "foo") {
+          aliasActive++;
+          maxAliasActive = Math.max(maxAliasActive, aliasActive);
+        }
+        startedNames.push(name);
+        started[name].resolve();
+        await gates[name].promise;
+        active--;
+        if (name.toLowerCase() === "foo") aliasActive--;
+        if (name === "Foo") throw new Error("alias worker crashed");
+        if (name === "foo") {
+          return { name, status: "skipped", reason: "Alias checked second" };
+        }
+        return { name, status: "updated" };
+      },
+    });
+
+    await Promise.all(
+      ["Foo", "Bar", "Baz", "Qux"].map((name) => started[name].promise),
+    );
+    expect(startedNames).toEqual(["Foo", "Bar", "Baz", "Qux"]);
+    expect(active).toBe(4);
+    expect(maxActive).toBe(4);
+
+    gates.Foo.resolve();
+    await started.foo.promise;
+    expect(startedNames).toEqual(["Foo", "Bar", "Baz", "Qux", "foo"]);
+    expect(maxAliasActive).toBe(1);
+
+    for (const name of ["Qux", "Bar", "foo", "Baz"]) gates[name].resolve();
+
+    const summary = await summaryPromise;
+    expect(summary.results.map((result) => result.name)).toEqual(names);
+    expect(summary.results.map((result) => result.status)).toEqual([
+      "failed",
+      "updated",
+      "skipped",
+      "updated",
+      "updated",
+    ]);
+    expect(summary.results[0].reason).toBe(
+      "Unexpected update failure: alias worker crashed",
+    );
+    expect(summary.updatedCount).toBe(3);
+    expect(summary.skippedCount).toBe(1);
+    expect(summary.failedCount).toBe(1);
+  });
+
+  test("serializes stale-read lock writes to match sequential state", async () => {
+    const names = ["skill-a", "skill-b", "skill-c"];
+    const { lock, outdated } = createUpdateFixture(names);
+    const unrelatedEntry: LockEntry = {
+      source: "github:user/unrelated",
+      commitHash: "unrelated-commit",
+      ref: "main",
+      installedAt: "2026-01-01T00:00:00.000Z",
+      provider: "claude",
+      sourceType: "github",
+    };
+    let lockState = {
+      version: 1 as const,
+      skills: { unrelated: unrelatedEntry } as Record<string, LockEntry>,
+    };
+    const writeStarted = Object.fromEntries(
+      names.map((name) => [name, deferred()]),
+    );
+    const releaseWrite = Object.fromEntries(
+      names.map((name) => [name, deferred()]),
+    );
+    const workerStarted = Object.fromEntries(
+      names.map((name) => [name, deferred()]),
+    );
+    const writeOrder: string[] = [];
+
+    const summaryPromise = updateSkills(null, false, {
+      readLockFn: async () => lock,
+      checkOutdatedFn: async () => outdated,
+      writeLockEntryFn: async (name, entry) => {
+        const staleSnapshot = {
+          version: lockState.version,
+          skills: { ...lockState.skills },
+        };
+        writeOrder.push(name);
+        writeStarted[name].resolve();
+        await releaseWrite[name].promise;
+        lockState = {
+          ...staleSnapshot,
+          skills: { ...staleSnapshot.skills, [name]: entry },
+        };
+      },
+      updateSkillFn: async (name, entry, _skipConfirm, overrides) => {
+        workerStarted[name].resolve();
+        await overrides!.writeLockEntryFn!(name, {
+          ...entry,
+          commitHash: `${name}-new`,
+        });
+        return { name, status: "updated" };
+      },
+    });
+
+    await Promise.all(names.map((name) => workerStarted[name].promise));
+    await writeStarted["skill-a"].promise;
+    expect(writeOrder).toEqual(["skill-a"]);
+
+    for (let index = 0; index < names.length; index++) {
+      const name = names[index];
+      releaseWrite[name].resolve();
+      const nextName = names[index + 1];
+      if (nextName) await writeStarted[nextName].promise;
+    }
+
+    const summary = await summaryPromise;
+    const sequentialState = {
+      version: 1 as const,
+      skills: { unrelated: unrelatedEntry } as Record<string, LockEntry>,
+    };
+    for (const name of names) {
+      sequentialState.skills[name] = {
+        ...lock.skills[name],
+        commitHash: `${name}-new`,
+      };
+    }
+
+    expect(summary.updatedCount).toBe(3);
+    expect(lockState).toEqual(sequentialState);
+  });
+
+  test("continues serialized lock writes after the first write rejects", async () => {
+    const names = ["skill-a", "skill-b"];
+    const { lock, outdated } = createUpdateFixture(names);
+    const persisted: Record<string, LockEntry> = {
+      unrelated: {
+        source: "github:user/unrelated",
+        commitHash: "unrelated-commit",
+        ref: "main",
+        installedAt: "2026-01-01T00:00:00.000Z",
+        provider: "claude",
+        sourceType: "github",
+      },
+    };
+    const writeCalls: string[] = [];
+
+    const summary = await updateSkills(null, false, {
+      readLockFn: async () => lock,
+      checkOutdatedFn: async () => outdated,
+      writeLockEntryFn: async (name, entry) => {
+        writeCalls.push(name);
+        if (name === "skill-a") throw new Error("disk unavailable");
+        persisted[name] = entry;
+      },
+      updateSkillFn: async (name, entry, _skipConfirm, overrides) => {
+        await overrides!.writeLockEntryFn!(name, {
+          ...entry,
+          commitHash: `${name}-new`,
+        });
+        return { name, status: "updated" };
+      },
+    });
+
+    expect(writeCalls).toEqual(names);
+    expect(summary.results).toEqual([
+      {
+        name: "skill-a",
+        status: "failed",
+        reason: "Unexpected update failure: disk unavailable",
+      },
+      { name: "skill-b", status: "updated" },
+    ]);
+    expect(persisted.unrelated.commitHash).toBe("unrelated-commit");
+    expect(persisted["skill-b"].commitHash).toBe("skill-b-new");
   });
 
   test("passes pre-read lock to checkOutdated (no redundant reads)", async () => {
