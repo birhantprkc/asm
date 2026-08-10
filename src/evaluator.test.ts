@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 import {
   buildFixPlan,
   evaluateSkillContent,
@@ -943,6 +943,92 @@ describe("runWithConcurrency", () => {
   it("treats limit < 1 as 1", async () => {
     const r = await runWithConcurrency([1, 2, 3], 0, async (x) => x);
     expect(r).toEqual([1, 2, 3]);
+  });
+
+  it("rejects on mapper error, waits for already-started blocked mappers, and does not start queued work", async () => {
+    // Regression guard: runWithConcurrency must re-throw the original error
+    // (not swallow it) and must not start queued work after the first
+    // failure.  Already-started mappers that are blocked on external
+    // synchronisation must still be awaited.
+    function deferred(): { promise: Promise<void>; resolve: () => void } {
+      let resolve!: () => void;
+      const promise = new Promise<void>((done) => {
+        resolve = done;
+      });
+      return { promise, resolve };
+    }
+
+    // Three independent gates for deterministic synchronisation:
+    //   progressGate  — released when the initial 3 workers have all started
+    //   rejectionGate — triggers n=1 to throw (and signals the mapper to fail)
+    //   inFlightGate  — releases the blocked n=2/n=3 mappers
+    const progressGate = deferred();
+    const rejectionGate = deferred();
+    const inFlightGate = deferred();
+    const started = new Set<number>();
+    let startedCount = 0;
+
+    const mapper = vi.fn(async (n: number): Promise<number> => {
+      started.add(n);
+      if (++startedCount === 3) {
+        progressGate.resolve();
+      }
+      if (n === 1) {
+        // Wait until the test triggers the rejection, then signal and throw.
+        await rejectionGate.promise;
+        throw new Error("boom from 1");
+      }
+      // n=2 and n=3 are blocked until the test releases them.
+      await inFlightGate.promise;
+      return n * 2;
+    });
+
+    const promise = runWithConcurrency([1, 2, 3, 4, 5], 3, mapper);
+
+    // Settlement observer attached immediately so a rejection is captured
+    // synchronously.  Using .then(onSuccess, onFailure) avoids creating a
+    // new rejecting promise (unlike .finally) so the original promise can
+    // still be asserted with expect(...).rejects.
+    let settleObserved = false;
+    let settleError: unknown = undefined;
+    promise.then(
+      () => {},
+      (err) => {
+        settleObserved = true;
+        settleError = err;
+      },
+    );
+
+    // Wait until all three initial workers have started.
+    await progressGate.promise;
+
+    // Trigger n=1's rejection.
+    rejectionGate.resolve();
+
+    // At this point n=2/n=3 are still blocked on inFlightGate and the
+    // promise is unsettled.
+    expect(started.size).toBe(3);
+    expect(started).toEqual(new Set([1, 2, 3]));
+    expect(settleObserved).toBe(false);
+
+    // Release the blocked mappers.
+    inFlightGate.resolve();
+
+    // Workers n=2/n=3 complete; Promise.all(workers) settles; the function
+    // re-throws the original error.  The settlement observer fires as a
+    // microtask — flush until it has run.
+    await inFlightGate.promise;
+    for (let i = 0; i < 10; i++) await Promise.resolve();
+    expect(settleObserved).toBe(true);
+    expect(settleError).toBeInstanceOf(Error);
+    expect((settleError as Error).message).toBe("boom from 1");
+
+    // Only the initial batch of 3 started — no queued work after failure.
+    expect(started.size).toBe(3);
+    expect(started).toEqual(new Set([1, 2, 3]));
+
+    // The original promise still rejects with the exact error.
+    await expect(promise).rejects.toThrow("boom from 1");
   });
 });
 

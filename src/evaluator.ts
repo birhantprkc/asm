@@ -1953,6 +1953,14 @@ export function summariseBatch(items: EvalBatchItem[]): EvalBatchAggregate {
 /**
  * Run an async task for each input with a bounded concurrency window.
  * Preserves output order (index-indexed results array).
+ *
+ * On the first mapper rejection a boolean failure flag is set and the
+ * original error is remembered.  Workers stop claiming new indexes once
+ * failure is observed.  All already-started mapper calls are awaited
+ * (because every worker promise is awaited).  After Promise.all the first
+ * error is re-thrown; otherwise the ordered results are returned.
+ *
+ * Empty input always returns an empty array.
  */
 export async function runWithConcurrency<T, R>(
   inputs: T[],
@@ -1961,6 +1969,8 @@ export async function runWithConcurrency<T, R>(
 ): Promise<R[]> {
   const results: R[] = new Array(inputs.length);
   let next = 0;
+  let failure = false;
+  let firstError: unknown;
   const boundedLimit = Math.max(1, Math.floor(limit));
   const workers: Promise<void>[] = [];
   const size = Math.min(boundedLimit, inputs.length);
@@ -1968,14 +1978,27 @@ export async function runWithConcurrency<T, R>(
     workers.push(
       (async () => {
         while (true) {
+          if (failure) break;
           const idx = next++;
           if (idx >= inputs.length) break;
-          results[idx] = await fn(inputs[idx], idx);
+          try {
+            results[idx] = await fn(inputs[idx], idx);
+          } catch (err: unknown) {
+            if (!failure) {
+              failure = true;
+              firstError = err;
+            }
+            break;
+          }
         }
       })(),
     );
   }
   await Promise.all(workers);
+
+  if (failure) {
+    throw firstError;
+  }
   return results;
 }
 
