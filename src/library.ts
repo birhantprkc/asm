@@ -11,7 +11,6 @@ import {
   realpath,
   rename,
   rm,
-  writeFile,
 } from "fs/promises";
 import { execFile } from "child_process";
 import { createHash } from "crypto";
@@ -21,6 +20,11 @@ import { getLibraryLockPath, getLibrarySkillsDir } from "./config";
 import { debug } from "./logger";
 import { parseFrontmatter, resolveVersion } from "./utils/frontmatter";
 import { createDirSymlink } from "./utils/fs";
+import {
+  AtomicWritePostRenameError,
+  withFileMutationLock,
+  writeTextFileAtomically,
+} from "./utils/atomic-file";
 import { sourceToCloneUrl } from "./updater";
 import type { LibraryLockFile, LibrarySkillEntry } from "./utils/types";
 
@@ -86,51 +90,16 @@ export function emptyLibraryLock(): LibraryLockFile {
 export async function readLibraryLock(
   path: string = getLibraryLockPath(),
 ): Promise<LibraryLockFile> {
-  let raw: string;
-  try {
-    raw = await readFile(path, "utf-8");
-  } catch (err: any) {
-    if (err?.code === "ENOENT") {
-      debug("library: lock file not found, returning empty lock");
-      return emptyLibraryLock();
-    }
-    throw err;
-  }
-
-  try {
-    const parsed = JSON.parse(raw);
-    if (
-      !parsed ||
-      typeof parsed !== "object" ||
-      Array.isArray(parsed) ||
-      parsed.version !== 1 ||
-      typeof parsed.skills !== "object" ||
-      parsed.skills === null ||
-      Array.isArray(parsed.skills)
-    ) {
-      throw new Error("invalid schema");
-    }
-    return parsed as LibraryLockFile;
-  } catch {
-    const backupPath = path + ".bak";
-    try {
-      await copyFile(path, backupPath);
-    } catch {
-      // best effort backup
-    }
-    console.error(
-      `Warning: library-lock.json was corrupted. Backup saved to ${backupPath}. Starting fresh.`,
-    );
-    return emptyLibraryLock();
-  }
+  return readLibraryLockFile(path);
 }
 
 export async function writeLibraryLock(
   lock: LibraryLockFile,
   path: string = getLibraryLockPath(),
 ): Promise<void> {
-  await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, JSON.stringify(lock, null, 2) + "\n", "utf-8");
+  await withFileMutationLock(path, async () => {
+    await persistLibraryLock(lock, path);
+  });
 }
 
 export async function listLibrarySkills(
@@ -170,6 +139,50 @@ function libraryUpdateFailure(
   return { name, status: "failed", reason };
 }
 
+async function libraryEntryMatchesUpdateSource(
+  currentEntry: LibrarySkillEntry,
+  expectedEntry: LibrarySkillEntry,
+  expectedLocalSourceIdentity: string | null,
+): Promise<boolean> {
+  if (currentEntry.sourceType !== expectedEntry.sourceType) {
+    return false;
+  }
+  if (
+    resolve(currentEntry.libraryPath) !== resolve(expectedEntry.libraryPath)
+  ) {
+    return false;
+  }
+  if (currentEntry.sourceType === "local") {
+    if (!expectedLocalSourceIdentity) {
+      return false;
+    }
+    return (
+      (await resolveLocalSourceIdentity(currentEntry)) ===
+      expectedLocalSourceIdentity
+    );
+  }
+  return (
+    currentEntry.source === expectedEntry.source &&
+    currentEntry.ref === expectedEntry.ref &&
+    currentEntry.skillPath === expectedEntry.skillPath
+  );
+}
+
+function libraryEntryChangedDuringUpdate(name: string): LibraryUpdateResult {
+  return libraryUpdateFailure(
+    name,
+    `Library skill "${name}" changed while update was in progress. Run "asm library update ${name}" again.`,
+  );
+}
+
+function nextInstalledAt(previousInstalledAt?: string): string {
+  const previousTime = Date.parse(previousInstalledAt ?? "");
+  const installedAt = Number.isFinite(previousTime)
+    ? Math.max(Date.now(), previousTime + 1)
+    : Date.now();
+  return new Date(installedAt).toISOString();
+}
+
 function librarySourceRoot(entry: LibrarySkillEntry): string | null {
   if (!entry.source.startsWith("local:")) {
     return null;
@@ -179,6 +192,98 @@ function librarySourceRoot(entry: LibrarySkillEntry): string | null {
     return null;
   }
   return resolve(basePath);
+}
+
+async function resolveLocalSourceIdentity(
+  entry: LibrarySkillEntry,
+): Promise<string> {
+  const sourceRoot = librarySourceRoot(entry);
+  if (!sourceRoot) {
+    throw new Error("Unsupported library source for update");
+  }
+
+  const sourceDir = resolveContainedPath(
+    sourceRoot,
+    join(sourceRoot, entry.skillPath),
+  );
+  if (!sourceDir) {
+    throw new Error("Invalid update metadata: skillPath escapes source root");
+  }
+
+  const [realSourceRoot, realSourceDir] = await Promise.all([
+    realpath(sourceRoot),
+    realpath(sourceDir),
+  ]);
+  if (!isContainedPath(realSourceRoot, realSourceDir)) {
+    throw new Error("Invalid update metadata: skillPath escapes source root");
+  }
+
+  return realSourceDir;
+}
+
+async function readLibraryLockFile(path: string): Promise<LibraryLockFile> {
+  let raw: string;
+  try {
+    raw = await readFile(path, "utf-8");
+  } catch (err: any) {
+    if (err?.code === "ENOENT") {
+      debug("library: lock file not found, returning empty lock");
+      return emptyLibraryLock();
+    }
+    throw err;
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (
+      !parsed ||
+      typeof parsed !== "object" ||
+      Array.isArray(parsed) ||
+      parsed.version !== 1 ||
+      typeof parsed.skills !== "object" ||
+      parsed.skills === null ||
+      Array.isArray(parsed.skills)
+    ) {
+      throw new Error("invalid schema");
+    }
+    return parsed as LibraryLockFile;
+  } catch {
+    const backupPath = path + ".bak";
+    try {
+      await copyFile(path, backupPath);
+    } catch {
+      // best effort backup
+    }
+    console.error(
+      `Warning: library-lock.json was corrupted. Backup saved to ${backupPath}. Starting fresh.`,
+    );
+    return emptyLibraryLock();
+  }
+}
+
+async function persistLibraryLock(
+  lock: LibraryLockFile,
+  path: string,
+): Promise<void> {
+  await writeTextFileAtomically(path, JSON.stringify(lock, null, 2) + "\n");
+}
+
+async function mutateLibraryLock<T>(
+  path: string,
+  mutate: (
+    lock: LibraryLockFile,
+  ) =>
+    | Promise<{ changed: boolean; result?: T }>
+    | { changed: boolean; result?: T },
+): Promise<T | undefined> {
+  return withFileMutationLock(path, async () => {
+    const lock = await readLibraryLockFile(path);
+    const { changed, result } = await mutate(lock);
+    if (changed) {
+      await persistLibraryLock(lock, path);
+    }
+    return result;
+  });
 }
 
 function validateSourceSkillFrontmatter(
@@ -352,32 +457,54 @@ async function cloneRemoteLibrarySource(
   }
 }
 
+async function stageLibraryDirectory(
+  sourceDir: string,
+  targetDir: string,
+): Promise<string> {
+  const stagedDir = await mkdtemp(join(dirname(targetDir), ".library-update-"));
+
+  try {
+    await cp(sourceDir, stagedDir, { recursive: true });
+    await rm(join(stagedDir, ".git"), { recursive: true, force: true });
+    return stagedDir;
+  } catch (err) {
+    await rm(stagedDir, { recursive: true, force: true });
+    throw err;
+  }
+}
+
 async function replaceDirectoryAtomically(input: {
-  sourceDir: string;
+  stagedDir: string;
   targetDir: string;
   writeLock: () => Promise<void>;
 }): Promise<LibraryUpdateResult | null> {
   const parentDir = dirname(input.targetDir);
-  const stagedDir = await mkdtemp(join(parentDir, ".library-update-"));
   let backupDir: string | null = null;
   let preserveBackup = false;
 
   try {
     try {
-      await cp(input.sourceDir, stagedDir, { recursive: true });
-      await rm(join(stagedDir, ".git"), { recursive: true, force: true });
-
       if (await pathExists(input.targetDir)) {
         backupDir = join(parentDir, `.library-update-backup-${Date.now()}`);
         await rename(input.targetDir, backupDir);
       }
 
-      await rename(stagedDir, input.targetDir);
+      await rename(input.stagedDir, input.targetDir);
 
       try {
         await input.writeLock();
         return null;
       } catch (err: any) {
+        if (err instanceof AtomicWritePostRenameError) {
+          return {
+            name: "",
+            status: "failed",
+            reason: `Lock metadata and library files were published as the new generation, but parent-directory durability could not be confirmed: ${
+              err.cause instanceof Error ? err.cause.message : String(err.cause)
+            }`,
+          };
+        }
+
         await rm(input.targetDir, { recursive: true, force: true });
         if (backupDir) {
           try {
@@ -418,7 +545,7 @@ async function replaceDirectoryAtomically(input: {
       };
     }
   } finally {
-    await rm(stagedDir, { recursive: true, force: true });
+    await rm(input.stagedDir, { recursive: true, force: true });
     if (backupDir && !preserveBackup) {
       await rm(backupDir, { recursive: true, force: true });
     }
@@ -434,7 +561,8 @@ export async function updateLibrarySkill(
 ): Promise<LibraryUpdateResult> {
   const lockPath = paths.lockPath ?? getLibraryLockPath();
   const skillsDir = paths.skillsDir ?? getLibrarySkillsDir();
-  const writeLibraryLockFn = _overrides?.writeLibraryLockFn ?? writeLibraryLock;
+  const persistLibraryLockFn =
+    _overrides?.writeLibraryLockFn ?? persistLibraryLock;
   const lock = await readLibraryLock(lockPath);
   const directEntry = lock.skills[name] ?? null;
   const nameMatch =
@@ -453,6 +581,7 @@ export async function updateLibrarySkill(
   }
 
   const [dirName, entry] = selected;
+  const expectedEntry = { ...entry };
 
   if (!entry.source || !entry.source.trim()) {
     return libraryUpdateFailure(dirName, "Missing update metadata: source");
@@ -471,6 +600,7 @@ export async function updateLibrarySkill(
   }
 
   let cleanupSourceRoot: string | null = null;
+  let expectedLocalSourceIdentity: string | null = null;
   try {
     let sourceRoot: string;
     let nextCommitHash: string | null = null;
@@ -542,19 +672,8 @@ export async function updateLibrarySkill(
         "Invalid update metadata: skillPath escapes source root",
       );
     }
-
-    const libraryPath = resolveContainedPath(skillsDir, entry.libraryPath);
-    if (!libraryPath) {
-      return libraryUpdateFailure(
-        dirName,
-        "Invalid update metadata: libraryPath escapes library skills directory",
-      );
-    }
-    if (!(await libraryPathRealpathIsContained(skillsDir, libraryPath))) {
-      return libraryUpdateFailure(
-        dirName,
-        "Invalid update metadata: libraryPath escapes library skills directory",
-      );
+    if (entry.sourceType === "local") {
+      expectedLocalSourceIdentity = realSourceDir;
     }
 
     let sourceMarkdown: string;
@@ -583,50 +702,115 @@ export async function updateLibrarySkill(
     if (!nextCommitHash) {
       return libraryUpdateFailure(dirName, "Could not read new commit");
     }
-    if (entry.commitHash === nextCommitHash) {
-      return {
-        name: nameFromSource,
-        status: "skipped",
-        oldVersion: entry.version,
-        newVersion: versionFromSource,
-        oldCommit: entry.commitHash,
-        newCommit: nextCommitHash,
-      };
-    }
-    const updatedLock = {
-      ...lock,
-      skills: {
-        ...lock.skills,
-        [dirName]: {
-          ...entry,
-          name: nameFromSource,
-          version: versionFromSource,
-          commitHash: nextCommitHash,
-          installedAt: new Date().toISOString(),
-        },
-      },
-    };
 
-    const swapResult = await replaceDirectoryAtomically({
+    const stagedDir = await stageLibraryDirectory(
       sourceDir,
-      targetDir: libraryPath,
-      writeLock: () => writeLibraryLockFn(updatedLock, lockPath),
-    });
-    if (swapResult) {
-      return libraryUpdateFailure(
-        dirName,
-        swapResult.reason ?? "Failed to update library skill",
-      );
-    }
+      join(skillsDir, dirName),
+    );
 
-    return {
-      name: nameFromSource,
-      status: "updated",
-      oldVersion: entry.version,
-      newVersion: versionFromSource,
-      oldCommit: entry.commitHash,
-      newCommit: nextCommitHash,
-    };
+    try {
+      return await withFileMutationLock(lockPath, async () => {
+        const currentLock = await readLibraryLockFile(lockPath);
+        const currentEntry = currentLock.skills[dirName];
+        if (!currentEntry) {
+          return libraryUpdateFailure(
+            dirName,
+            `Library skill "${dirName}" not found. Run "asm library list".`,
+          );
+        }
+
+        const currentLibraryPath = resolveContainedPath(
+          skillsDir,
+          currentEntry.libraryPath,
+        );
+        if (!currentLibraryPath) {
+          return libraryUpdateFailure(
+            dirName,
+            "Invalid update metadata: libraryPath escapes library skills directory",
+          );
+        }
+        if (
+          !(await libraryPathRealpathIsContained(skillsDir, currentLibraryPath))
+        ) {
+          return libraryUpdateFailure(
+            dirName,
+            "Invalid update metadata: libraryPath escapes library skills directory",
+          );
+        }
+
+        let updateSourceStillMatches: boolean;
+        try {
+          updateSourceStillMatches = await libraryEntryMatchesUpdateSource(
+            currentEntry,
+            expectedEntry,
+            expectedLocalSourceIdentity,
+          );
+        } catch {
+          return libraryEntryChangedDuringUpdate(dirName);
+        }
+        const installedGenerationStillMatches =
+          currentEntry.installedAt === expectedEntry.installedAt;
+        if (
+          installedGenerationStillMatches &&
+          updateSourceStillMatches &&
+          currentEntry.commitHash === nextCommitHash
+        ) {
+          return {
+            name: currentEntry.name,
+            status: "skipped" as const,
+            oldVersion: currentEntry.version,
+            newVersion: versionFromSource,
+            oldCommit: currentEntry.commitHash,
+            newCommit: nextCommitHash,
+          };
+        }
+
+        if (
+          !installedGenerationStillMatches ||
+          !updateSourceStillMatches ||
+          currentEntry.commitHash !== expectedEntry.commitHash
+        ) {
+          return libraryEntryChangedDuringUpdate(dirName);
+        }
+
+        const updatedLock = {
+          ...currentLock,
+          skills: {
+            ...currentLock.skills,
+            [dirName]: {
+              ...currentEntry,
+              name: nameFromSource,
+              version: versionFromSource,
+              commitHash: nextCommitHash,
+              installedAt: nextInstalledAt(currentEntry.installedAt),
+            },
+          },
+        };
+
+        const swapResult = await replaceDirectoryAtomically({
+          stagedDir,
+          targetDir: currentLibraryPath,
+          writeLock: () => persistLibraryLockFn(updatedLock, lockPath),
+        });
+        if (swapResult) {
+          return libraryUpdateFailure(
+            dirName,
+            swapResult.reason ?? "Failed to update library skill",
+          );
+        }
+
+        return {
+          name: nameFromSource,
+          status: "updated" as const,
+          oldVersion: currentEntry.version,
+          newVersion: versionFromSource,
+          oldCommit: currentEntry.commitHash,
+          newCommit: nextCommitHash,
+        };
+      });
+    } finally {
+      await rm(stagedDir, { recursive: true, force: true });
+    }
   } finally {
     if (cleanupSourceRoot) {
       await rm(cleanupSourceRoot, { recursive: true, force: true });
@@ -843,37 +1027,55 @@ export async function installLibrarySkill(
   const libraryName = validateSkillDirectoryName(plan.libraryName);
   const libraryPath = join(skillsDir, libraryName);
 
-  if (await pathExists(libraryPath)) {
-    if (!plan.force) {
-      throw new Error(
-        `Library skill already exists: ${libraryPath}. Use --force to overwrite.`,
-      );
-    }
-    await rm(libraryPath, { recursive: true, force: true });
-  }
-
   await mkdir(skillsDir, { recursive: true });
-  await cp(plan.sourceDir, libraryPath, { recursive: true });
-  await rm(join(libraryPath, ".git"), { recursive: true, force: true });
+  const stagedDir = await stageLibraryDirectory(plan.sourceDir, libraryPath);
 
-  const skillMarkdown = await readFile(join(libraryPath, "SKILL.md"), "utf-8");
-  const fm = parseFrontmatter(skillMarkdown);
-  const name = fm.name || libraryName;
-  const version = resolveVersion(fm);
+  try {
+    const skillMarkdown = await readFile(join(stagedDir, "SKILL.md"), "utf-8");
+    const fm = parseFrontmatter(skillMarkdown);
+    const name = fm.name || libraryName;
+    const version = resolveVersion(fm);
 
-  const lock = await readLibraryLock(lockPath);
-  lock.skills[libraryName] = {
-    name,
-    version,
-    source: plan.source,
-    sourceType: plan.sourceType,
-    commitHash: plan.commitHash,
-    ref: plan.ref,
-    skillPath: plan.skillPath,
-    libraryPath,
-    installedAt: new Date().toISOString(),
-  };
-  await writeLibraryLock(lock, lockPath);
+    await withFileMutationLock(lockPath, async () => {
+      const currentLock = await readLibraryLockFile(lockPath);
+      if ((await pathExists(libraryPath)) && !plan.force) {
+        throw new Error(
+          `Library skill already exists: ${libraryPath}. Use --force to overwrite.`,
+        );
+      }
 
-  return { name, version, libraryPath };
+      const updatedLock = {
+        ...currentLock,
+        skills: {
+          ...currentLock.skills,
+          [libraryName]: {
+            name,
+            version,
+            source: plan.source,
+            sourceType: plan.sourceType,
+            commitHash: plan.commitHash,
+            ref: plan.ref,
+            skillPath: plan.skillPath,
+            libraryPath,
+            installedAt: nextInstalledAt(
+              currentLock.skills[libraryName]?.installedAt,
+            ),
+          },
+        },
+      };
+
+      const swapResult = await replaceDirectoryAtomically({
+        stagedDir,
+        targetDir: libraryPath,
+        writeLock: () => persistLibraryLock(updatedLock, lockPath),
+      });
+      if (swapResult) {
+        throw new Error(swapResult.reason ?? "Failed to install library skill");
+      }
+    });
+
+    return { name, version, libraryPath };
+  } finally {
+    await rm(stagedDir, { recursive: true, force: true });
+  }
 }

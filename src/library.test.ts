@@ -1,5 +1,55 @@
 import { createDirSymlink } from "./utils/fs";
-import { describe, test, expect, beforeEach, afterEach } from "vitest";
+import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
+
+const fspMocks = vi.hoisted(() => ({
+  openOverride: null as
+    | null
+    | ((
+        realOpen: typeof import("fs/promises").open,
+        ...args: Parameters<typeof import("fs/promises").open>
+      ) => ReturnType<typeof import("fs/promises").open>),
+  renameOverride: null as
+    | null
+    | ((
+        realRename: typeof import("fs/promises").rename,
+        ...args: Parameters<typeof import("fs/promises").rename>
+      ) => Promise<void>),
+  readFileOverride: null as
+    | null
+    | ((
+        realReadFile: typeof import("fs/promises").readFile,
+        ...args: Parameters<typeof import("fs/promises").readFile>
+      ) => ReturnType<typeof import("fs/promises").readFile>),
+  cpOverride: null as
+    | null
+    | ((
+        realCp: typeof import("fs/promises").cp,
+        ...args: Parameters<typeof import("fs/promises").cp>
+      ) => ReturnType<typeof import("fs/promises").cp>),
+}));
+vi.mock("fs/promises", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("fs/promises")>();
+  return {
+    ...actual,
+    open: (...args: Parameters<typeof actual.open>) =>
+      fspMocks.openOverride
+        ? fspMocks.openOverride(actual.open, ...args)
+        : actual.open(...args),
+    rename: (...args: Parameters<typeof actual.rename>) =>
+      fspMocks.renameOverride
+        ? fspMocks.renameOverride(actual.rename, ...args)
+        : actual.rename(...args),
+    readFile: (...args: Parameters<typeof actual.readFile>) =>
+      fspMocks.readFileOverride
+        ? fspMocks.readFileOverride(actual.readFile, ...args)
+        : actual.readFile(...args),
+    cp: (...args: Parameters<typeof actual.cp>) =>
+      fspMocks.cpOverride
+        ? fspMocks.cpOverride(actual.cp, ...args)
+        : actual.cp(...args),
+  };
+});
+
 import {
   chmod,
   lstat,
@@ -12,9 +62,10 @@ import {
   rm,
   symlink,
   writeFile,
+  readdir,
 } from "fs/promises";
 import { tmpdir } from "os";
-import { join, relative, resolve } from "path";
+import { dirname, join, relative, resolve } from "path";
 import {
   emptyLibraryLock,
   activateLibrarySkill,
@@ -25,6 +76,58 @@ import {
   updateLibrarySkills,
   writeLibraryLock,
 } from "./library";
+
+function deferred<T = void>() {
+  let resolve!: (value: T | PromiseLike<T>) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}
+
+function failDirectoryDurability(
+  directoryPath: string,
+  phase: "open" | "sync" | "close",
+  error: Error,
+): void {
+  fspMocks.openOverride = async (realOpen, ...args) => {
+    if (
+      args[1] !== "r" ||
+      resolve(String(args[0])) !== resolve(directoryPath)
+    ) {
+      return realOpen(...args);
+    }
+    if (phase === "open") throw error;
+
+    const handle = await realOpen(...args);
+    return {
+      sync: async () => {
+        if (phase === "sync") throw error;
+        await handle.sync();
+      },
+      close: async () => {
+        await handle.close();
+        if (phase === "close") throw error;
+      },
+    } as Awaited<ReturnType<typeof realOpen>>;
+  };
+}
+
+beforeEach(() => {
+  fspMocks.openOverride = null;
+  fspMocks.renameOverride = null;
+  fspMocks.readFileOverride = null;
+  fspMocks.cpOverride = null;
+});
+
+afterEach(() => {
+  fspMocks.openOverride = null;
+  fspMocks.renameOverride = null;
+  fspMocks.readFileOverride = null;
+  fspMocks.cpOverride = null;
+});
 
 describe("library lock", () => {
   let tempDir: string;
@@ -77,6 +180,56 @@ describe("library lock", () => {
     await expect(readFile(lockPath + ".bak", "utf-8")).resolves.toBe(
       invalidLock,
     );
+  });
+
+  test("writeLibraryLock preserves the previous lock when atomic rename fails", async () => {
+    const original =
+      JSON.stringify(
+        {
+          version: 1,
+          skills: {
+            brainstorming: {
+              name: "brainstorming",
+              version: "1.0.0",
+              source: "github:obra/superpowers",
+              sourceType: "github",
+              commitHash: "abc123",
+              ref: "main",
+              skillPath: "skills/brainstorming",
+              libraryPath: join(tempDir, "skills", "brainstorming"),
+              installedAt: "2026-06-18T00:00:00.000Z",
+            },
+          },
+        },
+        null,
+        2,
+      ) + "\n";
+    await writeFile(lockPath, original, "utf-8");
+
+    fspMocks.renameOverride = async (_realRename, _from, to) => {
+      if (to === lockPath) {
+        throw new Error("rename boom");
+      }
+    };
+
+    const updatedLock = emptyLibraryLock();
+    updatedLock.skills.brainstorming = {
+      name: "brainstorming",
+      version: "2.0.0",
+      source: "github:obra/superpowers",
+      sourceType: "github",
+      commitHash: "def456",
+      ref: "main",
+      skillPath: "skills/brainstorming",
+      libraryPath: join(tempDir, "skills", "brainstorming"),
+      installedAt: "2026-06-19T00:00:00.000Z",
+    };
+
+    await expect(writeLibraryLock(updatedLock, lockPath)).rejects.toThrow(
+      "rename boom",
+    );
+    await expect(readFile(lockPath, "utf-8")).resolves.toBe(original);
+    await expect(readdir(tempDir)).resolves.toEqual(["library-lock.json"]);
   });
 });
 
@@ -140,6 +293,46 @@ describe("installLibrarySkill", () => {
       libraryPath: result.libraryPath,
     });
   });
+
+  test.each(["open", "sync", "close"] as const)(
+    "keeps fresh-install lock metadata and files aligned after directory %s fails post-rename",
+    async (phase) => {
+      failDirectoryDurability(
+        dirname(lockPath),
+        phase,
+        new Error(`directory ${phase} boom`),
+      );
+
+      await expect(
+        installLibrarySkill(
+          {
+            sourceDir,
+            libraryName: "brainstorming",
+            source: "github:obra/superpowers",
+            sourceType: "github",
+            commitHash: "abc123",
+            ref: "main",
+            skillPath: "skills/brainstorming",
+            force: false,
+          },
+          { skillsDir, lockPath },
+        ),
+      ).rejects.toThrow(
+        "Lock metadata and library files were published as the new generation, but parent-directory durability could not be confirmed",
+      );
+
+      const lock = await readLibraryLock(lockPath);
+      expect(lock.skills.brainstorming).toMatchObject({
+        name: "brainstorming",
+        version: "1.0.0",
+        commitHash: "abc123",
+      });
+      await expect(
+        readFile(join(skillsDir, "brainstorming", "SKILL.md"), "utf-8"),
+      ).resolves.toContain("# Body");
+      await expect(readdir(skillsDir)).resolves.toEqual(["brainstorming"]);
+    },
+  );
 
   test("refuses to overwrite an existing library skill without force", async () => {
     await installLibrarySkill(
@@ -1297,6 +1490,419 @@ describe("updateLibrarySkill", () => {
       readFile(join(libraryPath, "notes.txt"), "utf-8"),
     ).resolves.toBe("bravo");
   });
+
+  test("serializes overlapping updates so later writes keep earlier lock deltas", async () => {
+    const outliningSourceDir = join(sourceRoot, "skills", "outlining");
+    const outliningLibraryPath = join(skillsDir, "outlining");
+    await mkdir(outliningSourceDir, { recursive: true });
+    await writeFile(
+      join(outliningSourceDir, "SKILL.md"),
+      "---\nname: outlining\nversion: 1.0.0\n---\n# Old Outline\n",
+    );
+    await installLibrarySkill(
+      {
+        sourceDir: outliningSourceDir,
+        libraryName: "outlining",
+        source: `local:${sourceRoot}`,
+        sourceType: "local",
+        commitHash: "local-outline",
+        ref: null,
+        skillPath: "skills/outlining",
+        force: false,
+      },
+      { skillsDir, lockPath },
+    );
+
+    await writeFile(
+      join(sourceRoot, "skills", "brainstorming", "SKILL.md"),
+      "---\nname: brainstorming\nversion: 2.0.0\n---\n# New Brainstorming\n",
+    );
+    await writeFile(
+      join(outliningSourceDir, "SKILL.md"),
+      "---\nname: outlining\nversion: 2.0.0\n---\n# New Outline\n",
+    );
+
+    const firstLockRenameStarted = deferred<void>();
+    const releaseFirstLockRename = deferred<void>();
+    let blockedFirstLockRename = false;
+    fspMocks.renameOverride = async (realRename, from, to) => {
+      if (to === lockPath && !blockedFirstLockRename) {
+        blockedFirstLockRename = true;
+        firstLockRenameStarted.resolve();
+        await releaseFirstLockRename.promise;
+      }
+      await realRename(from, to);
+    };
+
+    const firstUpdate = updateLibrarySkill("brainstorming", {
+      skillsDir,
+      lockPath,
+    });
+    await firstLockRenameStarted.promise;
+
+    const secondUpdate = updateLibrarySkill("outlining", {
+      skillsDir,
+      lockPath,
+    });
+
+    releaseFirstLockRename.resolve();
+
+    await expect(Promise.all([firstUpdate, secondUpdate])).resolves.toEqual([
+      expect.objectContaining({ name: "brainstorming", status: "updated" }),
+      expect.objectContaining({ name: "outlining", status: "updated" }),
+    ]);
+
+    const updatedLock = await readLibraryLock(lockPath);
+    expect(updatedLock.skills.brainstorming.version).toBe("2.0.0");
+    expect(updatedLock.skills.outlining.version).toBe("2.0.0");
+    await expect(
+      readFile(join(libraryPath, "SKILL.md"), "utf-8"),
+    ).resolves.toContain("# New Brainstorming");
+    await expect(
+      readFile(join(outliningLibraryPath, "SKILL.md"), "utf-8"),
+    ).resolves.toContain("# New Outline");
+  });
+
+  test("rejects a stale staged update after force reinstall publishes a new generation with unchanged metadata", async () => {
+    const initialInstalledAt = "2999-01-01T00:00:00.000Z";
+    const initialLock = await readLibraryLock(lockPath);
+    initialLock.skills.brainstorming.installedAt = initialInstalledAt;
+    await writeLibraryLock(initialLock, lockPath);
+
+    await writeFile(
+      join(sourceRoot, "skills", "brainstorming", "SKILL.md"),
+      "---\nname: brainstorming\nversion: 2.0.0\n---\n# Updated Source\n",
+    );
+
+    const updateStageReady = deferred<void>();
+    const releaseUpdateStage = deferred<void>();
+    let blockedUpdateStage = false;
+    const updateSourceDir = join(sourceRoot, "skills", "brainstorming");
+
+    fspMocks.cpOverride = async (realCp, from, to, ...rest) => {
+      const result = await realCp(from, to, ...rest);
+      if (!blockedUpdateStage && String(from) === updateSourceDir) {
+        blockedUpdateStage = true;
+        updateStageReady.resolve();
+        await releaseUpdateStage.promise;
+      }
+      return result;
+    };
+
+    const updatePromise = updateLibrarySkill("brainstorming", {
+      skillsDir,
+      lockPath,
+    });
+    await updateStageReady.promise;
+
+    await writeFile(
+      join(updateSourceDir, "SKILL.md"),
+      "---\nname: brainstorming\nversion: 3.0.0\n---\n# Reinstalled Source\n",
+    );
+
+    let reinstallResult: Awaited<ReturnType<typeof installLibrarySkill>>;
+    let reinstallEntry: Awaited<
+      ReturnType<typeof readLibraryLock>
+    >["skills"][string];
+    try {
+      reinstallResult = await installLibrarySkill(
+        {
+          sourceDir: updateSourceDir,
+          libraryName: "brainstorming",
+          source: `local:${sourceRoot}`,
+          sourceType: "local",
+          commitHash: "local",
+          ref: null,
+          skillPath: "skills/brainstorming",
+          force: true,
+        },
+        { skillsDir, lockPath },
+      );
+      reinstallEntry = (await readLibraryLock(lockPath)).skills.brainstorming;
+    } finally {
+      releaseUpdateStage.resolve();
+    }
+
+    const updateResult = await updatePromise;
+
+    expect(reinstallResult).toMatchObject({
+      name: "brainstorming",
+      version: "3.0.0",
+      libraryPath,
+    });
+    expect(updateResult).toEqual({
+      name: "brainstorming",
+      status: "failed",
+      reason:
+        'Library skill "brainstorming" changed while update was in progress. Run "asm library update brainstorming" again.',
+    });
+    await expect(
+      readFile(join(libraryPath, "SKILL.md"), "utf-8"),
+    ).resolves.toContain("# Reinstalled Source");
+    await expect(
+      readFile(join(libraryPath, "SKILL.md"), "utf-8"),
+    ).resolves.not.toContain("# Updated Source");
+    await expect(readLibraryLock(lockPath)).resolves.toEqual({
+      version: 1,
+      skills: {
+        brainstorming: reinstallEntry,
+      },
+    });
+    const finalLock = await readLibraryLock(lockPath);
+    expect(finalLock.skills.brainstorming).toEqual(reinstallEntry);
+    expect(finalLock.skills.brainstorming.source).toBe(`local:${sourceRoot}`);
+    expect(finalLock.skills.brainstorming.skillPath).toBe(
+      "skills/brainstorming",
+    );
+    expect(finalLock.skills.brainstorming.commitHash).toBe("local");
+    expect(
+      Date.parse(finalLock.skills.brainstorming.installedAt),
+    ).toBeGreaterThan(Date.parse(initialInstalledAt));
+  });
+
+  test("accepts equivalent local source spellings during stale-update revalidation", async () => {
+    await writeFile(
+      join(sourceRoot, "skills", "brainstorming", "SKILL.md"),
+      "---\nname: brainstorming\nversion: 2.0.0\n---\n# Updated Source\n",
+    );
+
+    const updateStageReady = deferred<void>();
+    const releaseUpdateStage = deferred<void>();
+    let blockedUpdateStage = false;
+    const updateSourceDir = join(sourceRoot, "skills", "brainstorming");
+
+    fspMocks.cpOverride = async (realCp, from, to, ...rest) => {
+      const result = await realCp(from, to, ...rest);
+      if (!blockedUpdateStage && String(from) === updateSourceDir) {
+        blockedUpdateStage = true;
+        updateStageReady.resolve();
+        await releaseUpdateStage.promise;
+      }
+      return result;
+    };
+
+    const updatePromise = updateLibrarySkill("brainstorming", {
+      skillsDir,
+      lockPath,
+    });
+    await updateStageReady.promise;
+
+    const lock = await readLibraryLock(lockPath);
+    const equivalentSource = sourceRoot.endsWith("/")
+      ? `${sourceRoot}.`
+      : `${sourceRoot}/.`;
+    lock.skills.brainstorming = {
+      ...lock.skills.brainstorming,
+      source: `local:${equivalentSource}`,
+      ref: "HEAD",
+      skillPath: "skills/brainstorming/.",
+    };
+    await writeLibraryLock(lock, lockPath);
+    releaseUpdateStage.resolve();
+
+    const result = await updatePromise;
+
+    expect(result).toMatchObject({
+      name: "brainstorming",
+      status: "updated",
+      oldVersion: "1.0.0",
+      newVersion: "2.0.0",
+    });
+    await expect(
+      readFile(join(libraryPath, "SKILL.md"), "utf-8"),
+    ).resolves.toContain("# Updated Source");
+    const finalLock = await readLibraryLock(lockPath);
+    expect(finalLock.skills.brainstorming.source).toBe(
+      `local:${equivalentSource}`,
+    );
+    expect(finalLock.skills.brainstorming.ref).toBe("HEAD");
+    expect(finalLock.skills.brainstorming.skillPath).toBe(
+      "skills/brainstorming/.",
+    );
+  });
+
+  test("rejects changed local sources during stale-update revalidation", async () => {
+    const movedSourceRoot = join(tempDir, "moved-source");
+    await mkdir(join(movedSourceRoot, "skills", "brainstorming"), {
+      recursive: true,
+    });
+    await writeFile(
+      join(movedSourceRoot, "skills", "brainstorming", "SKILL.md"),
+      "---\nname: brainstorming\nversion: 9.9.0\n---\n# Moved Source\n",
+    );
+    await writeFile(
+      join(sourceRoot, "skills", "brainstorming", "SKILL.md"),
+      "---\nname: brainstorming\nversion: 2.0.0\n---\n# Updated Source\n",
+    );
+
+    const updateStageReady = deferred<void>();
+    const releaseUpdateStage = deferred<void>();
+    let blockedUpdateStage = false;
+    const updateSourceDir = join(sourceRoot, "skills", "brainstorming");
+
+    fspMocks.cpOverride = async (realCp, from, to, ...rest) => {
+      const result = await realCp(from, to, ...rest);
+      if (!blockedUpdateStage && String(from) === updateSourceDir) {
+        blockedUpdateStage = true;
+        updateStageReady.resolve();
+        await releaseUpdateStage.promise;
+      }
+      return result;
+    };
+
+    const updatePromise = updateLibrarySkill("brainstorming", {
+      skillsDir,
+      lockPath,
+    });
+    await updateStageReady.promise;
+
+    const lock = await readLibraryLock(lockPath);
+    lock.skills.brainstorming = {
+      ...lock.skills.brainstorming,
+      source: `local:${movedSourceRoot}`,
+    };
+    await writeLibraryLock(lock, lockPath);
+    releaseUpdateStage.resolve();
+
+    const result = await updatePromise;
+
+    expect(result).toEqual({
+      name: "brainstorming",
+      status: "failed",
+      reason:
+        'Library skill "brainstorming" changed while update was in progress. Run "asm library update brainstorming" again.',
+    });
+    await expect(
+      readFile(join(libraryPath, "SKILL.md"), "utf-8"),
+    ).resolves.toContain("# Old Source");
+    await expect(
+      readFile(join(libraryPath, "SKILL.md"), "utf-8"),
+    ).resolves.not.toContain("# Updated Source");
+    const finalLock = await readLibraryLock(lockPath);
+    expect(finalLock.skills.brainstorming.source).toBe(
+      `local:${movedSourceRoot}`,
+    );
+  });
+
+  test("serializes force reinstall with failing update rollback so disk and lock stay aligned", async () => {
+    const reinstallSourceDir = join(tempDir, "reinstall", "brainstorming");
+    await mkdir(reinstallSourceDir, { recursive: true });
+    await writeFile(
+      join(reinstallSourceDir, "SKILL.md"),
+      "---\nname: brainstorming\nversion: 3.0.0\n---\n# Reinstalled Source\n",
+    );
+    await writeFile(
+      join(sourceRoot, "skills", "brainstorming", "SKILL.md"),
+      "---\nname: brainstorming\nversion: 2.0.0\n---\n# Updated Source\n",
+    );
+
+    const updateWriteStarted = deferred<void>();
+    const releaseUpdateWrite = deferred<void>();
+    const installMetadataRead = deferred<void>();
+    let watchInstallRead = false;
+    let installMetadataCaptured = false;
+
+    fspMocks.readFileOverride = async (realReadFile, path, ...rest) => {
+      const result = await realReadFile(path, ...rest);
+      if (
+        watchInstallRead &&
+        !installMetadataCaptured &&
+        String(path).endsWith("SKILL.md")
+      ) {
+        installMetadataCaptured = true;
+        installMetadataRead.resolve();
+      }
+      return result;
+    };
+
+    const updatePromise = updateLibrarySkill(
+      "brainstorming",
+      { skillsDir, lockPath },
+      {
+        writeLibraryLockFn: async () => {
+          updateWriteStarted.resolve();
+          await releaseUpdateWrite.promise;
+          throw new Error("lock write boom");
+        },
+      },
+    );
+    await updateWriteStarted.promise;
+
+    watchInstallRead = true;
+    const reinstallPromise = installLibrarySkill(
+      {
+        sourceDir: reinstallSourceDir,
+        libraryName: "brainstorming",
+        source: `local:${join(tempDir, "reinstall")}`,
+        sourceType: "local",
+        commitHash: "reinstall",
+        ref: null,
+        skillPath: "brainstorming",
+        force: true,
+      },
+      { skillsDir, lockPath },
+    );
+    await installMetadataRead.promise;
+    releaseUpdateWrite.resolve();
+
+    const [updateResult, reinstallResult] = await Promise.all([
+      updatePromise,
+      reinstallPromise,
+    ]);
+
+    expect(updateResult).toEqual({
+      name: "brainstorming",
+      status: "failed",
+      reason:
+        "Updated library copy, but failed to write lock file: lock write boom",
+    });
+    expect(reinstallResult).toMatchObject({
+      name: "brainstorming",
+      version: "3.0.0",
+      libraryPath,
+    });
+    await expect(
+      readFile(join(libraryPath, "SKILL.md"), "utf-8"),
+    ).resolves.toContain("# Reinstalled Source");
+    const lock = await readLibraryLock(lockPath);
+    expect(lock.skills.brainstorming.version).toBe("3.0.0");
+    expect(lock.skills.brainstorming.commitHash).toBe("reinstall");
+  });
+
+  test.each(["open", "sync", "close"] as const)(
+    "keeps updated lock metadata and files aligned after directory %s fails post-rename",
+    async (phase) => {
+      await writeFile(
+        join(sourceRoot, "skills", "brainstorming", "SKILL.md"),
+        "---\nname: brainstorming\nversion: 2.0.0\n---\n# New Source\n",
+      );
+      failDirectoryDurability(
+        dirname(lockPath),
+        phase,
+        new Error(`directory ${phase} boom`),
+      );
+
+      const result = await updateLibrarySkill("brainstorming", {
+        skillsDir,
+        lockPath,
+      });
+
+      expect(result).toMatchObject({
+        name: "brainstorming",
+        status: "failed",
+        reason: expect.stringContaining(
+          "Lock metadata and library files were published as the new generation, but parent-directory durability could not be confirmed",
+        ),
+      });
+      const lock = await readLibraryLock(lockPath);
+      expect(lock.skills.brainstorming.version).toBe("2.0.0");
+      expect(lock.skills.brainstorming.commitHash).not.toBe("local");
+      await expect(
+        readFile(join(libraryPath, "SKILL.md"), "utf-8"),
+      ).resolves.toContain("# New Source");
+      await expect(readdir(skillsDir)).resolves.toEqual(["brainstorming"]);
+    },
+  );
 
   test("restores old library copy when lock write fails after swap", async () => {
     await writeFile(
