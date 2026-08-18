@@ -126,6 +126,47 @@ describe("chooseDemotionAction", () => {
     );
     expect(action.hint).not.toContain("--tool");
   });
+
+  // ─── Reference tier (issue #422) ────────────────────────────────────────
+
+  it("offers asm get as a second demotion destination for a library skill", () => {
+    const action = chooseDemotionAction("my-skill", [
+      makeInstance({ libraryLinked: true }),
+    ]);
+    expect(action.reference).toEqual({
+      command: "asm get my-skill",
+      hint: "read it on demand, zero residency",
+    });
+  });
+
+  it("does not offer asm get on the disable path, even for a library skill", () => {
+    // `asm disable` renames SKILL.md on the *canonical* directory, which for a
+    // library-linked skill is the library copy itself — so after disabling
+    // there is no local SKILL.md left for `asm get` to read on any rung.
+    const action = chooseDemotionAction("my-skill", [
+      makeInstance({ libraryLinked: true, provider: "claude" }),
+      makeInstance({ libraryLinked: true, provider: "codex" }),
+    ]);
+    expect(action.kind).toBe("disable");
+    expect(action.reference).toBeUndefined();
+  });
+
+  it("does not offer asm get for a skill that is not in the library", () => {
+    const action = chooseDemotionAction("my-skill", [
+      makeInstance({ libraryLinked: false }),
+    ]);
+    expect(action.kind).toBe("disable");
+    expect(action.reference).toBeUndefined();
+  });
+
+  it("does not replace the primary demotion command", () => {
+    const action = chooseDemotionAction("my-skill", [
+      makeInstance({ libraryLinked: true }),
+    ]);
+    expect(action.kind).toBe("deactivate");
+    expect(action.command).toContain("asm deactivate my-skill");
+    expect(action.reference?.command).toBe("asm get my-skill");
+  });
 });
 
 // ─── Audit computation ──────────────────────────────────────────────────────
@@ -328,6 +369,60 @@ describe("formatResidencyReport", () => {
     expect(output).toContain("heavy");
     expect(output).toContain("the median description");
     expect(output).toContain("asm disable heavy");
+  });
+
+  it("renders the asm get reference tier next to the demotion command", () => {
+    const report = computeResidencyAudit(
+      withBaseline(
+        makeSkill({
+          dirName: "heavy",
+          description: longDescription(200),
+          isSymlink: true,
+          realPath: `${LIBRARY}/heavy`,
+        }),
+      ),
+      { librarySkillsDir: LIBRARY },
+    );
+    const output = formatResidencyReport(report);
+    expect(output).toContain("asm get heavy");
+    expect(output).toContain("read it on demand, zero residency");
+  });
+
+  it("omits the reference line for a skill that is not in the library", () => {
+    const report = computeResidencyAudit(
+      withBaseline(
+        makeSkill({ dirName: "heavy", description: longDescription(200) }),
+      ),
+    );
+    expect(formatResidencyReport(report)).not.toContain("asm get heavy");
+  });
+
+  it("omits the reference line on the disable path, which unlinks the body", () => {
+    // Two library-linked instances -> `asm disable`, which renames the shared
+    // canonical SKILL.md (the library copy) and leaves nothing for `asm get`.
+    const report = computeResidencyAudit(
+      withBaseline(
+        makeSkill({
+          dirName: "heavy",
+          description: longDescription(200),
+          isSymlink: true,
+          realPath: `${LIBRARY}/heavy`,
+          provider: "claude",
+        }),
+        makeSkill({
+          dirName: "heavy",
+          description: longDescription(200),
+          isSymlink: true,
+          realPath: `${LIBRARY}/heavy`,
+          provider: "codex",
+          path: "/home/u/.codex/skills/heavy",
+        }),
+      ),
+      { librarySkillsDir: LIBRARY },
+    );
+    const output = formatResidencyReport(report);
+    expect(output).toContain("asm disable heavy");
+    expect(output).not.toContain("asm get heavy");
   });
 
   it("renders every token figure with the `~` prefix, never as bytes", () => {
