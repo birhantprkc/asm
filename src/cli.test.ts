@@ -340,6 +340,35 @@ describe("parseArgs", () => {
 
 // ─── isCLIMode unit tests ──────────────────────────────────────────────────
 
+describe("parseArgs: --tokens (issue #421)", () => {
+  test("defaults to false", () => {
+    expect(parseArgs(["node", "cli", "stats"]).flags.tokens).toBe(false);
+  });
+
+  test("--tokens sets the attention-budget flag", () => {
+    const args = parseArgs(["node", "cli", "stats", "--tokens"]);
+    expect(args.command).toBe("stats");
+    expect(args.flags.tokens).toBe(true);
+  });
+
+  test("--tokens combines with --json and --machine", () => {
+    expect(
+      parseArgs(["node", "cli", "stats", "--tokens", "--json"]).flags,
+    ).toMatchObject({ tokens: true, json: true });
+    expect(
+      parseArgs(["node", "cli", "stats", "--tokens", "--machine"]).flags,
+    ).toMatchObject({ tokens: true, machine: true });
+  });
+});
+
+describe("parseArgs: audit residency (issue #423)", () => {
+  test("residency parses as an audit subcommand, not a top-level verb", () => {
+    const args = parseArgs(["node", "cli", "audit", "residency"]);
+    expect(args.command).toBe("audit");
+    expect(args.subcommand).toBe("residency");
+  });
+});
+
 describe("isCLIMode", () => {
   const check = (...args: string[]) =>
     isCLIMode(["node", "script.ts", ...args]);
@@ -1108,6 +1137,182 @@ describe("CLI integration: audit", () => {
   test("main --help includes audit command", async () => {
     const { stdout } = await runCLI("--help");
     expect(stdout).toContain("audit");
+  });
+});
+
+describe("CLI integration: stats --tokens (issue #421)", () => {
+  test("--tokens exits 0 and reports the attention budget", async () => {
+    const { stdout, exitCode } = await runCLI("stats", "--tokens");
+    expect(exitCode).toBe(0);
+    expect(stdout).toContain("Attention Budget");
+  });
+
+  test("--tokens --json returns resident and body totals separately", async () => {
+    const { stdout, exitCode } = await runCLI("stats", "--tokens", "--json");
+    expect(exitCode).toBe(0);
+    const data = JSON.parse(stdout);
+    expect(data).toHaveProperty("totalResidentTokens");
+    expect(data).toHaveProperty("totalBodyTokens");
+    expect(data).toHaveProperty("medianResidentTokens");
+    expect(Array.isArray(data.byProvider)).toBe(true);
+    expect(Array.isArray(data.byScope)).toBe(true);
+    expect(Array.isArray(data.heaviestResident)).toBe(true);
+  });
+
+  test("--tokens --machine emits the v1 envelope", async () => {
+    const { stdout, exitCode } = await runCLI("stats", "--tokens", "--machine");
+    expect(exitCode).toBe(0);
+    const envelope = JSON.parse(stdout);
+    expect(envelope.version).toBe(1);
+    expect(envelope.command).toBe("stats tokens");
+    expect(envelope.status).toBe("ok");
+    expect(envelope.data).toHaveProperty("totalResidentTokens");
+  });
+
+  test("--machine is honoured by the plain dashboard too", async () => {
+    const { stdout, exitCode } = await runCLI("stats", "--machine");
+    expect(exitCode).toBe(0);
+    const envelope = JSON.parse(stdout);
+    expect(envelope.version).toBe(1);
+    expect(envelope.command).toBe("stats");
+    expect(envelope.data).toHaveProperty("totalResidentTokens");
+  });
+
+  test("stats --help documents the new flags", async () => {
+    const { stdout, exitCode } = await runCLI("stats", "--help");
+    expect(exitCode).toBe(0);
+    expect(stdout).toContain("--tokens");
+    expect(stdout).toContain("--machine");
+  });
+});
+
+describe("CLI integration: stats with nothing installed", () => {
+  let emptyHome: string;
+  let emptyCwd: string;
+
+  beforeEach(async () => {
+    emptyHome = await mkdtemp(join(tmpdir(), "asm-empty-home-"));
+    emptyCwd = await mkdtemp(join(tmpdir(), "asm-empty-cwd-"));
+  });
+
+  afterEach(async () => {
+    await rm(emptyHome, { recursive: true, force: true });
+    await rm(emptyCwd, { recursive: true, force: true });
+  });
+
+  const runEmpty = (...args: string[]) =>
+    spawnCollect(["npx", "tsx", CLI_BIN, ...args], {
+      cwd: emptyCwd,
+      env: { ...process.env, HOME: emptyHome, NO_COLOR: "1" },
+    });
+
+  test("--json emits a parseable report, not the human sentence", async () => {
+    const { stdout, exitCode } = await runEmpty("stats", "--json");
+    expect(exitCode).toBe(0);
+    const data = JSON.parse(stdout);
+    expect(data.totalSkills).toBe(0);
+    expect(data.totalResidentTokens).toBe(0);
+    expect(data.totalBodyTokens).toBe(0);
+    expect(data).not.toHaveProperty("perSkillDiskBytes");
+  });
+
+  test("--json --verbose keeps perSkillDiskBytes even when empty", async () => {
+    const { stdout, exitCode } = await runEmpty("stats", "--json", "--verbose");
+    expect(exitCode).toBe(0);
+    const start = stdout.indexOf("{");
+    const data = JSON.parse(stdout.slice(start));
+    expect(data).toHaveProperty("perSkillDiskBytes");
+  });
+
+  test("--machine emits the v1 envelope", async () => {
+    const { stdout, exitCode } = await runEmpty("stats", "--machine");
+    expect(exitCode).toBe(0);
+    expect(JSON.parse(stdout).data.totalSkills).toBe(0);
+  });
+
+  test("the human dashboard still degrades to a sentence", async () => {
+    const { stdout, exitCode } = await runEmpty("stats");
+    expect(exitCode).toBe(0);
+    expect(stdout.trim()).toBe("No skills found.");
+  });
+
+  test("--tokens and audit residency both report an empty set", async () => {
+    const budget = await runEmpty("stats", "--tokens");
+    expect(budget.exitCode).toBe(0);
+    expect(budget.stdout).toContain("No installed skills");
+
+    const residency = await runEmpty("audit", "residency");
+    expect(residency.exitCode).toBe(0);
+    expect(residency.stdout).toContain("No installed skills");
+  });
+});
+
+describe("CLI integration: audit residency (issue #423)", () => {
+  test("audit residency exits 0 and reports without changing anything", async () => {
+    const { stdout, exitCode } = await runCLI("audit", "residency");
+    expect(exitCode).toBe(0);
+    expect(stdout).toContain("Residency Audit");
+  });
+
+  test("--yes never triggers a removal on the residency path", async () => {
+    // `asm audit -y` auto-removes duplicates; residency must stay read-only.
+    // The banner is printed with console.error, so stderr is the stream that
+    // can actually fail this assertion.
+    const { stdout, stderr, exitCode } = await runCLI(
+      "audit",
+      "residency",
+      "--yes",
+    );
+    expect(exitCode).toBe(0);
+    expect(stderr).not.toContain("Auto-removing");
+    expect(stdout).not.toContain("Auto-removing");
+  });
+
+  test("audit residency --json has the audit report shape", async () => {
+    const { stdout, exitCode } = await runCLI("audit", "residency", "--json");
+    expect(exitCode).toBe(0);
+    const data = JSON.parse(stdout);
+    expect(data).toHaveProperty("scannedAt");
+    expect(data).toHaveProperty("totalSkills");
+    expect(data).toHaveProperty("totalResidentTokens");
+    expect(Array.isArray(data.candidates)).toBe(true);
+    expect(Array.isArray(data.signals)).toBe(true);
+  });
+
+  test("unavailable signals are reported, not omitted", async () => {
+    const { stdout } = await runCLI("audit", "residency", "--json");
+    const { signals } = JSON.parse(stdout);
+    const unavailable = signals.filter(
+      (s: { available: boolean }) => !s.available,
+    );
+    expect(unavailable.map((s: { id: string }) => s.id).sort()).toEqual([
+      "trigger-collision",
+      "unused",
+    ]);
+  });
+
+  test("audit residency --machine emits the v1 envelope", async () => {
+    const { stdout, exitCode } = await runCLI(
+      "audit",
+      "residency",
+      "--machine",
+    );
+    expect(exitCode).toBe(0);
+    const envelope = JSON.parse(stdout);
+    expect(envelope.version).toBe(1);
+    expect(envelope.command).toBe("audit residency");
+    expect(envelope.data).toHaveProperty("candidates");
+  });
+
+  test("audit --help lists the residency subcommand", async () => {
+    const { stdout } = await runCLI("audit", "--help");
+    expect(stdout).toContain("residency");
+  });
+
+  test("unknown audit subcommand names residency", async () => {
+    const { stderr, exitCode } = await runCLI("audit", "bogus");
+    expect(exitCode).toBe(2);
+    expect(stderr).toContain("residency");
   });
 });
 
