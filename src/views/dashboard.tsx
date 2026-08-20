@@ -121,12 +121,38 @@ function ScopeTab({ label, active }: { label: string; active: boolean }) {
   );
 }
 
-export function DashboardFooter() {
+export interface DashboardFooterProps {
+  refreshFeedback: boolean;
+  scanning: boolean;
+  hasScanned: boolean;
+}
+
+export function DashboardFooter({
+  refreshFeedback,
+  scanning,
+  hasScanned,
+}: DashboardFooterProps) {
+  const feedback = refreshFeedback ? " ✓ Updated!" : "";
   return (
     <Text color={theme.fgDim}>
       {" "}
-      ↑/↓ Navigate Enter View d Uninstall a Audit / Filter Tab Scope s Sort r
-      Refresh c Config q Quit ? Help
+      ↑/↓ <Text color={theme.accent}>Navigate</Text>
+      {" · "}
+      Enter <Text color={theme.accent}>View</Text>
+      {" · "}d <Text color={theme.accent}>Uninstall</Text>
+      {" · "}a <Text color={theme.accent}>Audit</Text>
+      {" · "}/ <Text color={theme.accent}>Filter</Text>
+      {" · "}
+      Tab <Text color={theme.accent}>Scope</Text>
+      {" · "}s <Text color={theme.accent}>Sort</Text>
+      {" · "}r <Text color={theme.accent}>Refresh</Text>
+      {" · "}c <Text color={theme.accent}>Config</Text>
+      {" · "}q <Text color={theme.accent}>Quit</Text>
+      {" · "}? <Text color={theme.accent}>Help</Text>{" "}
+      {scanning && !hasScanned && (
+        <Text color={theme.yellow}> (Scanning...)</Text>
+      )}
+      {feedback && <Text color={theme.green}> {feedback}</Text>}
     </Text>
   );
 }
