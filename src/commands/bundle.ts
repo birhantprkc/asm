@@ -149,10 +149,15 @@ export async function cmdBundle(args: ParsedArgs) {
       let description = `Bundle of ${skillRefs.length} skills`;
       let author = "unknown";
       try {
-        const { execSync } = await import("child_process");
-        const gitUser = execSync("git config user.name", {
-          encoding: "utf-8",
-        }).trim();
+        const { execFile } = await import("child_process");
+        const { promisify } = await import("util");
+        const execFileAsync = promisify(execFile);
+        const gitUser = (
+          await execFileAsync("git", ["config", "user.name"], {
+            encoding: "utf-8",
+            timeout: 5000,
+          })
+        ).stdout.trim();
         if (gitUser) author = gitUser;
       } catch {
         // git not available or user.name not set; keep "unknown"
