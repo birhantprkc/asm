@@ -93,6 +93,8 @@ export interface ParsedArgs {
     predefined: boolean;
     /** `asm get --audit` — print the full security audit report for a fetched skill (issue #422). */
     audit: boolean;
+    /** `asm index overlap --threshold <N>` — minimum similarity score (0..1). */
+    threshold: number | null;
   };
 }
 
@@ -146,6 +148,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
       tags: null,
       predefined: false,
       audit: false,
+      threshold: null,
     },
   };
 
@@ -312,6 +315,18 @@ export function parseArgs(argv: string[]): ParsedArgs {
       result.flags.predefined = true;
     } else if (arg === "--audit") {
       result.flags.audit = true;
+    } else if (arg === "--threshold") {
+      i++;
+      const val = args[i];
+      const n = Number(val);
+      if (!isNaN(n) && n >= 0 && n <= 1) {
+        result.flags.threshold = n;
+      } else {
+        error(
+          `Invalid --threshold: "${val}". Must be a number between 0 and 1.`,
+        );
+        process.exit(2);
+      }
     } else if (arg.startsWith("-")) {
       error(`Unknown option: ${arg}`);
       console.error(`Run "asm --help" for usage.`);
