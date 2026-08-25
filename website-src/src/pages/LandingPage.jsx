@@ -46,51 +46,51 @@ export default function LandingPage() {
   );
 }
 
-/* ─── What's New (v2.16) ───────────────────────────────────────────── */
+/* ─── What's New (v2.17) ───────────────────────────────────────────── */
 
 function WhatsNew() {
   const highlights = [
     {
       tag: "New",
-      head: "Semantic overlap detection",
-      body: "Find skills that do substantially the same job — even with different names — using token-based similarity. Surface redundancy for review.",
+      head: "Overlap detection for installed skills",
+      body: "The duplicate finder now reads meaning, not just names — token-based similarity extends to skills already installed across your agents, surfacing near-duplicates for review.",
     },
     {
       tag: "New",
-      head: "PII detection & script linting",
-      body: "The evaluator now flags sensitive data patterns and unsafe shell scripts in skill code, raising the security bar for indexed skills.",
+      head: "Content fingerprints & guarded auto-remove",
+      body: "asm audit fingerprints skill content and can auto-remove verified-redundant copies — guarded so only provably stale duplicates are ever cleaned up.",
     },
     {
       tag: "New",
-      head: "License verification",
-      body: "Indexed skills are checked for valid, compatible licenses — ensuring your agent skills respect upstream licensing.",
+      head: "Antithesis skills join the catalog",
+      body: "antithesishq/antithesis-skills is now indexed — its curated collection is searchable and one command away via asm install.",
     },
     {
-      tag: "New",
-      head: "Zero-residency skill delivery",
-      body: "asm get <skill> resolves a skill through the installed / library / index / registry ladder and writes its SKILL.md body to stdout — no residency cost.",
+      tag: "Fixed",
+      head: "Six maintenance fixes",
+      body: "Includes the Phase 1+2 website blocker fixes (#549, #550) — the companion site you're browsing got steadier under the hood.",
     },
   ];
   return (
     <Reveal
       as="section"
       className="flex flex-col gap-8"
-      aria-label="What's new in v2.16"
+      aria-label="What's new in v2.17"
     >
       <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="flex flex-col gap-3 max-w-[680px]">
           <span className="lp-kicker">
             <span className="dot" aria-hidden="true" />
-            what&apos;s new · v2.16
+            what&apos;s new · v2.17
           </span>
           <h2 className="lp-section-title">
-            Overlap detection, PII flags, license checks, zero-residency
-            delivery.
+            Installed-skill overlap detection, fingerprinted audits, and a new
+            curated source.
           </h2>
           <p className="lp-lede">
-            v2.16 adds semantic overlap detection for indexed skills, PII and
-            script linting to the evaluator, license verification, and a new
-            zero-residency reference tier via `asm get`.
+            v2.17 extends semantic overlap detection to installed skills, adds
+            content fingerprints with guarded auto-remove to the audit, and
+            brings antithesishq/antithesis-skills into the curated index.
           </p>
         </div>
         <Link

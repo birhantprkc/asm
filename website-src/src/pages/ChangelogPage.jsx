@@ -27,6 +27,76 @@ function issue(n) {
 
 const ENTRIES = [
   {
+    version: "2.17.0",
+    date: "2026-08-25",
+    sections: [
+      {
+        tag: "added",
+        items: [
+          <>
+            Semantic overlap detection for installed skills — extend
+            token-based similarity matching to skills already installed across
+            agents ({pr(570)})
+          </>,
+          <>
+            Content fingerprints and guarded auto-remove in{" "}
+            <code>asm audit</code> — detect unchanged duplicates reliably and
+            clean them up safely ({pr(569)})
+          </>,
+          <>
+            Add <code>antithesishq/antithesis-skills</code> to the curated
+            skill index ({pr(560)})
+          </>,
+        ],
+      },
+      {
+        tag: "fixed",
+        items: [
+          <>
+            Resolve all Phase 1 and Phase 2 blockers from the website epic (
+            {pr(549)}, {pr(550)})
+          </>,
+          <>
+            Doctor PATH-shadowing recommendation now names the specific
+            shadowed binaries ({pr(515)})
+          </>,
+          <>
+            Exclude documentation files from the security scan ({pr(513)})
+          </>,
+          <>
+            Use <code>evaluateSkillContentSync</code> in enrich-index so index
+            enrichment runs correctly ({pr(512)})
+          </>,
+        ],
+      },
+      {
+        tag: "performance",
+        items: [
+          <>Phase 3 performance optimizations ({issue(527)}–{issue(532)}, {pr(551)})</>,
+        ],
+      },
+      {
+        tag: "changed",
+        items: [
+          <>
+            Phase 6 architecture improvements and duplicate-group normalization
+            in audit output with version-divergence flags ({pr(554)},{" "}
+            {pr(568)})
+          </>,
+          <>
+            Phase 4 UX polish and Phase 5 accessibility & code quality (
+            {pr(552)}, {pr(553)})
+          </>,
+          <>List top authors when stats encounters an unknown author ({pr(514)})</>,
+        ],
+      },
+      {
+        tag: "docs",
+        items: [<>Update epic 516 status — all phases complete ({pr(555)})</>],
+      },
+    ],
+  },
+  {
     version: "2.16.0",
     date: "2026-08-21",
     sections: [

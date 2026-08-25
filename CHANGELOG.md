@@ -1,3 +1,48 @@
+## v2.17.0 — 2026-08-25
+
+### Features
+
+- Extend semantic overlap detection to installed skills, surfacing near-duplicate skills across agents that exact hashing misses ([#570](https://github.com/luongnv89/asm/pull/570)) — @luongnv89
+- Detect duplicate installed skills via content fingerprints, with guarded auto-remove support ([#569](https://github.com/luongnv89/asm/pull/569)) — @luongnv89
+- Add `antithesishq/antithesis-skills` to the curated skill index ([#560](https://github.com/luongnv89/asm/pull/560)) — @luongnv89
+
+### Bug Fixes
+
+- Resolve all Phase 2 bug fixes from website epic [#516](https://github.com/luongnv89/asm/issues/516) ([#550](https://github.com/luongnv89/asm/pull/550)) — @luongnv89
+- Resolve all Phase 1 blockers from website epic [#516](https://github.com/luongnv89/asm/issues/516) ([#549](https://github.com/luongnv89/asm/pull/549)) — @luongnv89
+- Improve the doctor PATH-shadowing recommendation to name the specific shadowed binaries ([#515](https://github.com/luongnv89/asm/pull/515)) — @luongnv89
+- Exclude documentation files from the security scan ([#513](https://github.com/luongnv89/asm/pull/513)) — @luongnv89
+- Use `evaluateSkillContentSync` in enrich-index.ts so index enrichment runs correctly ([#512](https://github.com/luongnv89/asm/pull/512)) — @luongnv89
+
+### Performance Improvements
+
+- Land Phase 3 performance optimizations ([#527](https://github.com/luongnv89/asm/issues/527)–[#532](https://github.com/luongnv89/asm/issues/532)) ([#551](https://github.com/luongnv89/asm/pull/551)) — @luongnv89
+
+### Improvements
+
+- Phase 5 accessibility and code quality improvements ([#538](https://github.com/luongnv89/asm/issues/538)–[#543](https://github.com/luongnv89/asm/issues/543)) ([#553](https://github.com/luongnv89/asm/pull/553)) — @luongnv89
+- Phase 4 UX polish across the interface ([#533](https://github.com/luongnv89/asm/issues/533)–[#537](https://github.com/luongnv89/asm/issues/537)) ([#552](https://github.com/luongnv89/asm/pull/552)) — @luongnv89
+
+### Refactoring
+
+- Normalize duplicate groups in audit output and surface version divergence flags ([#568](https://github.com/luongnv89/asm/pull/568)) — @luongnv89
+- Land Phase 6 architecture improvements ([#544](https://github.com/luongnv89/asm/issues/544)–[#548](https://github.com/luongnv89/asm/issues/548)) ([#554](https://github.com/luongnv89/asm/pull/554)) — @luongnv89
+- List top authors when the stats command encounters an unknown author ([#514](https://github.com/luongnv89/asm/pull/514)) — @luongnv89
+
+### Documentation
+
+- Update epic 516 status — all phases complete ([#555](https://github.com/luongnv89/asm/pull/555)) — @luongnv89
+
+### Testing
+
+- Update the e2e test for the SkillDetail cache refactor — @luongnv89
+
+### Chores
+
+- Refresh indexed skill sources (multiple refreshes across the release) ([#507](https://github.com/luongnv89/asm/pull/507)) — @luongnv89
+
+**Full Changelog**: https://github.com/luongnv89/asm/compare/v2.16.0...v2.17.0
+
 ## v2.16.0 — 2026-08-01
 
 ### Features
