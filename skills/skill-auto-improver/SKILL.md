@@ -6,7 +6,7 @@ compatibility: "Claude Code; requires `asm` on PATH and Python 3 for skill-creat
 allowed-tools: Bash Read Write Edit Grep Glob
 effort: high
 metadata:
-  version: 1.3.0
+  version: 1.4.0
   author: luongnv89
 ---
 
@@ -21,6 +21,28 @@ The target must clear **two hard gates**, then gets one **advisory** audit:
 3. **Advisory — predictability audit (Phase 2b, not a gate)** — judgment-based findings against skill-creator's rubric, reported separately, **never** blocking.
 
 A skill that scores 92 but fails `quick_validate.py` is not done; one that passes `quick_validate.py` but scores 70 is not done. **Both gates must clear, or the loop reports a blocker** — open predictability findings alone never make one.
+
+## Dependency Preflight (mandatory)
+
+This skill invokes `skill-creator`: it runs that skill's `quick_validate.py` (required — the Gate 1 validator) and reads its `predictability-rubric.md` (fail-soft — Phase 2b). Resolve both once and reuse them **before the repo sync below**, which is the first step that changes anything. The rubric is **fail-soft** — a locally-installed skill-creator may predate the repo and not ship it; a missing file only degrades Phase 2b to a warning and never aborts the run:
+
+```bash
+date +%s >&2                      # anchors the Run stats block below — read it off stderr
+QV="$HOME/.claude/skills/skill-creator/scripts/quick_validate.py"
+test -f "$QV" || {
+  echo "Missing required skill: skill-creator" >&2
+  echo "Install it:      asm install skill-creator -p claude --yes" >&2
+  echo "No asm yet:      npm install -g agent-skill-manager" >&2
+  echo "Verify:          asm list -p claude --json | grep 'skill-creator'" >&2
+  exit 1
+}
+RUBRIC="$HOME/.claude/skills/skill-creator/references/predictability-rubric.md"
+test -f "$RUBRIC" || echo "⚠ predictability rubric missing — Phase 2b degraded (gates unaffected)"
+```
+
+`-p claude` is required, not decoration: `asm install` refuses to guess a provider in a non-interactive shell and `--yes` does not cover that choice, so a gate that omits it hands the user a command that errors instead of installing. The verification names the same provider the detection path belongs to, so an install landing under a different tool cannot report success while `$QV` is still missing.
+
+On a miss, stop before the first mutation and print the three commands above — do not continue with a partial run. This is the same gate this skill audits every target for (`references/skill-creator-checklist.md` → _Dependency preflight_).
 
 ## Repo Sync Before Edits (mandatory)
 
@@ -50,19 +72,10 @@ Reach for this on an **existing, external, legacy, manually-authored, or drifted
 Verify all of the following before touching any files. Stop and tell the user if any fails.
 
 - `asm` is available on PATH (`command -v asm` or `which asm`)
-- Python 3 is available, and `~/.claude/skills/skill-creator/scripts/quick_validate.py` exists (skill-creator must be installed locally)
+- Python 3 is available; skill-creator's `quick_validate.py` is resolved by _Dependency Preflight (mandatory)_ above, which is the only place that handles a miss
 - The target skill path contains a `SKILL.md` file
 - The working tree has no unrelated uncommitted edits (dirty files get mixed into diffs)
 - You have write access to the skill directory
-
-Resolve skill-creator's validator (required) and rubric (fail-soft) once and reuse them. The rubric is **fail-soft** — a locally-installed skill-creator may predate the repo and not ship it; a missing file only degrades Phase 2b to a warning and never aborts the run:
-
-```bash
-QV="$HOME/.claude/skills/skill-creator/scripts/quick_validate.py"
-test -f "$QV" || { echo "skill-creator not installed at $QV"; exit 1; }
-RUBRIC="$HOME/.claude/skills/skill-creator/references/predictability-rubric.md"
-test -f "$RUBRIC" || echo "⚠ predictability rubric missing — Phase 2b degraded (gates unaffected)"
-```
 
 ## Inputs
 
@@ -89,6 +102,7 @@ A skill passes this gate when **all** of these are true:
 - `metadata.version` follows `MAJOR.MINOR.PATCH`; `metadata.author` is present
 - If `docs/README.md` exists, it carries the AI-skip HTML comment at the top
 - Any bundled scripts under `scripts/` print descriptive errors on stderr before exiting
+- **If the target skill invokes another skill**, it carries a dependency preflight that names each dependency, its install command, the command that installs the installer itself, and a verification step (`references/skill-creator-checklist.md` → _Dependency preflight_). A skill that invokes no other skill needs no such section — its absence is not a finding, and never add an empty one
 
 This gate is **non-negotiable** — `asm publish` and the catalog rely on it.
 
@@ -168,6 +182,7 @@ Many skills jump 5–15 points on `asm eval` here without touching the body, and
 - Body over 500 lines → split dense sections into `references/<topic>.md` and replace inline content with a one-line pointer
 - Missing AI-skip notice in `docs/README.md` → prepend the HTML comment from `references/skill-creator-checklist.md`
 - Bundled script exits silently → add `echo "Error: ..." >&2` lines before each `exit 1` / `sys.exit(1)`
+- Skill invokes another skill with no preflight gate, or with one that never explains installation → report the finding and add the gate from `references/skill-creator-checklist.md` → _Dependency preflight_. Detect it by scanning the target for `/skill-name` invocations, reads under `~/.claude/skills/` or `~/.agents/skills/`, and phases handed to a named skill
 
 Re-run `python "$QV" "$SKILL_PATH"` after every Gate 1 edit. Do not move to Phase 2b until Gate 1 is clean.
 
@@ -175,7 +190,7 @@ Re-run `python "$QV" "$SKILL_PATH"` after every Gate 1 edit. Do not move to Phas
 
 With Gate 1 clean, audit against skill-creator's rubric **before** Phase 3 so the findings can steer your category edits. Advisory — never gates, never blocks.
 
-1. Confirm `$RUBRIC` resolved (Prerequisites). If missing, **skip fail-soft** — log `⚠ predictability audit skipped (rubric unavailable)` and move to Phase 3.
+1. Confirm `$RUBRIC` resolved (_Dependency Preflight (mandatory)_). If missing, **skip fail-soft** — log `⚠ predictability audit skipped (rubric unavailable)` and move to Phase 3.
 2. Walk `references/predictability-audit.md` — record each of the 7 items as `pass` / `advisory` with a specific note, save to `.asm-improver/predictability-audit.md`.
 
 Act on findings only when _targeted_ (a predictability fix often also lifts an asm-eval category); never bloat to satisfy one. Finding-handling detail and the no-bloat rule live in `references/predictability-audit.md`.
@@ -233,7 +248,36 @@ Write `.asm-improver/report.md` (full layout in `references/report-template.md`)
 2. **Predictability findings** (advisory) — Phase 2b findings per item, open ones with a one-line note; say so if it was skipped fail-soft. Never a gate failure.
 3. **Unresolved blockers** — BLOCKER only; each names the failed **hard gate** (Gate 1 or Gate 2), the specific check, and what was unresolvable. Predictability findings are never promoted here.
 
-Also include: skill path, `metadata.version` baseline → final, files changed, iterations (N of 8), key fixes applied. Do not pretend a blocker is a pass.
+Also include: skill path, `metadata.version` baseline → final, files changed, iterations (N of 8), key fixes applied. Do not pretend a blocker is a pass. Close the report — and the printed summary — with the **Run stats** block below.
+
+## Run stats (mandatory)
+
+Every run that updates a skill closes its summary with a run-stats block — the last thing printed, after the Phase 7 report. It reports what the run **cost**, and never repeats a metric the report already carries (iterations, scores, files changed).
+
+`run_started_epoch` is captured once, by the `date +%s >&2` in the _Dependency Preflight (mandatory)_ block above; read the value off that block's stderr rather than from a shell variable, which need not survive to a later command. `elapsed` is `now - run_started_epoch`. A stop before that block ran has no anchor, so `elapsed` prints `n/a`.
+
+```
+  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+  Run stats   elapsed 4m 12s · tokens 128,400 · cost $0.42
+              agents 0 · skills 1 · tool calls 63
+```
+
+Fields are fixed and in this order — never reordered, renamed, or added to:
+
+| Field        | Value                                                                                            |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| `elapsed`    | wall-clock duration, `{H}h {M}m {S}s`; drop zero-valued leading units only (`4m 12s`, `48s`)     |
+| `tokens`     | **conditional** — printed only where the host reported a usage figure, with thousands separators |
+| `cost`       | **conditional** — printed only where the host reported a run cost, as `$0.42`                    |
+| `agents`     | subagents this run spawned                                                                       |
+| `skills`     | other skills this run invoked (`skill-creator`'s validator counts as one)                        |
+| `tool calls` | tool invocations this run made                                                                   |
+
+- **`tokens` and `cost` are omitted entirely when the host reported no figure** — no dangling `·`, no placeholder. Never estimate one from output length, file sizes, or iteration counts, and never reconstruct one from host transcripts or logs.
+- **`elapsed`, `agents`, `skills`, and `tool calls` always print.** A value that cannot be determined prints the literal `n/a`; `0` is a determined value and is correct where it is true.
+- A missing optional figure never suppresses the rest of the block.
+
+Print it at **every** terminal outcome, not only a PASS: a completed loop, a BLOCKER report, the Phase 0 early exit when the baseline already passes both gates, a failed prerequisite, and an aborted run. Only a run that produced no output at all has no block. One epoch read at start, one at the end, two lines of output — never a timing call per phase or a summarization pass.
 
 ## Step Completion Reports (mandatory)
 
@@ -250,19 +294,21 @@ After each phase, emit a compact status block so pass/fail is scannable:
   Result:              PASS | FAIL | PARTIAL
 ```
 
-Use `√` for pass, `×` for fail, `—` for context. Report per phase: Phase 0 (baseline captured), Phase 1 (deterministic + normalization), Phase 2 (Gate 1 fixes), Phase 2b (predictability audit — report findings count and "advisory" / "skipped fail-soft"; this phase never gates), Phase 3 (asm-eval category fixes), Phase 5 (version bump applied), Phase 6 (loop stop condition), Phase 7 (final report written).
+Use `√` for pass, `×` for fail, `—` for context. Report per phase: Phase 0 (baseline captured), Phase 1 (deterministic + normalization), Phase 2 (Gate 1 fixes), Phase 2b (predictability audit — report findings count and "advisory" / "skipped fail-soft"; this phase never gates), Phase 3 (asm-eval category fixes), Phase 5 (version bump applied), Phase 6 (loop stop condition), Phase 7 (final report written, run stats printed).
 
 ## Acceptance Criteria
 
 - `.asm-improver/baseline.json`, `.asm-improver/baseline-quickvalidate.txt`, and `.asm-improver/baseline-frontmatter-audit.md` captured before any edits
 - `asm eval --fix` applied, then frontmatter normalized so `quick_validate.py` accepts the result
 - Each Gate 1 check addressed at least once before any Gate 2 work
+- A target that invokes another skill ends the run with a dependency preflight naming each dependency, its install command, the command that installs the installer itself, and a verification step; a target that invokes none gains no such section
 - Predictability audit (Phase 2b) run after Gate 1 is clean — findings captured to `.asm-improver/predictability-audit.md`, or the skip logged when the rubric is unavailable. Findings are advisory and never gate the loop
 - Each `asm eval` category below 8 addressed at least once
 - Re-eval against **both** gates after every iteration, captured to `.asm-improver/iter-N.json` and `.asm-improver/iter-N-gates.txt`
 - Target skill's `metadata.version` bumped exactly once per iteration that produced edits
 - Loop stops on one of the 4 conditions in Phase 6 — never unbounded
 - `.asm-improver/report.md` exists on exit, pass or blocker, with gate status, advisory predictability findings, and unresolved blockers as three visually distinct sections
+- Every terminal outcome closes with the Run stats block — `elapsed`, `agents`, `skills`, and `tool calls` always present (`n/a` when undetermined), `tokens` and `cost` printed only where the host reported them and never invented
 - On PASS: `python "$QV" "$SKILL_PATH"` exits 0 AND final eval JSON shows `overallScore > 85` AND `min(categories[*].score) >= 8`
 - On BLOCKER: report names every Gate 1 check still failing and every category still below 8 with a one-line reason. Open predictability findings alone never constitute a blocker
 
@@ -293,5 +339,6 @@ See `references/report-template.md` for the full PASS and BLOCKER report templat
 - `~/.claude/skills/skill-creator/scripts/quick_validate.py` — the Gate 1 mechanical validator
 - `~/.claude/skills/skill-creator/references/frontmatter-rules.md` — upstream source of the audit rules
 - `~/.claude/skills/skill-creator/references/predictability-rubric.md` — upstream source of the Phase 2b audit (fail-soft if absent)
+- `~/.claude/skills/skill-creator/references/dependency-preflight.md` — upstream source of the dependency-preflight rule (the checklist above carries everything needed to audit and fix without it)
 - `asm eval --help` — flag reference for the evaluator
 - `src/evaluator.ts` in the ASM repo — source of truth for how each Gate 2 category is scored

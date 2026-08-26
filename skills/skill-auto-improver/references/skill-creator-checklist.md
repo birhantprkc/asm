@@ -119,7 +119,49 @@ Every iteration that edits the SKILL.md body or frontmatter must bump `metadata.
 
 Bump once per loop iteration, not once per individual edit — otherwise the version churns ahead of meaningful change.
 
-## 8. Final mechanical check
+## 8. Dependency preflight (conditional)
+
+Applies only to a target that **invokes another skill** — it calls `/other-skill`, delegates a phase to a named skill, or reads a path under `~/.claude/skills/`, `~/.agents/skills/`, or `~/.codex/skills/`. Scan the target for those three signals before deciding.
+
+- **Invokes no other skill** → nothing is required and nothing is added. An absent preflight section is **not** a finding here, and adding an empty one is itself a defect.
+- **Invokes another skill** → the target must carry a `## Dependency Preflight (mandatory)` section above its first mutating step. Missing it, or carrying one that detects the miss without explaining the fix, is a Gate 1 finding.
+
+Per dependency the gate names four things:
+
+| Element                 | Requirement                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| **Name**                | the missing skill, exactly as installed                                         |
+| **Install command**     | the command that installs that skill                                            |
+| **Installer bootstrap** | the command that installs the installer itself, for a user who does not have it |
+| **Verification**        | a command that confirms the install landed                                      |
+
+Retrofit template — one entry per dependency, with both `<skill-name>` and `<tool>` (the provider it installs for, e.g. `claude`) replaced. An unreplaced `<tool>` is read by the shell as a redirection, not a flag:
+
+````markdown
+## Dependency Preflight (mandatory)
+
+This skill invokes `<skill-name>`. Verify it is installed **before** the first
+step that changes anything:
+
+```bash
+asm list -p <tool> --json | grep -q '"<skill-name>"' || {
+  echo "Missing required skill: <skill-name>" >&2
+  echo "Install it:      asm install <skill-name> -p <tool> --yes" >&2
+  echo "No asm yet:      npm install -g agent-skill-manager" >&2
+  echo "Verify:          asm list -p <tool> --json | grep '<skill-name>'" >&2
+  exit 1
+}
+```
+
+If the check fails, stop and print the three commands above — do not continue
+with a partial run.
+````
+
+`-p <tool>` is part of the install command, not optional polish: `asm install` refuses to guess a provider in a non-interactive shell and `--yes` does not cover that choice, so a gate that omits it prints a command that errors. An install command that cannot run unattended is an incomplete gate and still a Gate 1 finding. Use the same `-p` in the detection and the verification so an install under a different tool cannot report success while the dependency is missing.
+
+Where `asm` is not the target's installer, keep the four elements and swap the mechanics — e.g. `test -f "$HOME/.claude/skills/<skill-name>/SKILL.md"` for detection. Upstream source of the rule: `~/.claude/skills/skill-creator/references/dependency-preflight.md`.
+
+## 9. Final mechanical check
 
 Before declaring Gate 1 cleared, run:
 
