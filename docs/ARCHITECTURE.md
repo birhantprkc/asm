@@ -31,7 +31,7 @@ graph TD
 Parses arguments and dispatches to command handlers:
 
 Dispatches to ~47 command handlers (`cmd*` functions) covering discovery
-(`list`, `search`, `inspect`), lifecycle (`install`, `uninstall`,
+(`list`, `search`, `inspect`, `tag`), lifecycle (`install`, `uninstall`,
 `disable`/`enable`, `update`, `outdated`), authoring (`init`, `link`, `eval`,
 `publish`), and organization (`audit`, `bundle`, `library`, `stats`,
 `doctor`, `config`, `import`/`export`, `index`). See
@@ -95,6 +95,7 @@ Each view is an ink/React component:
 | Repo Bundles        | `repo-bundles.ts`                    | Bundle inference/records derived from indexed repos                               |
 | Library             | `library.ts`                         | Local library lifecycle (`install --library`, `activate`, `deactivate`)           |
 | Skill State         | `skill-state.ts`                     | Disable/enable state persisted to `skill-state.json`                              |
+| Skill Tags          | `skill-tags.ts`                      | Local tag overlays (`asm tag add\|remove`) and `--tag` AND filters                |
 | Importer / Exporter | `importer.ts` / `exporter.ts`        | `asm import` / `asm export`                                                       |
 | Updater             | `updater.ts`                         | `asm update` / `asm outdated`                                                     |
 | Doctor              | `doctor.ts`                          | `asm doctor` environment/PATH-shadowing diagnostics                               |

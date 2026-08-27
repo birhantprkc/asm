@@ -33,6 +33,14 @@ export default function DocsPage() {
         <pre>
           <code>asm</code>
         </pre>
+        <h3>Skill catalog</h3>
+        <p>
+          Browse indexed skills at <a href="#/skills">/skills</a>. Use{" "}
+          <strong>Tags</strong> (<code>TagFilter</code>) to require every
+          selected tag (AND). Selections persist in the <code>?tag=</code> query
+          string. The CLI equivalent is <code>asm list --tag</code> /{" "}
+          <code>asm search --tag</code>.
+        </p>
       </section>
 
       <section className="doc-section">
@@ -54,6 +62,10 @@ export default function DocsPage() {
             <Row
               cmd="asm search <query>"
               desc="Search installed skills and the skill index"
+            />
+            <Row
+              cmd="asm tag add|remove"
+              desc="Edit local tags for an installed skill (does not rewrite SKILL.md)"
             />
             <Row
               cmd="asm inspect <skill-name>"
@@ -162,6 +174,10 @@ export default function DocsPage() {
               "Target tool / provider (claude, codex, openclaw, agents, …)",
             ],
             [
+              "--tag <tag[,tag]>",
+              "Require every tag; repeatable (list, search)",
+            ],
+            [
               "--sort <field>",
               <>
                 Sort by: <code>name</code>, <code>version</code>, or{" "}
@@ -208,6 +224,10 @@ export default function DocsPage() {
               "Filter by tool (claude, codex, openclaw, agents, …)",
             ],
             ["--flat", "Show one row per tool instance (ungrouped)"],
+            [
+              "--tag <tag[,tag]>",
+              "Require every tag (AND); repeatable or comma-separated",
+            ],
             ["--json", "Output as JSON array"],
             [
               "--machine",
@@ -220,6 +240,7 @@ asm list --flat                   # One row per tool instance
 asm list -p claude                # Only Claude Code skills
 asm list -s project               # Only project-scoped skills
 asm list --sort version           # Sort by version
+asm list --tag cli,testing        # Require both tags
 asm list --json                   # Output as JSON`}</CodeBlock>
 
         <h3>
@@ -246,6 +267,10 @@ asm list --json                   # Output as JSON`}</CodeBlock>
               </>,
             ],
             ["-p, --tool <p>", "Filter by tool"],
+            [
+              "--tag <tag[,tag]>",
+              "Require every tag (AND); repeatable or comma-separated",
+            ],
             ["--installed", "Show only installed skills"],
             ["--available", "Show only available (not installed) skills"],
             ["--flat", "Show one row per tool instance"],
@@ -257,7 +282,20 @@ asm list --json                   # Output as JSON`}</CodeBlock>
 asm search review -p claude       # Within Claude Code only
 asm search "test" --installed     # Installed skills only
 asm search "test" --available     # Available skills only
+asm search code --tag cli,testing # Require both tags
 asm search openspec --json        # Matches as JSON`}</CodeBlock>
+
+        <h3>
+          <code>asm tag</code> — Edit local tags
+        </h3>
+        <p>
+          Add or remove tags on installed skills without rewriting{" "}
+          <code>SKILL.md</code>. Values are 1–32 lowercase letters, numbers,
+          hyphens, or underscores; arguments may be space- or comma-separated.
+        </p>
+        <CodeBlock>{`asm tag add code-review testing cli
+asm tag add code-review testing,automation
+asm tag remove code-review automation`}</CodeBlock>
 
         <h3>
           <code>asm inspect</code> — Show details for a skill

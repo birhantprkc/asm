@@ -46,51 +46,52 @@ export default function LandingPage() {
   );
 }
 
-/* ─── What's New (v2.17) ───────────────────────────────────────────── */
+/* ─── What's New (v2.18) ───────────────────────────────────────────── */
 
 function WhatsNew() {
   const highlights = [
     {
       tag: "New",
-      head: "Overlap detection for installed skills",
-      body: "The duplicate finder now reads meaning, not just names — token-based similarity extends to skills already installed across your agents, surfacing near-duplicates for review.",
+      head: "Tag skills, then filter the catalog",
+      body: "Skills can carry tags, and the public catalog AND-filters on them — same idea in the TUI/CLI — so you can slice thousands of entries without guessing names.",
     },
     {
       tag: "New",
-      head: "Content fingerprints & guarded auto-remove",
-      body: "asm audit fingerprints skill content and can auto-remove verified-redundant copies — guarded so only provably stale duplicates are ever cleaned up.",
+      head: "Eleven anti-slop skills in the index",
+      body: "Charlie Hills–ranked anti-slop skills are searchable and one asm install away: stop-slop, hallmark, voiceprint, answer-first, and seven more for writing, UI, and diagrams that do not sound templated.",
     },
     {
       tag: "New",
-      head: "Antithesis skills join the catalog",
-      body: "antithesishq/antithesis-skills is now indexed — its curated collection is searchable and one command away via asm install.",
+      head: "Four new skill sources",
+      body: "ComposioHQ/awesome-claude-skills, JuliusBrussee/caveman, multica-ai/andrej-karpathy-skills, and ayghri/i-have-adhd join the curated index.",
     },
     {
-      tag: "Fixed",
-      head: "Six maintenance fixes",
-      body: "Includes the Phase 1+2 website blocker fixes (#549, #550) — the companion site you're browsing got steadier under the hood.",
+      tag: "New",
+      head: "Dependency gating and per-step context",
+      body: "skill-creator and skill-auto-improver now refuse a run when a declared skill dependency is missing, print run stats at the end, and can hand each heavy step only the slice of references/ its worker needs.",
     },
   ];
   return (
     <Reveal
       as="section"
       className="flex flex-col gap-8"
-      aria-label="What's new in v2.17"
+      aria-label="What's new in v2.18"
     >
       <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="flex flex-col gap-3 max-w-[680px]">
           <span className="lp-kicker">
             <span className="dot" aria-hidden="true" />
-            what&apos;s new · v2.17
+            what&apos;s new · v2.18
           </span>
           <h2 className="lp-section-title">
-            Installed-skill overlap detection, fingerprinted audits, and a new
-            curated source.
+            Skill tags on the catalog, eleven anti-slop skills, and gated
+            authoring.
           </h2>
           <p className="lp-lede">
-            v2.17 extends semantic overlap detection to installed skills, adds
-            content fingerprints with guarded auto-remove to the audit, and
-            brings antithesishq/antithesis-skills into the curated index.
+            v2.18 lets you tag skills and AND-filter the catalog by those tags,
+            indexes eleven anti-slop skills plus four new sources, and teaches
+            skill-creator to gate dependencies, print run stats, and delegate
+            per-step context.
           </p>
         </div>
         <Link

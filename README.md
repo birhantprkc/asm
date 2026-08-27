@@ -72,6 +72,7 @@ graph LR
 | Feature                  | What you get                                                         |
 | ------------------------ | -------------------------------------------------------------------- |
 | Cross-provider inventory | `asm list --json` — every skill, every agent, one response           |
+| Local skill tags         | `asm tag add\|remove`; `asm list --tag` / `asm search --tag` (AND)   |
 | One-command install      | `asm install github:user/repo` or `asm install skill-name`           |
 | Agent-parseable output   | `--json` on list, search, inspect, install, audit                    |
 | Duplicate audit          | `asm audit --yes` removes redundant skills non-interactively         |
@@ -132,8 +133,10 @@ Node.js 22+ required. Optional TUI: run `asm` with no arguments.
 | Live dev via symlink          | `asm link ./my-skill -p claude`                  |
 | Publish to registry           | `asm publish ./my-skill --yes`                   |
 | Install a bundle              | `asm bundle install frontend-dev --yes`          |
+| Tag an installed skill        | `asm tag add code-review testing`                |
+| Filter inventory by tags      | `asm list --tag cli,testing`                     |
 
-Full command reference, flags, and examples: [CLI Commands](#cli-commands). Catalog UI and bundles: [luongnv.com/asm](https://luongnv.com/asm/).
+Full command reference, flags, and examples: [CLI Commands](#cli-commands). Catalog UI and bundles: [luongnv.com/asm](https://luongnv.com/asm/) (use **Tags** / `TagFilter`, AND match, `?tag=`).
 
 ## Attention budget
 
@@ -554,6 +557,7 @@ Multiple `asm` binaries on `PATH` can shadow a fresh upgrade.
 | ------------------------------- | ----------------------------------------- | ----------------------------------------- |
 | `asm list` | List all discovered skills |
 | `asm search <query>` | Search by name/description/provider |
+| `asm tag add\|remove` | Edit local tags on an installed skill |
 | `asm inspect <skill-name>` | Show detailed info for a skill |
 | `asm get <skill>` | Print a skill's body, install nothing |
 | `asm install <source>` | Install from GitHub or registry |
@@ -609,6 +613,7 @@ Multiple `asm` binaries on `PATH` can shadow a fresh upgrade.
 --machine              Stable machine-readable JSON envelope (v1)
 -s, --scope <scope>    global, project, or both
 -p, --tool <name>      Filter by tool (list, search)
+--tag <tag[,tag]>      Filter by all tags; repeatable (list, search)
 --sort <field>         name, version, or location
 --flat                 Show one row per tool instance (list, search)
 --model-invocable      Only skills the model can invoke
@@ -637,6 +642,15 @@ asm list --model-invocable --user-invocable
 ```
 
 Listings and `asm inspect` show invocability as `model`, `user`, or `both` (never collapsed). `--model-invocable` and `--user-invocable` are independent; both flags keep skills that match both (typically `both`).
+
+```bash
+asm tag add code-review testing cli
+asm tag remove code-review automation
+asm list --tag cli --tag testing
+asm search code --tag cli,testing
+```
+
+Tags are local overlays (not written into `SKILL.md`). `--tag` requires every listed tag (AND). The catalog UI `TagFilter` uses the same AND matching and stores selections in `?tag=`.
 
 ```bash
 asm search "code review" --json
@@ -1073,7 +1087,7 @@ asm/
 | [Security](SECURITY.md)                  | Vulnerability reporting     |
 | [Code of Conduct](CODE_OF_CONDUCT.md)    | Community guidelines        |
 
-**Landing page:** [luongnv.com/asm](https://luongnv.com/asm/) — catalog, bundles, author/repo stats, filtered search.
+**Landing page:** [luongnv.com/asm](https://luongnv.com/asm/) — catalog, bundles, author/repo stats, filtered search, and catalog `TagFilter` (AND, `?tag=`).
 
 </details>
 

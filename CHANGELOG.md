@@ -1,3 +1,29 @@
+## v2.18.0 — 2026-08-28
+
+### Features
+
+- Add skill tag assignment and catalog tag filtering: frontmatter `tags` plus a local overlay, `asm tag add|remove`, `--tag` on list/search, and an AND-semantics tag facet on the catalog website ([#584](https://github.com/luongnv89/asm/issues/584)) ([#585](https://github.com/luongnv89/asm/pull/585)) — @luongnv89
+- Index 11 anti-slop skills from Charlie Hills' ranking and carry `anti-slop` in related skill descriptions ([#583](https://github.com/luongnv89/asm/pull/583)) — @luongnv89
+- Add four new skill sources (ComposioHQ, caveman, Karpathy, ADHD) and refresh six existing indexed repos ([#578](https://github.com/luongnv89/asm/pull/578)) — @luongnv89
+- Adopt per-step context delegation in skill-creator and skill-auto-improver so agents load only the current step's reference slice ([#574](https://github.com/luongnv89/asm/issues/574)) ([#575](https://github.com/luongnv89/asm/pull/575)) — @luongnv89
+- Gate skill dependencies before create/improve runs and require run-stats reporting on successful paths ([#571](https://github.com/luongnv89/asm/issues/571)) ([#573](https://github.com/luongnv89/asm/pull/573)) — @luongnv89
+
+### Bug Fixes
+
+- Deflake App container view-transition assertions by polling for the expected frame instead of a fixed sleep
+- Quote find-me-skills `metadata.author` so YAML frontmatter with `<`, `>`, and `@` parses safely
+
+### Refactoring
+
+- Split skill-creator into reference files so it fits under its own size cap (1.16.2) ([#581](https://github.com/luongnv89/asm/pull/581)) — @luongnv89
+- Finish the skill-auto-improver reference split so the body stays under the 3000-word gate ([#580](https://github.com/luongnv89/asm/pull/580)) — @luongnv89
+
+### Testing
+
+- Cover the split core modules and install-inspect, and repair stats.test.ts types so typecheck passes ([#576](https://github.com/luongnv89/asm/issues/576)) ([#577](https://github.com/luongnv89/asm/pull/577)) — @luongnv89
+
+**Full Changelog**: https://github.com/luongnv89/asm/compare/v2.17.0...v2.18.0
+
 ## v2.17.0 — 2026-08-25
 
 ### Features
@@ -120,6 +146,7 @@
 - @matheussilva421 (Matheus Firmino da Silva) made their first contribution in [#396](https://github.com/luongnv89/asm/pull/396) and [#397](https://github.com/luongnv89/asm/pull/397)
 
 **Full Changelog**: https://github.com/luongnv89/asm/compare/v2.15.0...v2.16.0
+
 # Changelog
 
 ## Unreleased

@@ -27,6 +27,51 @@ function issue(n) {
 
 const ENTRIES = [
   {
+    version: "2.18.0",
+    date: "2026-08-28",
+    sections: [
+      {
+        tag: "added",
+        items: [
+          <>
+            Skill tag assignment and catalog tag filtering —{" "}
+            <code>asm tag add|remove</code>, <code>--tag</code> on list/search,
+            and an AND-match <code>TagFilter</code> on the catalog ({issue(584)}
+            , {pr(585)})
+          </>,
+          <>
+            Eleven anti-slop skills from the Charlie Hills rank, with tag
+            descriptions in the index ({pr(583)})
+          </>,
+          <>
+            Four curated sources: <code>ComposioHQ/awesome-claude-skills</code>,{" "}
+            <code>JuliusBrussee/caveman</code>,{" "}
+            <code>multica-ai/andrej-karpathy-skills</code>,{" "}
+            <code>ayghri/i-have-adhd</code> ({pr(578)})
+          </>,
+          <>
+            Per-step context delegation in <code>skill-creator</code> and{" "}
+            <code>skill-auto-improver</code> ({issue(574)}, {pr(575)})
+          </>,
+          <>
+            Skill-dependency gating and run-stats output on create/improve paths
+            ({issue(571)}, {pr(573)})
+          </>,
+        ],
+      },
+      {
+        tag: "fixed",
+        items: [
+          <>
+            Quote find-me-skills <code>metadata.author</code> so YAML
+            frontmatter stays valid
+          </>,
+          <>Deflake App container view-transition assertions in tests</>,
+        ],
+      },
+    ],
+  },
+  {
     version: "2.17.0",
     date: "2026-08-25",
     sections: [
@@ -34,9 +79,9 @@ const ENTRIES = [
         tag: "added",
         items: [
           <>
-            Semantic overlap detection for installed skills — extend
-            token-based similarity matching to skills already installed across
-            agents ({pr(570)})
+            Semantic overlap detection for installed skills — extend token-based
+            similarity matching to skills already installed across agents (
+            {pr(570)})
           </>,
           <>
             Content fingerprints and guarded auto-remove in{" "}
@@ -44,8 +89,8 @@ const ENTRIES = [
             clean them up safely ({pr(569)})
           </>,
           <>
-            Add <code>antithesishq/antithesis-skills</code> to the curated
-            skill index ({pr(560)})
+            Add <code>antithesishq/antithesis-skills</code> to the curated skill
+            index ({pr(560)})
           </>,
         ],
       },
@@ -57,12 +102,10 @@ const ENTRIES = [
             {pr(549)}, {pr(550)})
           </>,
           <>
-            Doctor PATH-shadowing recommendation now names the specific
-            shadowed binaries ({pr(515)})
+            Doctor PATH-shadowing recommendation now names the specific shadowed
+            binaries ({pr(515)})
           </>,
-          <>
-            Exclude documentation files from the security scan ({pr(513)})
-          </>,
+          <>Exclude documentation files from the security scan ({pr(513)})</>,
           <>
             Use <code>evaluateSkillContentSync</code> in enrich-index so index
             enrichment runs correctly ({pr(512)})
@@ -72,7 +115,10 @@ const ENTRIES = [
       {
         tag: "performance",
         items: [
-          <>Phase 3 performance optimizations ({issue(527)}–{issue(532)}, {pr(551)})</>,
+          <>
+            Phase 3 performance optimizations ({issue(527)}–{issue(532)},{" "}
+            {pr(551)})
+          </>,
         ],
       },
       {
@@ -80,14 +126,15 @@ const ENTRIES = [
         items: [
           <>
             Phase 6 architecture improvements and duplicate-group normalization
-            in audit output with version-divergence flags ({pr(554)},{" "}
-            {pr(568)})
+            in audit output with version-divergence flags ({pr(554)}, {pr(568)})
           </>,
           <>
             Phase 4 UX polish and Phase 5 accessibility & code quality (
             {pr(552)}, {pr(553)})
           </>,
-          <>List top authors when stats encounters an unknown author ({pr(514)})</>,
+          <>
+            List top authors when stats encounters an unknown author ({pr(514)})
+          </>,
         ],
       },
       {
