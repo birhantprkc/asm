@@ -13,6 +13,8 @@ export interface SkillInfo {
   license: string;
   compatibility: string;
   allowedTools: string[];
+  /** Free-form tags assigned to the skill. */
+  tags?: string[];
   /** Agent Skills model invocation. Default true when omitted. */
   modelInvocable?: boolean;
   /** Agent Skills user/slash invocation. Default true when omitted. */
@@ -81,6 +83,20 @@ export interface SkillStateFile {
   disabled: Record<
     string,
     Record<string, Partial<Record<"global" | "project", true>>>
+  >;
+}
+
+/** Local tag edits keyed by the skill's canonical on-disk directory. */
+export interface SkillTagStateFile {
+  version: 1;
+  skills: Record<
+    string,
+    {
+      /** Tags added locally beyond authoritative SKILL.md frontmatter. */
+      added: string[];
+      /** Frontmatter tags hidden locally without mutating SKILL.md. */
+      removed: string[];
+    }
   >;
 }
 
@@ -600,6 +616,7 @@ export interface DiscoveredSkill {
   creator: string;
   compatibility: string;
   allowedTools: string[];
+  tags?: string[];
   modelInvocable?: boolean;
   userInvocable?: boolean;
   /**
@@ -635,6 +652,7 @@ export interface IndexedSkill {
   creator: string;
   compatibility: string;
   allowedTools: string[];
+  tags?: string[];
   modelInvocable?: boolean;
   userInvocable?: boolean;
   installUrl: string;
