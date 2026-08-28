@@ -431,4 +431,21 @@ describe("App smoke", () => {
     // The catalog sidebar list must NOT be present on the landing page.
     expect(container.querySelector("aside a[href*='/skills/']")).toBeNull();
   });
+
+  it("docs route renders the CLI documentation", async () => {
+    window.history.replaceState(null, "", "/#/docs");
+    render(
+      <HashRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
+        <App />
+      </HashRouter>,
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: "Documentation" }),
+      ).toBeTruthy();
+    });
+    expect(screen.getByText("asm get <skill>")).toBeTruthy();
+  });
 });

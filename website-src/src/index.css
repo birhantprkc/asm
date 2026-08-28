@@ -215,6 +215,7 @@ mark.hl {
 }
 .prose-asm .doc-section {
   margin-bottom: 2rem;
+  scroll-margin-top: 4.5rem;
 }
 .prose-asm .doc-section h2:first-child {
   margin-top: 0;
