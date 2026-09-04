@@ -2,9 +2,185 @@
   "repoUrl": "https://github.com/davidondrej/skills.git",
   "owner": "davidondrej",
   "repo": "skills",
-  "updatedAt": "2026-09-02T21:57:36.351Z",
-  "skillCount": 59,
+  "updatedAt": "2026-09-04T01:21:13.334Z",
+  "skillCount": 62,
   "skills": [
+    {
+      "name": "adr-verbatim",
+      "description": "Write a new ADR whose body is the user''s exact words, nothing added. Use when the user says \"adr-verbatim\", \"document that as an ADR\", \"new ADR\", \"record this decision\", or gives wording for an ADR. Differentiator: agent adds only title, number and status line; it never drafts, rewrites, or expands the body.",
+      "version": "0.0.0",
+      "license": "",
+      "creator": "",
+      "compatibility": "",
+      "allowedTools": [],
+      "tags": [],
+      "modelInvocable": true,
+      "userInvocable": true,
+      "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/adr-verbatim",
+      "relPath": "skills/thinking-and-docs/adr-verbatim",
+      "verified": true,
+      "tokenCount": 412,
+      "evalSummary": {
+        "overallScore": 61,
+        "grade": "D",
+        "categories": [
+          {
+            "id": "structure",
+            "name": "Structure & completeness",
+            "score": 7,
+            "max": 10
+          },
+          {
+            "id": "description",
+            "name": "Description quality",
+            "score": 8,
+            "max": 10
+          },
+          {
+            "id": "prompt-engineering",
+            "name": "Prompt engineering",
+            "score": 7,
+            "max": 10
+          },
+          {
+            "id": "context-efficiency",
+            "name": "Context efficiency",
+            "score": 6,
+            "max": 10
+          },
+          {
+            "id": "safety",
+            "name": "Safety & guardrails",
+            "score": 2,
+            "max": 10
+          },
+          {
+            "id": "testability",
+            "name": "Testability",
+            "score": 1,
+            "max": 10
+          },
+          {
+            "id": "license",
+            "name": "License verification",
+            "score": 0,
+            "max": 10
+          },
+          {
+            "id": "naming",
+            "name": "Naming & conventions",
+            "score": 10,
+            "max": 10
+          },
+          {
+            "id": "pii",
+            "name": "PII detection",
+            "score": 10,
+            "max": 10
+          },
+          {
+            "id": "script-lint",
+            "name": "Script linting",
+            "score": 10,
+            "max": 10
+          }
+        ],
+        "evaluatedAt": "2026-09-04T01:21:13.134Z",
+        "evaluatedVersion": "0.0.0"
+      },
+      "evalSummaries": {
+        "quality": {
+          "providerId": "quality",
+          "providerVersion": "1.0.0",
+          "schemaVersion": 1,
+          "passed": true,
+          "overallScore": 61,
+          "grade": "D",
+          "categories": [
+            {
+              "id": "structure",
+              "name": "Structure & completeness",
+              "score": 7,
+              "max": 10
+            },
+            {
+              "id": "description",
+              "name": "Description quality",
+              "score": 8,
+              "max": 10
+            },
+            {
+              "id": "prompt-engineering",
+              "name": "Prompt engineering",
+              "score": 7,
+              "max": 10
+            },
+            {
+              "id": "context-efficiency",
+              "name": "Context efficiency",
+              "score": 6,
+              "max": 10
+            },
+            {
+              "id": "safety",
+              "name": "Safety & guardrails",
+              "score": 2,
+              "max": 10
+            },
+            {
+              "id": "testability",
+              "name": "Testability",
+              "score": 1,
+              "max": 10
+            },
+            {
+              "id": "license",
+              "name": "License verification",
+              "score": 0,
+              "max": 10
+            },
+            {
+              "id": "naming",
+              "name": "Naming & conventions",
+              "score": 10,
+              "max": 10
+            },
+            {
+              "id": "pii",
+              "name": "PII detection",
+              "score": 10,
+              "max": 10
+            },
+            {
+              "id": "script-lint",
+              "name": "Script linting",
+              "score": 10,
+              "max": 10
+            }
+          ],
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
+          "evaluatedVersion": "0.0.0"
+        },
+        "skill-best-practice": {
+          "providerId": "skill-best-practice",
+          "providerVersion": "1.1.0",
+          "schemaVersion": 1,
+          "passed": false,
+          "overallScore": 69,
+          "grade": "C",
+          "categories": [
+            {
+              "id": "validation",
+              "name": "Deterministic validation",
+              "score": 9,
+              "max": 13
+            }
+          ],
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
+          "evaluatedVersion": "0.0.0"
+        }
+      }
+    },
     {
       "name": "agent-self-scheduling",
       "description": "Make an AI agent run on a schedule, loop, or interval — cron, heartbeats, recurring autonomous checks. Use for \"run every N minutes\", \"schedule a task\", \"run on a loop\", \"heartbeat\". Covers external clocks (Claude Code, Codex, Pi) vs Hermes' built-in scheduler.",
@@ -19,7 +195,7 @@
       "installUrl": "github:davidondrej/skills:skills/agent-orchestration/agent-self-scheduling",
       "relPath": "skills/agent-orchestration/agent-self-scheduling",
       "verified": true,
-      "tokenCount": 1434,
+      "tokenCount": 1438,
       "evalSummary": {
         "overallScore": 66,
         "grade": "C",
@@ -85,7 +261,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.224Z",
+        "evaluatedAt": "2026-09-04T01:21:13.134Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -158,7 +334,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.224Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -176,7 +352,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.224Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -261,7 +437,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.223Z",
+        "evaluatedAt": "2026-09-04T01:21:13.134Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -334,7 +510,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.224Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -352,7 +528,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.224Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -437,7 +613,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.224Z",
+        "evaluatedAt": "2026-09-04T01:21:13.134Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -510,7 +686,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -528,14 +704,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "ask-then-build",
-      "description": "Scope a feature, change, or refactor by asking David 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when David says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
+      "description": "Scope a feature, change, or refactor by asking the user 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when the user says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -547,7 +723,7 @@
       "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/ask-then-build",
       "relPath": "skills/thinking-and-docs/ask-then-build",
       "verified": true,
-      "tokenCount": 832,
+      "tokenCount": 840,
       "evalSummary": {
         "overallScore": 68,
         "grade": "C",
@@ -613,7 +789,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.223Z",
+        "evaluatedAt": "2026-09-04T01:21:13.134Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -686,7 +862,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.224Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -704,7 +880,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.224Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -723,7 +899,7 @@
       "installUrl": "github:davidondrej/skills:skills/agent-orchestration/bb-cli",
       "relPath": "skills/agent-orchestration/bb-cli",
       "verified": true,
-      "tokenCount": 17433,
+      "tokenCount": 17435,
       "evalSummary": {
         "overallScore": 75,
         "grade": "C",
@@ -789,7 +965,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.224Z",
+        "evaluatedAt": "2026-09-04T01:21:13.134Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -862,7 +1038,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -880,7 +1056,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -965,7 +1141,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.225Z",
+        "evaluatedAt": "2026-09-04T01:21:13.134Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1038,7 +1214,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1056,183 +1232,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
-          "evaluatedVersion": "0.0.0"
-        }
-      }
-    },
-    {
-      "name": "bb-subagents",
-      "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Use when the user says \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
-      "version": "0.0.0",
-      "license": "",
-      "creator": "",
-      "compatibility": "",
-      "allowedTools": [],
-      "tags": [],
-      "modelInvocable": true,
-      "userInvocable": true,
-      "installUrl": "github:davidondrej/skills:skills/agent-orchestration/bb-subagents",
-      "relPath": "skills/agent-orchestration/bb-subagents",
-      "verified": true,
-      "tokenCount": 2226,
-      "evalSummary": {
-        "overallScore": 65,
-        "grade": "C",
-        "categories": [
-          {
-            "id": "structure",
-            "name": "Structure & completeness",
-            "score": 7,
-            "max": 10
-          },
-          {
-            "id": "description",
-            "name": "Description quality",
-            "score": 3,
-            "max": 10
-          },
-          {
-            "id": "prompt-engineering",
-            "name": "Prompt engineering",
-            "score": 7,
-            "max": 10
-          },
-          {
-            "id": "context-efficiency",
-            "name": "Context efficiency",
-            "score": 9,
-            "max": 10
-          },
-          {
-            "id": "safety",
-            "name": "Safety & guardrails",
-            "score": 8,
-            "max": 10
-          },
-          {
-            "id": "testability",
-            "name": "Testability",
-            "score": 1,
-            "max": 10
-          },
-          {
-            "id": "license",
-            "name": "License verification",
-            "score": 0,
-            "max": 10
-          },
-          {
-            "id": "naming",
-            "name": "Naming & conventions",
-            "score": 10,
-            "max": 10
-          },
-          {
-            "id": "pii",
-            "name": "PII detection",
-            "score": 10,
-            "max": 10
-          },
-          {
-            "id": "script-lint",
-            "name": "Script linting",
-            "score": 10,
-            "max": 10
-          }
-        ],
-        "evaluatedAt": "2026-09-02T21:57:36.225Z",
-        "evaluatedVersion": "0.0.0"
-      },
-      "evalSummaries": {
-        "quality": {
-          "providerId": "quality",
-          "providerVersion": "1.0.0",
-          "schemaVersion": 1,
-          "passed": true,
-          "overallScore": 65,
-          "grade": "C",
-          "categories": [
-            {
-              "id": "structure",
-              "name": "Structure & completeness",
-              "score": 7,
-              "max": 10
-            },
-            {
-              "id": "description",
-              "name": "Description quality",
-              "score": 3,
-              "max": 10
-            },
-            {
-              "id": "prompt-engineering",
-              "name": "Prompt engineering",
-              "score": 7,
-              "max": 10
-            },
-            {
-              "id": "context-efficiency",
-              "name": "Context efficiency",
-              "score": 9,
-              "max": 10
-            },
-            {
-              "id": "safety",
-              "name": "Safety & guardrails",
-              "score": 8,
-              "max": 10
-            },
-            {
-              "id": "testability",
-              "name": "Testability",
-              "score": 1,
-              "max": 10
-            },
-            {
-              "id": "license",
-              "name": "License verification",
-              "score": 0,
-              "max": 10
-            },
-            {
-              "id": "naming",
-              "name": "Naming & conventions",
-              "score": 10,
-              "max": 10
-            },
-            {
-              "id": "pii",
-              "name": "PII detection",
-              "score": 10,
-              "max": 10
-            },
-            {
-              "id": "script-lint",
-              "name": "Script linting",
-              "score": 10,
-              "max": 10
-            }
-          ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
-          "evaluatedVersion": "0.0.0"
-        },
-        "skill-best-practice": {
-          "providerId": "skill-best-practice",
-          "providerVersion": "1.1.0",
-          "schemaVersion": 1,
-          "passed": false,
-          "overallScore": 69,
-          "grade": "C",
-          "categories": [
-            {
-              "id": "validation",
-              "name": "Deterministic validation",
-              "score": 9,
-              "max": 13
-            }
-          ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -1251,7 +1251,7 @@
       "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/before-building",
       "relPath": "skills/thinking-and-docs/before-building",
       "verified": true,
-      "tokenCount": 211,
+      "tokenCount": 213,
       "evalSummary": {
         "overallScore": 48,
         "grade": "F",
@@ -1317,7 +1317,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.225Z",
+        "evaluatedAt": "2026-09-04T01:21:13.134Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1390,7 +1390,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1408,7 +1408,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.225Z",
+          "evaluatedAt": "2026-09-04T01:21:13.134Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -1493,7 +1493,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.236Z",
+        "evaluatedAt": "2026-09-04T01:21:13.146Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1566,7 +1566,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.237Z",
+          "evaluatedAt": "2026-09-04T01:21:13.146Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1584,7 +1584,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.237Z",
+          "evaluatedAt": "2026-09-04T01:21:13.146Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -1603,9 +1603,9 @@
       "installUrl": "github:davidondrej/skills:skills/research-and-web/browser-harness",
       "relPath": "skills/research-and-web/browser-harness",
       "verified": true,
-      "tokenCount": 2685,
+      "tokenCount": 3052,
       "evalSummary": {
-        "overallScore": 71,
+        "overallScore": 69,
         "grade": "C",
         "categories": [
           {
@@ -1629,7 +1629,7 @@
           {
             "id": "context-efficiency",
             "name": "Context efficiency",
-            "score": 9,
+            "score": 7,
             "max": 10
           },
           {
@@ -1669,7 +1669,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.238Z",
+        "evaluatedAt": "2026-09-04T01:21:13.146Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1678,7 +1678,7 @@
           "providerVersion": "1.0.0",
           "schemaVersion": 1,
           "passed": true,
-          "overallScore": 71,
+          "overallScore": 69,
           "grade": "C",
           "categories": [
             {
@@ -1702,7 +1702,7 @@
             {
               "id": "context-efficiency",
               "name": "Context efficiency",
-              "score": 9,
+              "score": 7,
               "max": 10
             },
             {
@@ -1742,7 +1742,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.238Z",
+          "evaluatedAt": "2026-09-04T01:21:13.146Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1760,7 +1760,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.238Z",
+          "evaluatedAt": "2026-09-04T01:21:13.146Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -1779,7 +1779,7 @@
       "installUrl": "github:davidondrej/skills:skills/agent-orchestration/cmux",
       "relPath": "skills/agent-orchestration/cmux",
       "verified": true,
-      "tokenCount": 4229,
+      "tokenCount": 4231,
       "evalSummary": {
         "overallScore": 69,
         "grade": "C",
@@ -1845,7 +1845,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.238Z",
+        "evaluatedAt": "2026-09-04T01:21:13.146Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1918,7 +1918,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.238Z",
+          "evaluatedAt": "2026-09-04T01:21:13.146Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1936,7 +1936,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.238Z",
+          "evaluatedAt": "2026-09-04T01:21:13.147Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2021,7 +2021,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.238Z",
+        "evaluatedAt": "2026-09-04T01:21:13.146Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2094,7 +2094,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.239Z",
+          "evaluatedAt": "2026-09-04T01:21:13.147Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2112,7 +2112,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.239Z",
+          "evaluatedAt": "2026-09-04T01:21:13.147Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2197,7 +2197,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.240Z",
+        "evaluatedAt": "2026-09-04T01:21:13.150Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2270,7 +2270,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.240Z",
+          "evaluatedAt": "2026-09-04T01:21:13.151Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2288,7 +2288,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.240Z",
+          "evaluatedAt": "2026-09-04T01:21:13.151Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2373,7 +2373,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.242Z",
+        "evaluatedAt": "2026-09-04T01:21:13.151Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2446,7 +2446,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.243Z",
+          "evaluatedAt": "2026-09-04T01:21:13.151Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2464,7 +2464,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.243Z",
+          "evaluatedAt": "2026-09-04T01:21:13.151Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2549,7 +2549,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.243Z",
+        "evaluatedAt": "2026-09-04T01:21:13.152Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2622,7 +2622,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.243Z",
+          "evaluatedAt": "2026-09-04T01:21:13.152Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2640,7 +2640,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.243Z",
+          "evaluatedAt": "2026-09-04T01:21:13.152Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2725,7 +2725,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.245Z",
+        "evaluatedAt": "2026-09-04T01:21:13.153Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2798,7 +2798,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.245Z",
+          "evaluatedAt": "2026-09-04T01:21:13.154Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2816,7 +2816,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.246Z",
+          "evaluatedAt": "2026-09-04T01:21:13.154Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2901,7 +2901,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.246Z",
+        "evaluatedAt": "2026-09-04T01:21:13.154Z",
         "evaluatedVersion": "b18c96c6e053"
       },
       "evalSummaries": {
@@ -2974,7 +2974,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.246Z",
+          "evaluatedAt": "2026-09-04T01:21:13.154Z",
           "evaluatedVersion": "b18c96c6e053"
         },
         "skill-best-practice": {
@@ -2992,7 +2992,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.246Z",
+          "evaluatedAt": "2026-09-04T01:21:13.154Z",
           "evaluatedVersion": "b18c96c6e053"
         }
       }
@@ -3077,7 +3077,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.249Z",
+        "evaluatedAt": "2026-09-04T01:21:13.157Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3150,7 +3150,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.251Z",
+          "evaluatedAt": "2026-09-04T01:21:13.157Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3168,7 +3168,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.251Z",
+          "evaluatedAt": "2026-09-04T01:21:13.157Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3253,7 +3253,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.251Z",
+        "evaluatedAt": "2026-09-04T01:21:13.157Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3326,7 +3326,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.251Z",
+          "evaluatedAt": "2026-09-04T01:21:13.157Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3344,14 +3344,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.251Z",
+          "evaluatedAt": "2026-09-04T01:21:13.157Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "fable-review",
-      "description": "Launch a Fable 5 Max 1M reviewer as a bb thread (default: /bb-subagents) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/fable-review\", \"fable review\", or asks for Fable to review the code. Differentiator: reviewer model is Fable 5 Max 1M — for a GPT reviewer use gpt-review.",
+      "description": "Launch a Fable 5 Max 1M reviewer as a bb thread (default: /nagent) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/fable-review\", \"fable review\", or asks for Fable to review the code. Differentiator: reviewer model is Fable 5 Max 1M — for a GPT reviewer use gpt-review.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -3429,7 +3429,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.251Z",
+        "evaluatedAt": "2026-09-04T01:21:13.158Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3502,7 +3502,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.251Z",
+          "evaluatedAt": "2026-09-04T01:21:13.158Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3520,7 +3520,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.251Z",
+          "evaluatedAt": "2026-09-04T01:21:13.159Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3605,7 +3605,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.254Z",
+        "evaluatedAt": "2026-09-04T01:21:13.163Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3678,7 +3678,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.255Z",
+          "evaluatedAt": "2026-09-04T01:21:13.163Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3696,7 +3696,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.255Z",
+          "evaluatedAt": "2026-09-04T01:21:13.163Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3781,7 +3781,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.256Z",
+        "evaluatedAt": "2026-09-04T01:21:13.164Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3854,7 +3854,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.256Z",
+          "evaluatedAt": "2026-09-04T01:21:13.164Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3872,7 +3872,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.256Z",
+          "evaluatedAt": "2026-09-04T01:21:13.164Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3957,7 +3957,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.257Z",
+        "evaluatedAt": "2026-09-04T01:21:13.164Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4030,7 +4030,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.258Z",
+          "evaluatedAt": "2026-09-04T01:21:13.164Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4048,14 +4048,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.258Z",
+          "evaluatedAt": "2026-09-04T01:21:13.164Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "folder-specific-claude-and-agents-md",
-      "description": "Create a specialized CLAUDE.md (+ AGENTS.md symlink) inside a specific folder to give future agents folder-scoped context. Use when the user asks to create a CLAUDE.md for a folder, write folder instructions, or add agent context to a directory.",
+      "description": "Create a specialized CLAUDE.md (+ AGENTS.md symlink) inside a specific folder to give future agents folder-scoped context. Use when David asks to create a CLAUDE.md for a folder, write folder instructions, or add agent context to a directory.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -4067,7 +4067,7 @@
       "installUrl": "github:davidondrej/skills:skills/skill-authoring/folder-specific-claude-and-agents-md",
       "relPath": "skills/skill-authoring/folder-specific-claude-and-agents-md",
       "verified": true,
-      "tokenCount": 1570,
+      "tokenCount": 1536,
       "evalSummary": {
         "overallScore": 77,
         "grade": "C",
@@ -4133,7 +4133,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.257Z",
+        "evaluatedAt": "2026-09-04T01:21:13.164Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4206,7 +4206,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.258Z",
+          "evaluatedAt": "2026-09-04T01:21:13.165Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4224,7 +4224,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.258Z",
+          "evaluatedAt": "2026-09-04T01:21:13.165Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -4309,7 +4309,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.257Z",
+        "evaluatedAt": "2026-09-04T01:21:13.165Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4382,7 +4382,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.258Z",
+          "evaluatedAt": "2026-09-04T01:21:13.166Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4400,7 +4400,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.258Z",
+          "evaluatedAt": "2026-09-04T01:21:13.166Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -4485,7 +4485,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.262Z",
+        "evaluatedAt": "2026-09-04T01:21:13.170Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4558,7 +4558,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.262Z",
+          "evaluatedAt": "2026-09-04T01:21:13.171Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4576,7 +4576,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.262Z",
+          "evaluatedAt": "2026-09-04T01:21:13.171Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -4595,7 +4595,7 @@
       "installUrl": "github:davidondrej/skills:skills/ops-and-setup/global-agent-guardrails",
       "relPath": "skills/ops-and-setup/global-agent-guardrails",
       "verified": true,
-      "tokenCount": 2088,
+      "tokenCount": 2098,
       "evalSummary": {
         "overallScore": 69,
         "grade": "C",
@@ -4661,7 +4661,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.262Z",
+        "evaluatedAt": "2026-09-04T01:21:13.171Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4734,7 +4734,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.262Z",
+          "evaluatedAt": "2026-09-04T01:21:13.171Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4752,7 +4752,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.262Z",
+          "evaluatedAt": "2026-09-04T01:21:13.171Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -4771,7 +4771,7 @@
       "installUrl": "github:davidondrej/skills:skills/agent-orchestration/goal-loop",
       "relPath": "skills/agent-orchestration/goal-loop",
       "verified": true,
-      "tokenCount": 3000,
+      "tokenCount": 3008,
       "evalSummary": {
         "overallScore": 77,
         "grade": "C",
@@ -4837,7 +4837,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.263Z",
+        "evaluatedAt": "2026-09-04T01:21:13.171Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4910,7 +4910,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.263Z",
+          "evaluatedAt": "2026-09-04T01:21:13.171Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4928,7 +4928,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.263Z",
+          "evaluatedAt": "2026-09-04T01:21:13.171Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -5013,7 +5013,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.263Z",
+        "evaluatedAt": "2026-09-04T01:21:13.171Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -5086,7 +5086,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.263Z",
+          "evaluatedAt": "2026-09-04T01:21:13.171Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -5104,14 +5104,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.263Z",
+          "evaluatedAt": "2026-09-04T01:21:13.171Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "gpt-review",
-      "description": "Launch a GPT 5.6 Sol Max reviewer as a bb thread (default: /bb-subagents) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/gpt-review\", \"gpt review\", or asks for GPT to review the code. Differentiator: reviewer model is GPT 5.6 Sol Max — for a Fable reviewer use fable-review.",
+      "description": "Launch a GPT 5.6 Sol Max reviewer as a bb thread (default: /nagent) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/gpt-review\", \"gpt review\", or asks for GPT to review the code. Differentiator: reviewer model is GPT 5.6 Sol Max — for a Fable reviewer use fable-review.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -5123,7 +5123,7 @@
       "installUrl": "github:davidondrej/skills:skills/agent-orchestration/gpt-review",
       "relPath": "skills/agent-orchestration/gpt-review",
       "verified": true,
-      "tokenCount": 743,
+      "tokenCount": 749,
       "evalSummary": {
         "overallScore": 49,
         "grade": "F",
@@ -5189,7 +5189,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.266Z",
+        "evaluatedAt": "2026-09-04T01:21:13.173Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -5262,7 +5262,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.266Z",
+          "evaluatedAt": "2026-09-04T01:21:13.174Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -5280,7 +5280,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.266Z",
+          "evaluatedAt": "2026-09-04T01:21:13.174Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -5365,7 +5365,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.269Z",
+        "evaluatedAt": "2026-09-04T01:21:13.177Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -5438,7 +5438,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.269Z",
+          "evaluatedAt": "2026-09-04T01:21:13.177Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -5456,7 +5456,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.269Z",
+          "evaluatedAt": "2026-09-04T01:21:13.177Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -5541,7 +5541,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.269Z",
+        "evaluatedAt": "2026-09-04T01:21:13.177Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -5614,7 +5614,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.269Z",
+          "evaluatedAt": "2026-09-04T01:21:13.177Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -5632,7 +5632,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.269Z",
+          "evaluatedAt": "2026-09-04T01:21:13.177Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -5717,7 +5717,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.269Z",
+        "evaluatedAt": "2026-09-04T01:21:13.177Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -5790,7 +5790,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.269Z",
+          "evaluatedAt": "2026-09-04T01:21:13.177Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -5808,7 +5808,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.269Z",
+          "evaluatedAt": "2026-09-04T01:21:13.177Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -5893,7 +5893,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.269Z",
+        "evaluatedAt": "2026-09-04T01:21:13.177Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -5966,7 +5966,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.269Z",
+          "evaluatedAt": "2026-09-04T01:21:13.178Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -5984,7 +5984,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.269Z",
+          "evaluatedAt": "2026-09-04T01:21:13.178Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -6069,7 +6069,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.270Z",
+        "evaluatedAt": "2026-09-04T01:21:13.179Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -6142,7 +6142,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.270Z",
+          "evaluatedAt": "2026-09-04T01:21:13.179Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -6160,7 +6160,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.270Z",
+          "evaluatedAt": "2026-09-04T01:21:13.179Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -6245,7 +6245,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.272Z",
+        "evaluatedAt": "2026-09-04T01:21:13.180Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -6318,7 +6318,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.272Z",
+          "evaluatedAt": "2026-09-04T01:21:13.180Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -6336,7 +6336,183 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.272Z",
+          "evaluatedAt": "2026-09-04T01:21:13.180Z",
+          "evaluatedVersion": "0.0.0"
+        }
+      }
+    },
+    {
+      "name": "nagent",
+      "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Short for \"new agent\". Use when the user says \"nagent\", \"/nagent\", \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", \"launch it as its own thread, not as your subagent\", \"standalone bb thread\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
+      "version": "0.0.0",
+      "license": "",
+      "creator": "",
+      "compatibility": "",
+      "allowedTools": [],
+      "tags": [],
+      "modelInvocable": true,
+      "userInvocable": true,
+      "installUrl": "github:davidondrej/skills:skills/agent-orchestration/nagent",
+      "relPath": "skills/agent-orchestration/nagent",
+      "verified": true,
+      "tokenCount": 2523,
+      "evalSummary": {
+        "overallScore": 65,
+        "grade": "C",
+        "categories": [
+          {
+            "id": "structure",
+            "name": "Structure & completeness",
+            "score": 7,
+            "max": 10
+          },
+          {
+            "id": "description",
+            "name": "Description quality",
+            "score": 3,
+            "max": 10
+          },
+          {
+            "id": "prompt-engineering",
+            "name": "Prompt engineering",
+            "score": 7,
+            "max": 10
+          },
+          {
+            "id": "context-efficiency",
+            "name": "Context efficiency",
+            "score": 9,
+            "max": 10
+          },
+          {
+            "id": "safety",
+            "name": "Safety & guardrails",
+            "score": 8,
+            "max": 10
+          },
+          {
+            "id": "testability",
+            "name": "Testability",
+            "score": 1,
+            "max": 10
+          },
+          {
+            "id": "license",
+            "name": "License verification",
+            "score": 0,
+            "max": 10
+          },
+          {
+            "id": "naming",
+            "name": "Naming & conventions",
+            "score": 10,
+            "max": 10
+          },
+          {
+            "id": "pii",
+            "name": "PII detection",
+            "score": 10,
+            "max": 10
+          },
+          {
+            "id": "script-lint",
+            "name": "Script linting",
+            "score": 10,
+            "max": 10
+          }
+        ],
+        "evaluatedAt": "2026-09-04T01:21:13.183Z",
+        "evaluatedVersion": "0.0.0"
+      },
+      "evalSummaries": {
+        "quality": {
+          "providerId": "quality",
+          "providerVersion": "1.0.0",
+          "schemaVersion": 1,
+          "passed": true,
+          "overallScore": 65,
+          "grade": "C",
+          "categories": [
+            {
+              "id": "structure",
+              "name": "Structure & completeness",
+              "score": 7,
+              "max": 10
+            },
+            {
+              "id": "description",
+              "name": "Description quality",
+              "score": 3,
+              "max": 10
+            },
+            {
+              "id": "prompt-engineering",
+              "name": "Prompt engineering",
+              "score": 7,
+              "max": 10
+            },
+            {
+              "id": "context-efficiency",
+              "name": "Context efficiency",
+              "score": 9,
+              "max": 10
+            },
+            {
+              "id": "safety",
+              "name": "Safety & guardrails",
+              "score": 8,
+              "max": 10
+            },
+            {
+              "id": "testability",
+              "name": "Testability",
+              "score": 1,
+              "max": 10
+            },
+            {
+              "id": "license",
+              "name": "License verification",
+              "score": 0,
+              "max": 10
+            },
+            {
+              "id": "naming",
+              "name": "Naming & conventions",
+              "score": 10,
+              "max": 10
+            },
+            {
+              "id": "pii",
+              "name": "PII detection",
+              "score": 10,
+              "max": 10
+            },
+            {
+              "id": "script-lint",
+              "name": "Script linting",
+              "score": 10,
+              "max": 10
+            }
+          ],
+          "evaluatedAt": "2026-09-04T01:21:13.183Z",
+          "evaluatedVersion": "0.0.0"
+        },
+        "skill-best-practice": {
+          "providerId": "skill-best-practice",
+          "providerVersion": "1.1.0",
+          "schemaVersion": 1,
+          "passed": false,
+          "overallScore": 69,
+          "grade": "C",
+          "categories": [
+            {
+              "id": "validation",
+              "name": "Deterministic validation",
+              "score": 9,
+              "max": 13
+            }
+          ],
+          "evaluatedAt": "2026-09-04T01:21:13.183Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -6421,7 +6597,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.274Z",
+        "evaluatedAt": "2026-09-04T01:21:13.184Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -6494,7 +6670,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.274Z",
+          "evaluatedAt": "2026-09-04T01:21:13.184Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -6512,7 +6688,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.274Z",
+          "evaluatedAt": "2026-09-04T01:21:13.184Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -6597,7 +6773,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.274Z",
+        "evaluatedAt": "2026-09-04T01:21:13.184Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -6670,7 +6846,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.274Z",
+          "evaluatedAt": "2026-09-04T01:21:13.184Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -6688,14 +6864,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.275Z",
+          "evaluatedAt": "2026-09-04T01:21:13.184Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "online-shopping",
-      "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust. Load whenever the user is shopping or buying anything online: mentions buying a product, comparing prices, \"is this a good price\", \"where can I get X\", or attaches a product photo or listing screenshot. Research only — never places orders.",
+      "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust, and VAT/tax savings. Load on ANY shopping, buying, purchasing, checkout, subscribe, SaaS plan, software subscription, Stripe/payment page, or \"is this a good price\" moment — including product photos and listing or checkout screenshots. Differentiator: research-only shopping help plus a company VAT-number reminder; never places orders.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -6707,10 +6883,10 @@
       "installUrl": "github:davidondrej/skills:skills/research-and-web/online-shopping",
       "relPath": "skills/research-and-web/online-shopping",
       "verified": true,
-      "tokenCount": 1968,
+      "tokenCount": 2553,
       "evalSummary": {
-        "overallScore": 65,
-        "grade": "C",
+        "overallScore": 61,
+        "grade": "D",
         "categories": [
           {
             "id": "structure",
@@ -6721,7 +6897,7 @@
           {
             "id": "description",
             "name": "Description quality",
-            "score": 5,
+            "score": 3,
             "max": 10
           },
           {
@@ -6739,7 +6915,7 @@
           {
             "id": "safety",
             "name": "Safety & guardrails",
-            "score": 4,
+            "score": 2,
             "max": 10
           },
           {
@@ -6773,7 +6949,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.274Z",
+        "evaluatedAt": "2026-09-04T01:21:13.185Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -6782,8 +6958,8 @@
           "providerVersion": "1.0.0",
           "schemaVersion": 1,
           "passed": true,
-          "overallScore": 65,
-          "grade": "C",
+          "overallScore": 61,
+          "grade": "D",
           "categories": [
             {
               "id": "structure",
@@ -6794,7 +6970,7 @@
             {
               "id": "description",
               "name": "Description quality",
-              "score": 5,
+              "score": 3,
               "max": 10
             },
             {
@@ -6812,7 +6988,7 @@
             {
               "id": "safety",
               "name": "Safety & guardrails",
-              "score": 4,
+              "score": 2,
               "max": 10
             },
             {
@@ -6846,7 +7022,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.274Z",
+          "evaluatedAt": "2026-09-04T01:21:13.185Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -6864,7 +7040,183 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.274Z",
+          "evaluatedAt": "2026-09-04T01:21:13.185Z",
+          "evaluatedVersion": "0.0.0"
+        }
+      }
+    },
+    {
+      "name": "persistent-localhost",
+      "description": "Start, stop, restart, and inspect durable localhost dev servers on macOS as user LaunchAgents, so they outlive the agent's shell and auto-restart on crash. Use whenever an agent must run a dev server, API, or any long-lived local process on a port: \"start the dev server\", \"run it on localhost\", \"keep the server running\", \"the server keeps dying\", \"restart the app on port 5111\". Never start servers with nohup, &, disown, setsid, or run_in_background; those die with the shell or become unfindable orphans.",
+      "version": "0.0.0",
+      "license": "",
+      "creator": "",
+      "compatibility": "",
+      "allowedTools": [],
+      "tags": [],
+      "modelInvocable": true,
+      "userInvocable": true,
+      "installUrl": "github:davidondrej/skills:skills/ops-and-setup/persistent-localhost",
+      "relPath": "skills/ops-and-setup/persistent-localhost",
+      "verified": true,
+      "tokenCount": 729,
+      "evalSummary": {
+        "overallScore": 61,
+        "grade": "D",
+        "categories": [
+          {
+            "id": "structure",
+            "name": "Structure & completeness",
+            "score": 7,
+            "max": 10
+          },
+          {
+            "id": "description",
+            "name": "Description quality",
+            "score": 0,
+            "max": 10
+          },
+          {
+            "id": "prompt-engineering",
+            "name": "Prompt engineering",
+            "score": 6,
+            "max": 10
+          },
+          {
+            "id": "context-efficiency",
+            "name": "Context efficiency",
+            "score": 9,
+            "max": 10
+          },
+          {
+            "id": "safety",
+            "name": "Safety & guardrails",
+            "score": 9,
+            "max": 10
+          },
+          {
+            "id": "testability",
+            "name": "Testability",
+            "score": 0,
+            "max": 10
+          },
+          {
+            "id": "license",
+            "name": "License verification",
+            "score": 0,
+            "max": 10
+          },
+          {
+            "id": "naming",
+            "name": "Naming & conventions",
+            "score": 10,
+            "max": 10
+          },
+          {
+            "id": "pii",
+            "name": "PII detection",
+            "score": 10,
+            "max": 10
+          },
+          {
+            "id": "script-lint",
+            "name": "Script linting",
+            "score": 10,
+            "max": 10
+          }
+        ],
+        "evaluatedAt": "2026-09-04T01:21:13.186Z",
+        "evaluatedVersion": "0.0.0"
+      },
+      "evalSummaries": {
+        "quality": {
+          "providerId": "quality",
+          "providerVersion": "1.0.0",
+          "schemaVersion": 1,
+          "passed": true,
+          "overallScore": 61,
+          "grade": "D",
+          "categories": [
+            {
+              "id": "structure",
+              "name": "Structure & completeness",
+              "score": 7,
+              "max": 10
+            },
+            {
+              "id": "description",
+              "name": "Description quality",
+              "score": 0,
+              "max": 10
+            },
+            {
+              "id": "prompt-engineering",
+              "name": "Prompt engineering",
+              "score": 6,
+              "max": 10
+            },
+            {
+              "id": "context-efficiency",
+              "name": "Context efficiency",
+              "score": 9,
+              "max": 10
+            },
+            {
+              "id": "safety",
+              "name": "Safety & guardrails",
+              "score": 9,
+              "max": 10
+            },
+            {
+              "id": "testability",
+              "name": "Testability",
+              "score": 0,
+              "max": 10
+            },
+            {
+              "id": "license",
+              "name": "License verification",
+              "score": 0,
+              "max": 10
+            },
+            {
+              "id": "naming",
+              "name": "Naming & conventions",
+              "score": 10,
+              "max": 10
+            },
+            {
+              "id": "pii",
+              "name": "PII detection",
+              "score": 10,
+              "max": 10
+            },
+            {
+              "id": "script-lint",
+              "name": "Script linting",
+              "score": 10,
+              "max": 10
+            }
+          ],
+          "evaluatedAt": "2026-09-04T01:21:13.186Z",
+          "evaluatedVersion": "0.0.0"
+        },
+        "skill-best-practice": {
+          "providerId": "skill-best-practice",
+          "providerVersion": "1.1.0",
+          "schemaVersion": 1,
+          "passed": false,
+          "overallScore": 0,
+          "grade": "F",
+          "categories": [
+            {
+              "id": "validation",
+              "name": "Deterministic validation",
+              "score": 1,
+              "max": 2
+            }
+          ],
+          "evaluatedAt": "2026-09-04T01:21:13.186Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -6949,7 +7301,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.277Z",
+        "evaluatedAt": "2026-09-04T01:21:13.187Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -7022,7 +7374,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.277Z",
+          "evaluatedAt": "2026-09-04T01:21:13.187Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -7040,7 +7392,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.277Z",
+          "evaluatedAt": "2026-09-04T01:21:13.187Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -7125,7 +7477,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.277Z",
+        "evaluatedAt": "2026-09-04T01:21:13.189Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -7198,7 +7550,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.278Z",
+          "evaluatedAt": "2026-09-04T01:21:13.189Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -7216,14 +7568,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.278Z",
+          "evaluatedAt": "2026-09-04T01:21:13.189Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "prompt-me",
-      "description": "Prompt the user with pointed questions to extract what is in their head about a project — remaining work, what is being avoided, what really matters, what does not. Use when the user says \"prompt me\", \"ask me questions\", or wants the agent to figure out priorities by questioning them.",
+      "description": "Prompt David with pointed questions to extract what is in his head about a project — remaining work, what is being avoided, what really matters, what does not. Use when David says \"prompt me\", \"ask me questions\", or wants the agent to figure out priorities by questioning him.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -7235,9 +7587,9 @@
       "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/prompt-me",
       "relPath": "skills/thinking-and-docs/prompt-me",
       "verified": true,
-      "tokenCount": 223,
+      "tokenCount": 215,
       "evalSummary": {
-        "overallScore": 47,
+        "overallScore": 45,
         "grade": "F",
         "categories": [
           {
@@ -7261,7 +7613,7 @@
           {
             "id": "context-efficiency",
             "name": "Context efficiency",
-            "score": 4,
+            "score": 2,
             "max": 10
           },
           {
@@ -7301,7 +7653,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.278Z",
+        "evaluatedAt": "2026-09-04T01:21:13.189Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -7310,7 +7662,7 @@
           "providerVersion": "1.0.0",
           "schemaVersion": 1,
           "passed": false,
-          "overallScore": 47,
+          "overallScore": 45,
           "grade": "F",
           "categories": [
             {
@@ -7334,7 +7686,7 @@
             {
               "id": "context-efficiency",
               "name": "Context efficiency",
-              "score": 4,
+              "score": 2,
               "max": 10
             },
             {
@@ -7374,7 +7726,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.278Z",
+          "evaluatedAt": "2026-09-04T01:21:13.191Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -7392,14 +7744,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.278Z",
+          "evaluatedAt": "2026-09-04T01:21:13.191Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "push-skill-to-github",
-      "description": "Commit and push agent-skill changes to the user's private skills GitHub repo (rooted at ~/.agents). Use after creating or updating any skill, when the user says \"push the skill\", \"push skills to github\", \"save the skill to my repo\", or \"update the skills repo\". Handles staging, committing, and pushing directly in the current shell — works in any agent, no cmux needed.",
+      "description": "Commit and push agent-skill changes to the user's private skills GitHub repo (private-skills, rooted at ~/.agents). Use after creating or updating any skill, when the user says \"push the skill\", \"push skills to github\", \"save the skill to my repo\", or \"update the skills repo\". Handles staging, committing, and pushing directly in the current shell — works in any agent, no cmux needed.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -7411,7 +7763,7 @@
       "installUrl": "github:davidondrej/skills:skills/skill-authoring/push-skill-to-github",
       "relPath": "skills/skill-authoring/push-skill-to-github",
       "verified": true,
-      "tokenCount": 562,
+      "tokenCount": 576,
       "evalSummary": {
         "overallScore": 61,
         "grade": "D",
@@ -7477,7 +7829,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.279Z",
+        "evaluatedAt": "2026-09-04T01:21:13.192Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -7550,7 +7902,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.279Z",
+          "evaluatedAt": "2026-09-04T01:21:13.192Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -7568,7 +7920,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.279Z",
+          "evaluatedAt": "2026-09-04T01:21:13.192Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -7653,7 +8005,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.279Z",
+        "evaluatedAt": "2026-09-04T01:21:13.192Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -7726,7 +8078,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.279Z",
+          "evaluatedAt": "2026-09-04T01:21:13.192Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -7744,7 +8096,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.279Z",
+          "evaluatedAt": "2026-09-04T01:21:13.192Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -7829,7 +8181,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.280Z",
+        "evaluatedAt": "2026-09-04T01:21:13.194Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -7902,7 +8254,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.280Z",
+          "evaluatedAt": "2026-09-04T01:21:13.194Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -7920,7 +8272,183 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.280Z",
+          "evaluatedAt": "2026-09-04T01:21:13.194Z",
+          "evaluatedVersion": "0.0.0"
+        }
+      }
+    },
+    {
+      "name": "rename",
+      "description": "Manually-invoked skill that renames the current thread or session to 2-5 lowercase descriptive words. Use when David says \"rename\", \"rename this\", \"rename thread\", or \"rename session\".",
+      "version": "0.0.0",
+      "license": "",
+      "creator": "",
+      "compatibility": "",
+      "allowedTools": [],
+      "tags": [],
+      "modelInvocable": false,
+      "userInvocable": true,
+      "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/rename",
+      "relPath": "skills/thinking-and-docs/rename",
+      "verified": true,
+      "tokenCount": 123,
+      "evalSummary": {
+        "overallScore": 45,
+        "grade": "F",
+        "categories": [
+          {
+            "id": "structure",
+            "name": "Structure & completeness",
+            "score": 6,
+            "max": 10
+          },
+          {
+            "id": "description",
+            "name": "Description quality",
+            "score": 7,
+            "max": 10
+          },
+          {
+            "id": "prompt-engineering",
+            "name": "Prompt engineering",
+            "score": 0,
+            "max": 10
+          },
+          {
+            "id": "context-efficiency",
+            "name": "Context efficiency",
+            "score": 3,
+            "max": 10
+          },
+          {
+            "id": "safety",
+            "name": "Safety & guardrails",
+            "score": 2,
+            "max": 10
+          },
+          {
+            "id": "testability",
+            "name": "Testability",
+            "score": 0,
+            "max": 10
+          },
+          {
+            "id": "license",
+            "name": "License verification",
+            "score": 0,
+            "max": 10
+          },
+          {
+            "id": "naming",
+            "name": "Naming & conventions",
+            "score": 7,
+            "max": 10
+          },
+          {
+            "id": "pii",
+            "name": "PII detection",
+            "score": 10,
+            "max": 10
+          },
+          {
+            "id": "script-lint",
+            "name": "Script linting",
+            "score": 10,
+            "max": 10
+          }
+        ],
+        "evaluatedAt": "2026-09-04T01:21:13.194Z",
+        "evaluatedVersion": "0.0.0"
+      },
+      "evalSummaries": {
+        "quality": {
+          "providerId": "quality",
+          "providerVersion": "1.0.0",
+          "schemaVersion": 1,
+          "passed": false,
+          "overallScore": 45,
+          "grade": "F",
+          "categories": [
+            {
+              "id": "structure",
+              "name": "Structure & completeness",
+              "score": 6,
+              "max": 10
+            },
+            {
+              "id": "description",
+              "name": "Description quality",
+              "score": 7,
+              "max": 10
+            },
+            {
+              "id": "prompt-engineering",
+              "name": "Prompt engineering",
+              "score": 0,
+              "max": 10
+            },
+            {
+              "id": "context-efficiency",
+              "name": "Context efficiency",
+              "score": 3,
+              "max": 10
+            },
+            {
+              "id": "safety",
+              "name": "Safety & guardrails",
+              "score": 2,
+              "max": 10
+            },
+            {
+              "id": "testability",
+              "name": "Testability",
+              "score": 0,
+              "max": 10
+            },
+            {
+              "id": "license",
+              "name": "License verification",
+              "score": 0,
+              "max": 10
+            },
+            {
+              "id": "naming",
+              "name": "Naming & conventions",
+              "score": 7,
+              "max": 10
+            },
+            {
+              "id": "pii",
+              "name": "PII detection",
+              "score": 10,
+              "max": 10
+            },
+            {
+              "id": "script-lint",
+              "name": "Script linting",
+              "score": 10,
+              "max": 10
+            }
+          ],
+          "evaluatedAt": "2026-09-04T01:21:13.194Z",
+          "evaluatedVersion": "0.0.0"
+        },
+        "skill-best-practice": {
+          "providerId": "skill-best-practice",
+          "providerVersion": "1.1.0",
+          "schemaVersion": 1,
+          "passed": false,
+          "overallScore": 69,
+          "grade": "C",
+          "categories": [
+            {
+              "id": "validation",
+              "name": "Deterministic validation",
+              "score": 9,
+              "max": 13
+            }
+          ],
+          "evaluatedAt": "2026-09-04T01:21:13.194Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -8005,7 +8533,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.281Z",
+        "evaluatedAt": "2026-09-04T01:21:13.194Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -8078,7 +8606,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.281Z",
+          "evaluatedAt": "2026-09-04T01:21:13.194Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -8096,7 +8624,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.281Z",
+          "evaluatedAt": "2026-09-04T01:21:13.194Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -8181,7 +8709,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.282Z",
+        "evaluatedAt": "2026-09-04T01:21:13.195Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -8254,7 +8782,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.282Z",
+          "evaluatedAt": "2026-09-04T01:21:13.195Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -8272,7 +8800,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.282Z",
+          "evaluatedAt": "2026-09-04T01:21:13.195Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -8357,7 +8885,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.282Z",
+        "evaluatedAt": "2026-09-04T01:21:13.196Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -8430,7 +8958,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.282Z",
+          "evaluatedAt": "2026-09-04T01:21:13.197Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -8448,7 +8976,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.282Z",
+          "evaluatedAt": "2026-09-04T01:21:13.197Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -8467,7 +8995,7 @@
       "installUrl": "github:davidondrej/skills:skills/agent-orchestration/run-deep-swe",
       "relPath": "skills/agent-orchestration/run-deep-swe",
       "verified": true,
-      "tokenCount": 1194,
+      "tokenCount": 1198,
       "evalSummary": {
         "overallScore": 67,
         "grade": "C",
@@ -8533,7 +9061,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.283Z",
+        "evaluatedAt": "2026-09-04T01:21:13.197Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -8606,7 +9134,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.283Z",
+          "evaluatedAt": "2026-09-04T01:21:13.198Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -8624,7 +9152,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.283Z",
+          "evaluatedAt": "2026-09-04T01:21:13.198Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -8709,7 +9237,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.285Z",
+        "evaluatedAt": "2026-09-04T01:21:13.198Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -8782,7 +9310,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.286Z",
+          "evaluatedAt": "2026-09-04T01:21:13.198Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -8800,7 +9328,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.286Z",
+          "evaluatedAt": "2026-09-04T01:21:13.198Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -8885,7 +9413,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.286Z",
+        "evaluatedAt": "2026-09-04T01:21:13.199Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -8958,7 +9486,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.287Z",
+          "evaluatedAt": "2026-09-04T01:21:13.199Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -8976,7 +9504,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.287Z",
+          "evaluatedAt": "2026-09-04T01:21:13.199Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -9061,7 +9589,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.287Z",
+        "evaluatedAt": "2026-09-04T01:21:13.199Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -9134,7 +9662,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.287Z",
+          "evaluatedAt": "2026-09-04T01:21:13.200Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -9152,7 +9680,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.287Z",
+          "evaluatedAt": "2026-09-04T01:21:13.200Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -9237,7 +9765,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.287Z",
+        "evaluatedAt": "2026-09-04T01:21:13.201Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -9310,7 +9838,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.287Z",
+          "evaluatedAt": "2026-09-04T01:21:13.201Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -9328,14 +9856,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.287Z",
+          "evaluatedAt": "2026-09-04T01:21:13.201Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "stop-overthinking",
-      "description": "Manually-invoked skill that stops overthinking and forces a short, practical decision. Use only when the user explicitly invokes stop-overthinking.",
+      "description": "Manually-invoked skill that stops overthinking and forces a short, practical decision. Use only when David explicitly invokes stop-overthinking.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -9347,7 +9875,7 @@
       "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/stop-overthinking",
       "relPath": "skills/thinking-and-docs/stop-overthinking",
       "verified": true,
-      "tokenCount": 138,
+      "tokenCount": 134,
       "evalSummary": {
         "overallScore": 45,
         "grade": "F",
@@ -9413,7 +9941,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.287Z",
+        "evaluatedAt": "2026-09-04T01:21:13.203Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -9486,7 +10014,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.287Z",
+          "evaluatedAt": "2026-09-04T01:21:13.203Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -9504,7 +10032,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.287Z",
+          "evaluatedAt": "2026-09-04T01:21:13.203Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -9589,7 +10117,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.290Z",
+        "evaluatedAt": "2026-09-04T01:21:13.204Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -9662,7 +10190,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.290Z",
+          "evaluatedAt": "2026-09-04T01:21:13.204Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -9680,7 +10208,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.290Z",
+          "evaluatedAt": "2026-09-04T01:21:13.204Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -9765,7 +10293,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.291Z",
+        "evaluatedAt": "2026-09-04T01:21:13.204Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -9838,7 +10366,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.291Z",
+          "evaluatedAt": "2026-09-04T01:21:13.205Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -9856,7 +10384,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.291Z",
+          "evaluatedAt": "2026-09-04T01:21:13.205Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -9941,7 +10469,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.295Z",
+        "evaluatedAt": "2026-09-04T01:21:13.205Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -10014,7 +10542,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.295Z",
+          "evaluatedAt": "2026-09-04T01:21:13.205Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -10032,14 +10560,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.295Z",
+          "evaluatedAt": "2026-09-04T01:21:13.205Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "who-is-this",
-      "description": "Deep-scrape a person across X, LinkedIn, GitHub, and the open web to judge if they are legit. Manual-only; invoke with /who-is-this. Use when the user says who-is-this, \"who is this\", \"who is this guy\", \"research this person\", \"are they legit\", \"vet this founder\", or drops a profile screenshot. Differentiator vs twitter-alpha: one-person background check, not a 7-person idea list. Differentiator vs deep-research: platform scrapes plus a short verdict, not a long cited memo.",
+      "description": "Deep-scrape a person across X, LinkedIn, GitHub, and the open web to judge if they are legit. Manual-only; invoke with /who-is-this. Use when David says who-is-this, \"who is this\", \"who is this guy\", \"research this person\", \"are they legit\", \"vet this founder\", or drops a profile screenshot. Differentiator vs twitter-alpha: one-person background check, not a 7-person idea list. Differentiator vs deep-research: platform scrapes plus a short verdict, not a long cited memo.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -10051,7 +10579,7 @@
       "installUrl": "github:davidondrej/skills:skills/research-and-web/who-is-this",
       "relPath": "skills/research-and-web/who-is-this",
       "verified": true,
-      "tokenCount": 1087,
+      "tokenCount": 1085,
       "evalSummary": {
         "overallScore": 60,
         "grade": "D",
@@ -10117,7 +10645,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.295Z",
+        "evaluatedAt": "2026-09-04T01:21:13.208Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -10190,7 +10718,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.295Z",
+          "evaluatedAt": "2026-09-04T01:21:13.208Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -10208,7 +10736,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.295Z",
+          "evaluatedAt": "2026-09-04T01:21:13.208Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -10293,7 +10821,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:36.295Z",
+        "evaluatedAt": "2026-09-04T01:21:13.208Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -10366,7 +10894,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.295Z",
+          "evaluatedAt": "2026-09-04T01:21:13.208Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -10384,7 +10912,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:36.295Z",
+          "evaluatedAt": "2026-09-04T01:21:13.208Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -10396,7 +10924,7 @@
       "name": "davidondrej-skills-data-ai",
       "description": "Data, analytics, AI, model, prompt, agent, and automation skills. Derived from davidondrej/skills.",
       "author": "ASM (davidondrej/skills)",
-      "createdAt": "2026-09-02T21:57:36.351Z",
+      "createdAt": "2026-09-04T01:21:13.334Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -10407,6 +10935,12 @@
         "skills"
       ],
       "skills": [
+        {
+          "name": "adr-verbatim",
+          "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/adr-verbatim",
+          "description": "Write a new ADR whose body is the user''s exact words, nothing added. Use when the user says \"adr-verbatim\", \"document that as an ADR\", \"new ADR\", \"record this decision\", or gives wording for an ADR. Differentiator: agent adds only title, number and status line; it never drafts, rewrites, or expands the body.",
+          "version": "0.0.0"
+        },
         {
           "name": "agent-self-scheduling",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/agent-self-scheduling",
@@ -10428,7 +10962,7 @@
         {
           "name": "ask-then-build",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/ask-then-build",
-          "description": "Scope a feature, change, or refactor by asking David 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when David says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
+          "description": "Scope a feature, change, or refactor by asking the user 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when the user says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
           "version": "0.0.0"
         },
         {
@@ -10441,12 +10975,6 @@
           "name": "bb-plugins",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/bb-plugins",
           "description": "Build, install, and debug bb plugins. Use when the user wants a bb plugin, a sidebar panel, a bb CLI subcommand, an agent tool, a theme, a provider, or to extend bb itself. For running threads and the core bb CLI, use bb-cli instead.",
-          "version": "0.0.0"
-        },
-        {
-          "name": "bb-subagents",
-          "installUrl": "github:davidondrej/skills:skills/agent-orchestration/bb-subagents",
-          "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Use when the user says \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
           "version": "0.0.0"
         },
         {
@@ -10512,7 +11040,7 @@
         {
           "name": "fable-review",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/fable-review",
-          "description": "Launch a Fable 5 Max 1M reviewer as a bb thread (default: /bb-subagents) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/fable-review\", \"fable review\", or asks for Fable to review the code. Differentiator: reviewer model is Fable 5 Max 1M — for a GPT reviewer use gpt-review.",
+          "description": "Launch a Fable 5 Max 1M reviewer as a bb thread (default: /nagent) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/fable-review\", \"fable review\", or asks for Fable to review the code. Differentiator: reviewer model is Fable 5 Max 1M — for a GPT reviewer use gpt-review.",
           "version": "0.0.0"
         },
         {
@@ -10530,7 +11058,7 @@
         {
           "name": "folder-specific-claude-and-agents-md",
           "installUrl": "github:davidondrej/skills:skills/skill-authoring/folder-specific-claude-and-agents-md",
-          "description": "Create a specialized CLAUDE.md (+ AGENTS.md symlink) inside a specific folder to give future agents folder-scoped context. Use when the user asks to create a CLAUDE.md for a folder, write folder instructions, or add agent context to a directory.",
+          "description": "Create a specialized CLAUDE.md (+ AGENTS.md symlink) inside a specific folder to give future agents folder-scoped context. Use when David asks to create a CLAUDE.md for a folder, write folder instructions, or add agent context to a directory.",
           "version": "0.0.0"
         },
         {
@@ -10566,7 +11094,7 @@
         {
           "name": "gpt-review",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/gpt-review",
-          "description": "Launch a GPT 5.6 Sol Max reviewer as a bb thread (default: /bb-subagents) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/gpt-review\", \"gpt review\", or asks for GPT to review the code. Differentiator: reviewer model is GPT 5.6 Sol Max — for a Fable reviewer use fable-review.",
+          "description": "Launch a GPT 5.6 Sol Max reviewer as a bb thread (default: /nagent) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/gpt-review\", \"gpt review\", or asks for GPT to review the code. Differentiator: reviewer model is GPT 5.6 Sol Max — for a Fable reviewer use fable-review.",
           "version": "0.0.0"
         },
         {
@@ -10600,9 +11128,21 @@
           "version": "0.0.0"
         },
         {
+          "name": "nagent",
+          "installUrl": "github:davidondrej/skills:skills/agent-orchestration/nagent",
+          "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Short for \"new agent\". Use when the user says \"nagent\", \"/nagent\", \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", \"launch it as its own thread, not as your subagent\", \"standalone bb thread\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
+          "version": "0.0.0"
+        },
+        {
           "name": "online-shopping",
           "installUrl": "github:davidondrej/skills:skills/research-and-web/online-shopping",
-          "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust. Load whenever the user is shopping or buying anything online: mentions buying a product, comparing prices, \"is this a good price\", \"where can I get X\", or attaches a product photo or listing screenshot. Research only — never places orders.",
+          "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust, and VAT/tax savings. Load on ANY shopping, buying, purchasing, checkout, subscribe, SaaS plan, software subscription, Stripe/payment page, or \"is this a good price\" moment — including product photos and listing or checkout screenshots. Differentiator: research-only shopping help plus a company VAT-number reminder; never places orders.",
+          "version": "0.0.0"
+        },
+        {
+          "name": "persistent-localhost",
+          "installUrl": "github:davidondrej/skills:skills/ops-and-setup/persistent-localhost",
+          "description": "Start, stop, restart, and inspect durable localhost dev servers on macOS as user LaunchAgents, so they outlive the agent's shell and auto-restart on crash. Use whenever an agent must run a dev server, API, or any long-lived local process on a port: \"start the dev server\", \"run it on localhost\", \"keep the server running\", \"the server keeps dying\", \"restart the app on port 5111\". Never start servers with nohup, &, disown, setsid, or run_in_background; those die with the shell or become unfindable orphans.",
           "version": "0.0.0"
         },
         {
@@ -10620,13 +11160,13 @@
         {
           "name": "prompt-me",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/prompt-me",
-          "description": "Prompt the user with pointed questions to extract what is in their head about a project — remaining work, what is being avoided, what really matters, what does not. Use when the user says \"prompt me\", \"ask me questions\", or wants the agent to figure out priorities by questioning them.",
+          "description": "Prompt David with pointed questions to extract what is in his head about a project — remaining work, what is being avoided, what really matters, what does not. Use when David says \"prompt me\", \"ask me questions\", or wants the agent to figure out priorities by questioning him.",
           "version": "0.0.0"
         },
         {
           "name": "push-skill-to-github",
           "installUrl": "github:davidondrej/skills:skills/skill-authoring/push-skill-to-github",
-          "description": "Commit and push agent-skill changes to the user's private skills GitHub repo (rooted at ~/.agents). Use after creating or updating any skill, when the user says \"push the skill\", \"push skills to github\", \"save the skill to my repo\", or \"update the skills repo\". Handles staging, committing, and pushing directly in the current shell — works in any agent, no cmux needed.",
+          "description": "Commit and push agent-skill changes to the user's private skills GitHub repo (private-skills, rooted at ~/.agents). Use after creating or updating any skill, when the user says \"push the skill\", \"push skills to github\", \"save the skill to my repo\", or \"update the skills repo\". Handles staging, committing, and pushing directly in the current shell — works in any agent, no cmux needed.",
           "version": "0.0.0"
         },
         {
@@ -10702,7 +11242,7 @@
       "name": "davidondrej-skills-devops",
       "description": "Deployment, CI/CD, infrastructure, cloud, Docker, Kubernetes, and automation skills. Derived from davidondrej/skills.",
       "author": "ASM (davidondrej/skills)",
-      "createdAt": "2026-09-02T21:57:36.351Z",
+      "createdAt": "2026-09-04T01:21:13.334Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -10714,15 +11254,15 @@
       ],
       "skills": [
         {
-          "name": "ask-then-build",
-          "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/ask-then-build",
-          "description": "Scope a feature, change, or refactor by asking David 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when David says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
+          "name": "adr-verbatim",
+          "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/adr-verbatim",
+          "description": "Write a new ADR whose body is the user''s exact words, nothing added. Use when the user says \"adr-verbatim\", \"document that as an ADR\", \"new ADR\", \"record this decision\", or gives wording for an ADR. Differentiator: agent adds only title, number and status line; it never drafts, rewrites, or expands the body.",
           "version": "0.0.0"
         },
         {
-          "name": "bb-subagents",
-          "installUrl": "github:davidondrej/skills:skills/agent-orchestration/bb-subagents",
-          "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Use when the user says \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
+          "name": "ask-then-build",
+          "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/ask-then-build",
+          "description": "Scope a feature, change, or refactor by asking the user 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when the user says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
           "version": "0.0.0"
         },
         {
@@ -10758,7 +11298,7 @@
         {
           "name": "folder-specific-claude-and-agents-md",
           "installUrl": "github:davidondrej/skills:skills/skill-authoring/folder-specific-claude-and-agents-md",
-          "description": "Create a specialized CLAUDE.md (+ AGENTS.md symlink) inside a specific folder to give future agents folder-scoped context. Use when the user asks to create a CLAUDE.md for a folder, write folder instructions, or add agent context to a directory.",
+          "description": "Create a specialized CLAUDE.md (+ AGENTS.md symlink) inside a specific folder to give future agents folder-scoped context. Use when David asks to create a CLAUDE.md for a folder, write folder instructions, or add agent context to a directory.",
           "version": "0.0.0"
         },
         {
@@ -10783,6 +11323,12 @@
           "name": "launch-subagent",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/launch-subagent",
           "description": "Read this BEFORE launching any subagent (Task tool, background agents, parallel agents, best-of-N, delegating work to another agent). Consensus principles for using subagents well. Triggers: launch a subagent, spawn agents, run agents in parallel, delegate to a subagent.",
+          "version": "0.0.0"
+        },
+        {
+          "name": "nagent",
+          "installUrl": "github:davidondrej/skills:skills/agent-orchestration/nagent",
+          "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Short for \"new agent\". Use when the user says \"nagent\", \"/nagent\", \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", \"launch it as its own thread, not as your subagent\", \"standalone bb thread\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
           "version": "0.0.0"
         },
         {
@@ -10836,7 +11382,7 @@
         {
           "name": "stop-overthinking",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/stop-overthinking",
-          "description": "Manually-invoked skill that stops overthinking and forces a short, practical decision. Use only when the user explicitly invokes stop-overthinking.",
+          "description": "Manually-invoked skill that stops overthinking and forces a short, practical decision. Use only when David explicitly invokes stop-overthinking.",
           "version": "0.0.0"
         },
         {
@@ -10854,7 +11400,7 @@
         {
           "name": "who-is-this",
           "installUrl": "github:davidondrej/skills:skills/research-and-web/who-is-this",
-          "description": "Deep-scrape a person across X, LinkedIn, GitHub, and the open web to judge if they are legit. Manual-only; invoke with /who-is-this. Use when the user says who-is-this, \"who is this\", \"who is this guy\", \"research this person\", \"are they legit\", \"vet this founder\", or drops a profile screenshot. Differentiator vs twitter-alpha: one-person background check, not a 7-person idea list. Differentiator vs deep-research: platform scrapes plus a short verdict, not a long cited memo.",
+          "description": "Deep-scrape a person across X, LinkedIn, GitHub, and the open web to judge if they are legit. Manual-only; invoke with /who-is-this. Use when David says who-is-this, \"who is this\", \"who is this guy\", \"research this person\", \"are they legit\", \"vet this founder\", or drops a profile screenshot. Differentiator vs twitter-alpha: one-person background check, not a 7-person idea list. Differentiator vs deep-research: platform scrapes plus a short verdict, not a long cited memo.",
           "version": "0.0.0"
         }
       ],
@@ -10870,7 +11416,7 @@
       "name": "davidondrej-skills-engineering",
       "description": "Coding, debugging, testing, architecture, review, and software engineering skills. Derived from davidondrej/skills.",
       "author": "ASM (davidondrej/skills)",
-      "createdAt": "2026-09-02T21:57:36.351Z",
+      "createdAt": "2026-09-04T01:21:13.334Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -10902,7 +11448,7 @@
         {
           "name": "ask-then-build",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/ask-then-build",
-          "description": "Scope a feature, change, or refactor by asking David 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when David says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
+          "description": "Scope a feature, change, or refactor by asking the user 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when the user says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
           "version": "0.0.0"
         },
         {
@@ -10915,12 +11461,6 @@
           "name": "bb-plugins",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/bb-plugins",
           "description": "Build, install, and debug bb plugins. Use when the user wants a bb plugin, a sidebar panel, a bb CLI subcommand, an agent tool, a theme, a provider, or to extend bb itself. For running threads and the core bb CLI, use bb-cli instead.",
-          "version": "0.0.0"
-        },
-        {
-          "name": "bb-subagents",
-          "installUrl": "github:davidondrej/skills:skills/agent-orchestration/bb-subagents",
-          "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Use when the user says \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
           "version": "0.0.0"
         },
         {
@@ -10986,7 +11526,7 @@
         {
           "name": "fable-review",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/fable-review",
-          "description": "Launch a Fable 5 Max 1M reviewer as a bb thread (default: /bb-subagents) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/fable-review\", \"fable review\", or asks for Fable to review the code. Differentiator: reviewer model is Fable 5 Max 1M — for a GPT reviewer use gpt-review.",
+          "description": "Launch a Fable 5 Max 1M reviewer as a bb thread (default: /nagent) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/fable-review\", \"fable review\", or asks for Fable to review the code. Differentiator: reviewer model is Fable 5 Max 1M — for a GPT reviewer use gpt-review.",
           "version": "0.0.0"
         },
         {
@@ -11040,7 +11580,7 @@
         {
           "name": "gpt-review",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/gpt-review",
-          "description": "Launch a GPT 5.6 Sol Max reviewer as a bb thread (default: /bb-subagents) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/gpt-review\", \"gpt review\", or asks for GPT to review the code. Differentiator: reviewer model is GPT 5.6 Sol Max — for a Fable reviewer use fable-review.",
+          "description": "Launch a GPT 5.6 Sol Max reviewer as a bb thread (default: /nagent) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/gpt-review\", \"gpt review\", or asks for GPT to review the code. Differentiator: reviewer model is GPT 5.6 Sol Max — for a Fable reviewer use fable-review.",
           "version": "0.0.0"
         },
         {
@@ -11062,6 +11602,12 @@
           "version": "0.0.0"
         },
         {
+          "name": "nagent",
+          "installUrl": "github:davidondrej/skills:skills/agent-orchestration/nagent",
+          "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Short for \"new agent\". Use when the user says \"nagent\", \"/nagent\", \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", \"launch it as its own thread, not as your subagent\", \"standalone bb thread\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
+          "version": "0.0.0"
+        },
+        {
           "name": "nuke-cursor-app",
           "installUrl": "github:davidondrej/skills:skills/ops-and-setup/nuke-cursor-app",
           "description": "End-to-end Cursor IDE restart on the user''s MacBook: snapshot metrics, kill ALL Cursor processes, relaunch Cursor, report before/after memory. Recovers from the known renderer memory leak that makes Cursor lag. Manual-only — run ONLY when the user explicitly invokes it (/nuke-cursor-app, \"nuke cursor\"). Differentiator: kills the Cursor desktop app; cursor-cli sessions are unrelated.",
@@ -11070,7 +11616,13 @@
         {
           "name": "online-shopping",
           "installUrl": "github:davidondrej/skills:skills/research-and-web/online-shopping",
-          "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust. Load whenever the user is shopping or buying anything online: mentions buying a product, comparing prices, \"is this a good price\", \"where can I get X\", or attaches a product photo or listing screenshot. Research only — never places orders.",
+          "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust, and VAT/tax savings. Load on ANY shopping, buying, purchasing, checkout, subscribe, SaaS plan, software subscription, Stripe/payment page, or \"is this a good price\" moment — including product photos and listing or checkout screenshots. Differentiator: research-only shopping help plus a company VAT-number reminder; never places orders.",
+          "version": "0.0.0"
+        },
+        {
+          "name": "persistent-localhost",
+          "installUrl": "github:davidondrej/skills:skills/ops-and-setup/persistent-localhost",
+          "description": "Start, stop, restart, and inspect durable localhost dev servers on macOS as user LaunchAgents, so they outlive the agent's shell and auto-restart on crash. Use whenever an agent must run a dev server, API, or any long-lived local process on a port: \"start the dev server\", \"run it on localhost\", \"keep the server running\", \"the server keeps dying\", \"restart the app on port 5111\". Never start servers with nohup, &, disown, setsid, or run_in_background; those die with the shell or become unfindable orphans.",
           "version": "0.0.0"
         },
         {
@@ -11122,7 +11674,7 @@
       "name": "davidondrej-skills-frontend-design",
       "description": "Frontend, UI, UX, visual design, component, theme, and landing-page skills. Derived from davidondrej/skills.",
       "author": "ASM (davidondrej/skills)",
-      "createdAt": "2026-09-02T21:57:36.351Z",
+      "createdAt": "2026-09-04T01:21:13.334Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -11154,7 +11706,7 @@
         {
           "name": "ask-then-build",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/ask-then-build",
-          "description": "Scope a feature, change, or refactor by asking David 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when David says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
+          "description": "Scope a feature, change, or refactor by asking the user 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when the user says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
           "version": "0.0.0"
         },
         {
@@ -11250,7 +11802,7 @@
         {
           "name": "push-skill-to-github",
           "installUrl": "github:davidondrej/skills:skills/skill-authoring/push-skill-to-github",
-          "description": "Commit and push agent-skill changes to the user's private skills GitHub repo (rooted at ~/.agents). Use after creating or updating any skill, when the user says \"push the skill\", \"push skills to github\", \"save the skill to my repo\", or \"update the skills repo\". Handles staging, committing, and pushing directly in the current shell — works in any agent, no cmux needed.",
+          "description": "Commit and push agent-skill changes to the user's private skills GitHub repo (private-skills, rooted at ~/.agents). Use after creating or updating any skill, when the user says \"push the skill\", \"push skills to github\", \"save the skill to my repo\", or \"update the skills repo\". Handles staging, committing, and pushing directly in the current shell — works in any agent, no cmux needed.",
           "version": "0.0.0"
         },
         {
@@ -11272,7 +11824,7 @@
       "name": "davidondrej-skills-marketing",
       "description": "Marketing, growth, SEO, ASO, affiliate, sales, and conversion skills. Derived from davidondrej/skills.",
       "author": "ASM (davidondrej/skills)",
-      "createdAt": "2026-09-02T21:57:36.351Z",
+      "createdAt": "2026-09-04T01:21:13.334Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -11287,12 +11839,6 @@
           "name": "agent-self-scheduling",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/agent-self-scheduling",
           "description": "Make an AI agent run on a schedule, loop, or interval — cron, heartbeats, recurring autonomous checks. Use for \"run every N minutes\", \"schedule a task\", \"run on a loop\", \"heartbeat\". Covers external clocks (Claude Code, Codex, Pi) vs Hermes' built-in scheduler.",
-          "version": "0.0.0"
-        },
-        {
-          "name": "bb-subagents",
-          "installUrl": "github:davidondrej/skills:skills/agent-orchestration/bb-subagents",
-          "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Use when the user says \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
           "version": "0.0.0"
         },
         {
@@ -11320,6 +11866,12 @@
           "version": "0.0.0"
         },
         {
+          "name": "nagent",
+          "installUrl": "github:davidondrej/skills:skills/agent-orchestration/nagent",
+          "description": "Launch a new bb worker thread with an explicit project, provider, model, reasoning effort, fast/default tier, worktree, and prompt. Short for \"new agent\". Use when the user says \"nagent\", \"/nagent\", \"launch a bb session\", \"bb subagent\", \"spawn a bb thread\", \"new worktree agent\", \"launch it as its own thread, not as your subagent\", \"standalone bb thread\", or asks to run Grok/Codex/Cursor CLI in bb on a repo. Differentiator vs bb-cli: this is only the spawn recipe. Differentiator vs codex-subagent/launch-subagent: those are Codex CLI and Cursor Task tool, not bb threads.",
+          "version": "0.0.0"
+        },
+        {
           "name": "save-idea",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/save-idea",
           "description": "Quickly capture an idea from any repo or chat. Everything goes to the ~/code/ideas repo: video ideas to VIDEO-IDEAS.md; smaller podcast topics, guest ideas, questions, and AI observations to TOPICS.md; marketing and distribution ideas to MARKETING-IDEAS.md; startup ideas to STARTUP-IDEAS.md; convictions the user is certain about on AI-era building to CONVICTIONS.md; mini/technical/cool projects to build to mini-projects.md. Every entry gets a source line referencing the chat and repo it came from. Use when the user says \"/save-idea\", \"save this idea\", \"video idea\", \"add a topic\", \"marketing idea\", \"startup idea\", \"save this conviction\", \"mini project\", \"cool project to build\", \"write this down for a video/podcast\". Differentiator: appends to the user''s idea backlogs — not a reminder, task, or general note tool.",
@@ -11328,7 +11880,7 @@
         {
           "name": "who-is-this",
           "installUrl": "github:davidondrej/skills:skills/research-and-web/who-is-this",
-          "description": "Deep-scrape a person across X, LinkedIn, GitHub, and the open web to judge if they are legit. Manual-only; invoke with /who-is-this. Use when the user says who-is-this, \"who is this\", \"who is this guy\", \"research this person\", \"are they legit\", \"vet this founder\", or drops a profile screenshot. Differentiator vs twitter-alpha: one-person background check, not a 7-person idea list. Differentiator vs deep-research: platform scrapes plus a short verdict, not a long cited memo.",
+          "description": "Deep-scrape a person across X, LinkedIn, GitHub, and the open web to judge if they are legit. Manual-only; invoke with /who-is-this. Use when David says who-is-this, \"who is this\", \"who is this guy\", \"research this person\", \"are they legit\", \"vet this founder\", or drops a profile screenshot. Differentiator vs twitter-alpha: one-person background check, not a 7-person idea list. Differentiator vs deep-research: platform scrapes plus a short verdict, not a long cited memo.",
           "version": "0.0.0"
         }
       ],
@@ -11344,7 +11896,7 @@
       "name": "davidondrej-skills-product-business",
       "description": "Product, strategy, PRD, planning, finance, resume, and business workflow skills. Derived from davidondrej/skills.",
       "author": "ASM (davidondrej/skills)",
-      "createdAt": "2026-09-02T21:57:36.351Z",
+      "createdAt": "2026-09-04T01:21:13.334Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -11382,7 +11934,7 @@
         {
           "name": "online-shopping",
           "installUrl": "github:davidondrej/skills:skills/research-and-web/online-shopping",
-          "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust. Load whenever the user is shopping or buying anything online: mentions buying a product, comparing prices, \"is this a good price\", \"where can I get X\", or attaches a product photo or listing screenshot. Research only — never places orders.",
+          "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust, and VAT/tax savings. Load on ANY shopping, buying, purchasing, checkout, subscribe, SaaS plan, software subscription, Stripe/payment page, or \"is this a good price\" moment — including product photos and listing or checkout screenshots. Differentiator: research-only shopping help plus a company VAT-number reminder; never places orders.",
           "version": "0.0.0"
         },
         {
@@ -11410,7 +11962,7 @@
       "name": "davidondrej-skills-research",
       "description": "Research, academic, literature-review, citation, paper, and analysis skills. Derived from davidondrej/skills.",
       "author": "ASM (davidondrej/skills)",
-      "createdAt": "2026-09-02T21:57:36.351Z",
+      "createdAt": "2026-09-04T01:21:13.334Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -11448,7 +12000,7 @@
         {
           "name": "fable-review",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/fable-review",
-          "description": "Launch a Fable 5 Max 1M reviewer as a bb thread (default: /bb-subagents) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/fable-review\", \"fable review\", or asks for Fable to review the code. Differentiator: reviewer model is Fable 5 Max 1M — for a GPT reviewer use gpt-review.",
+          "description": "Launch a Fable 5 Max 1M reviewer as a bb thread (default: /nagent) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/fable-review\", \"fable review\", or asks for Fable to review the code. Differentiator: reviewer model is Fable 5 Max 1M — for a GPT reviewer use gpt-review.",
           "version": "0.0.0"
         },
         {
@@ -11466,13 +12018,13 @@
         {
           "name": "gpt-review",
           "installUrl": "github:davidondrej/skills:skills/agent-orchestration/gpt-review",
-          "description": "Launch a GPT 5.6 Sol Max reviewer as a bb thread (default: /bb-subagents) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/gpt-review\", \"gpt review\", or asks for GPT to review the code. Differentiator: reviewer model is GPT 5.6 Sol Max — for a Fable reviewer use fable-review.",
+          "description": "Launch a GPT 5.6 Sol Max reviewer as a bb thread (default: /nagent) to do a deep, neutral senior-developer review of the current work and report its findings back verbatim. Use when the user says \"/gpt-review\", \"gpt review\", or asks for GPT to review the code. Differentiator: reviewer model is GPT 5.6 Sol Max — for a Fable reviewer use fable-review.",
           "version": "0.0.0"
         },
         {
           "name": "online-shopping",
           "installUrl": "github:davidondrej/skills:skills/research-and-web/online-shopping",
-          "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust. Load whenever the user is shopping or buying anything online: mentions buying a product, comparing prices, \"is this a good price\", \"where can I get X\", or attaches a product photo or listing screenshot. Research only — never places orders.",
+          "description": "Research any online purchase with DeepAPI — fair-price checks, best deals, where to buy, shop trust, and VAT/tax savings. Load on ANY shopping, buying, purchasing, checkout, subscribe, SaaS plan, software subscription, Stripe/payment page, or \"is this a good price\" moment — including product photos and listing or checkout screenshots. Differentiator: research-only shopping help plus a company VAT-number reminder; never places orders.",
           "version": "0.0.0"
         },
         {
@@ -11520,7 +12072,7 @@
         {
           "name": "who-is-this",
           "installUrl": "github:davidondrej/skills:skills/research-and-web/who-is-this",
-          "description": "Deep-scrape a person across X, LinkedIn, GitHub, and the open web to judge if they are legit. Manual-only; invoke with /who-is-this. Use when the user says who-is-this, \"who is this\", \"who is this guy\", \"research this person\", \"are they legit\", \"vet this founder\", or drops a profile screenshot. Differentiator vs twitter-alpha: one-person background check, not a 7-person idea list. Differentiator vs deep-research: platform scrapes plus a short verdict, not a long cited memo.",
+          "description": "Deep-scrape a person across X, LinkedIn, GitHub, and the open web to judge if they are legit. Manual-only; invoke with /who-is-this. Use when David says who-is-this, \"who is this\", \"who is this guy\", \"research this person\", \"are they legit\", \"vet this founder\", or drops a profile screenshot. Differentiator vs twitter-alpha: one-person background check, not a 7-person idea list. Differentiator vs deep-research: platform scrapes plus a short verdict, not a long cited memo.",
           "version": "0.0.0"
         },
         {
@@ -11542,7 +12094,7 @@
       "name": "davidondrej-skills-writing",
       "description": "Writing, editing, documentation, publishing, and content-production skills. Derived from davidondrej/skills.",
       "author": "ASM (davidondrej/skills)",
-      "createdAt": "2026-09-02T21:57:36.351Z",
+      "createdAt": "2026-09-04T01:21:13.334Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -11554,9 +12106,15 @@
       ],
       "skills": [
         {
+          "name": "adr-verbatim",
+          "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/adr-verbatim",
+          "description": "Write a new ADR whose body is the user''s exact words, nothing added. Use when the user says \"adr-verbatim\", \"document that as an ADR\", \"new ADR\", \"record this decision\", or gives wording for an ADR. Differentiator: agent adds only title, number and status line; it never drafts, rewrites, or expands the body.",
+          "version": "0.0.0"
+        },
+        {
           "name": "ask-then-build",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/ask-then-build",
-          "description": "Scope a feature, change, or refactor by asking David 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when David says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
+          "description": "Scope a feature, change, or refactor by asking the user 3-6 pointed questions ONE at a time (options A-D, state a preference, wait), record every answer, then deliver ONE concise paragraph prompt that another agent can implement from. Use when the user says \"ask-then-build\", \"ask me questions then give me a prompt\", or wants a spec turned into a build prompt for another agent. Differentiator: question-then-prompt loop; next-decision only drills decisions, brain-to-docs extracts vision into docs.",
           "version": "0.0.0"
         },
         {
@@ -11604,7 +12162,7 @@
         {
           "name": "folder-specific-claude-and-agents-md",
           "installUrl": "github:davidondrej/skills:skills/skill-authoring/folder-specific-claude-and-agents-md",
-          "description": "Create a specialized CLAUDE.md (+ AGENTS.md symlink) inside a specific folder to give future agents folder-scoped context. Use when the user asks to create a CLAUDE.md for a folder, write folder instructions, or add agent context to a directory.",
+          "description": "Create a specialized CLAUDE.md (+ AGENTS.md symlink) inside a specific folder to give future agents folder-scoped context. Use when David asks to create a CLAUDE.md for a folder, write folder instructions, or add agent context to a directory.",
           "version": "0.0.0"
         },
         {
@@ -11658,7 +12216,7 @@
         {
           "name": "prompt-me",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/prompt-me",
-          "description": "Prompt the user with pointed questions to extract what is in their head about a project — remaining work, what is being avoided, what really matters, what does not. Use when the user says \"prompt me\", \"ask me questions\", or wants the agent to figure out priorities by questioning them.",
+          "description": "Prompt David with pointed questions to extract what is in his head about a project — remaining work, what is being avoided, what really matters, what does not. Use when David says \"prompt me\", \"ask me questions\", or wants the agent to figure out priorities by questioning him.",
           "version": "0.0.0"
         },
         {
@@ -11671,6 +12229,12 @@
           "name": "remind",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/remind",
           "description": "Rewrite the last response simpler and shorter in plain English, prefixed with a 3-5 sentence TLDR of the conversation so far. Manual-only, invoked as /remind.",
+          "version": "0.0.0"
+        },
+        {
+          "name": "rename",
+          "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/rename",
+          "description": "Manually-invoked skill that renames the current thread or session to 2-5 lowercase descriptive words. Use when David says \"rename\", \"rename this\", \"rename thread\", or \"rename session\".",
           "version": "0.0.0"
         },
         {
@@ -11700,7 +12264,7 @@
         {
           "name": "stop-overthinking",
           "installUrl": "github:davidondrej/skills:skills/thinking-and-docs/stop-overthinking",
-          "description": "Manually-invoked skill that stops overthinking and forces a short, practical decision. Use only when the user explicitly invokes stop-overthinking.",
+          "description": "Manually-invoked skill that stops overthinking and forces a short, practical decision. Use only when David explicitly invokes stop-overthinking.",
           "version": "0.0.0"
         },
         {

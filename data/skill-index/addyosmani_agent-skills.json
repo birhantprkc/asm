@@ -2,7 +2,7 @@
   "repoUrl": "https://github.com/addyosmani/agent-skills.git",
   "owner": "addyosmani",
   "repo": "agent-skills",
-  "updatedAt": "2026-09-02T21:55:45.799Z",
+  "updatedAt": "2026-09-04T01:19:35.961Z",
   "skillCount": 25,
   "skills": [
     {
@@ -85,7 +85,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.747Z",
+        "evaluatedAt": "2026-09-04T01:19:35.907Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -158,7 +158,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.748Z",
+          "evaluatedAt": "2026-09-04T01:19:35.909Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -176,7 +176,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.748Z",
+          "evaluatedAt": "2026-09-04T01:19:35.909Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -261,7 +261,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.747Z",
+        "evaluatedAt": "2026-09-04T01:19:35.907Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -334,7 +334,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.748Z",
+          "evaluatedAt": "2026-09-04T01:19:35.909Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -352,7 +352,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.748Z",
+          "evaluatedAt": "2026-09-04T01:19:35.909Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -437,7 +437,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.750Z",
+        "evaluatedAt": "2026-09-04T01:19:35.907Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -510,7 +510,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.750Z",
+          "evaluatedAt": "2026-09-04T01:19:35.909Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -528,7 +528,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.750Z",
+          "evaluatedAt": "2026-09-04T01:19:35.909Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -613,7 +613,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.747Z",
+        "evaluatedAt": "2026-09-04T01:19:35.910Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -686,7 +686,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.748Z",
+          "evaluatedAt": "2026-09-04T01:19:35.910Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -704,7 +704,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.748Z",
+          "evaluatedAt": "2026-09-04T01:19:35.910Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -789,7 +789,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.747Z",
+        "evaluatedAt": "2026-09-04T01:19:35.907Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -862,7 +862,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.748Z",
+          "evaluatedAt": "2026-09-04T01:19:35.909Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -880,7 +880,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.748Z",
+          "evaluatedAt": "2026-09-04T01:19:35.909Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -965,7 +965,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.748Z",
+        "evaluatedAt": "2026-09-04T01:19:35.909Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1038,7 +1038,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.750Z",
+          "evaluatedAt": "2026-09-04T01:19:35.910Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1056,7 +1056,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.750Z",
+          "evaluatedAt": "2026-09-04T01:19:35.910Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -1141,7 +1141,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.750Z",
+        "evaluatedAt": "2026-09-04T01:19:35.910Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1214,7 +1214,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.750Z",
+          "evaluatedAt": "2026-09-04T01:19:35.910Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1232,7 +1232,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.750Z",
+          "evaluatedAt": "2026-09-04T01:19:35.910Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -1317,7 +1317,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.750Z",
+        "evaluatedAt": "2026-09-04T01:19:35.910Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1390,7 +1390,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.750Z",
+          "evaluatedAt": "2026-09-04T01:19:35.910Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1408,14 +1408,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.750Z",
+          "evaluatedAt": "2026-09-04T01:19:35.910Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "deprecation-and-migration",
-      "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when deciding whether to maintain or sunset existing code.",
+      "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when migrating a database schema in production, such as renaming or dropping a column without downtime (expand/contract). Use when deciding whether to maintain or sunset existing code.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -1427,9 +1427,9 @@
       "installUrl": "github:addyosmani/agent-skills:skills/deprecation-and-migration",
       "relPath": "skills/deprecation-and-migration",
       "verified": true,
-      "tokenCount": 3817,
+      "tokenCount": 3853,
       "evalSummary": {
-        "overallScore": 79,
+        "overallScore": 77,
         "grade": "C",
         "categories": [
           {
@@ -1441,7 +1441,7 @@
           {
             "id": "description",
             "name": "Description quality",
-            "score": 10,
+            "score": 8,
             "max": 10
           },
           {
@@ -1493,7 +1493,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.762Z",
+        "evaluatedAt": "2026-09-04T01:19:35.923Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1502,7 +1502,7 @@
           "providerVersion": "1.0.0",
           "schemaVersion": 1,
           "passed": true,
-          "overallScore": 79,
+          "overallScore": 77,
           "grade": "C",
           "categories": [
             {
@@ -1514,7 +1514,7 @@
             {
               "id": "description",
               "name": "Description quality",
-              "score": 10,
+              "score": 8,
               "max": 10
             },
             {
@@ -1566,7 +1566,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.924Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1574,17 +1574,17 @@
           "providerVersion": "1.1.0",
           "schemaVersion": 1,
           "passed": false,
-          "overallScore": 77,
+          "overallScore": 69,
           "grade": "C",
           "categories": [
             {
               "id": "validation",
               "name": "Deterministic validation",
-              "score": 10,
+              "score": 9,
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.924Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -1669,7 +1669,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.763Z",
+        "evaluatedAt": "2026-09-04T01:19:35.923Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1742,7 +1742,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.924Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1760,7 +1760,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.924Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -1845,7 +1845,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.765Z",
+        "evaluatedAt": "2026-09-04T01:19:35.923Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -1918,7 +1918,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.925Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -1936,7 +1936,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.925Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2021,7 +2021,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.765Z",
+        "evaluatedAt": "2026-09-04T01:19:35.923Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2094,7 +2094,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.925Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2112,7 +2112,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.925Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2197,7 +2197,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.765Z",
+        "evaluatedAt": "2026-09-04T01:19:35.925Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2270,7 +2270,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.926Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2288,7 +2288,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.926Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2373,7 +2373,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.765Z",
+        "evaluatedAt": "2026-09-04T01:19:35.925Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2446,7 +2446,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.926Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2464,7 +2464,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.926Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2549,7 +2549,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.765Z",
+        "evaluatedAt": "2026-09-04T01:19:35.926Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2622,7 +2622,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.926Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2640,7 +2640,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.765Z",
+          "evaluatedAt": "2026-09-04T01:19:35.926Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2725,7 +2725,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.770Z",
+        "evaluatedAt": "2026-09-04T01:19:35.931Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2798,7 +2798,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.772Z",
+          "evaluatedAt": "2026-09-04T01:19:35.933Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2816,7 +2816,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.772Z",
+          "evaluatedAt": "2026-09-04T01:19:35.933Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -2901,7 +2901,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.781Z",
+        "evaluatedAt": "2026-09-04T01:19:35.940Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -2974,7 +2974,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.783Z",
+          "evaluatedAt": "2026-09-04T01:19:35.941Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -2992,7 +2992,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.783Z",
+          "evaluatedAt": "2026-09-04T01:19:35.941Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3077,7 +3077,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.783Z",
+        "evaluatedAt": "2026-09-04T01:19:35.940Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3150,7 +3150,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.784Z",
+          "evaluatedAt": "2026-09-04T01:19:35.941Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3168,7 +3168,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.784Z",
+          "evaluatedAt": "2026-09-04T01:19:35.941Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3253,7 +3253,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.783Z",
+        "evaluatedAt": "2026-09-04T01:19:35.943Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3326,7 +3326,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.784Z",
+          "evaluatedAt": "2026-09-04T01:19:35.945Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3344,14 +3344,14 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.784Z",
+          "evaluatedAt": "2026-09-04T01:19:35.945Z",
           "evaluatedVersion": "0.0.0"
         }
       }
     },
     {
       "name": "security-and-hardening",
-      "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
+      "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when auditing dependencies for known vulnerabilities, triaging package-manager audit findings, or assessing supply-chain risk in a new package. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
       "version": "0.0.0",
       "license": "",
       "creator": "",
@@ -3363,9 +3363,9 @@
       "installUrl": "github:addyosmani/agent-skills:skills/security-and-hardening",
       "relPath": "skills/security-and-hardening",
       "verified": true,
-      "tokenCount": 6955,
+      "tokenCount": 7318,
       "evalSummary": {
-        "overallScore": 69,
+        "overallScore": 67,
         "grade": "C",
         "categories": [
           {
@@ -3377,7 +3377,7 @@
           {
             "id": "description",
             "name": "Description quality",
-            "score": 5,
+            "score": 3,
             "max": 10
           },
           {
@@ -3429,7 +3429,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.784Z",
+        "evaluatedAt": "2026-09-04T01:19:35.944Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3438,7 +3438,7 @@
           "providerVersion": "1.0.0",
           "schemaVersion": 1,
           "passed": true,
-          "overallScore": 69,
+          "overallScore": 67,
           "grade": "C",
           "categories": [
             {
@@ -3450,7 +3450,7 @@
             {
               "id": "description",
               "name": "Description quality",
-              "score": 5,
+              "score": 3,
               "max": 10
             },
             {
@@ -3502,7 +3502,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.784Z",
+          "evaluatedAt": "2026-09-04T01:19:35.945Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3520,7 +3520,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.784Z",
+          "evaluatedAt": "2026-09-04T01:19:35.945Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3605,7 +3605,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.784Z",
+        "evaluatedAt": "2026-09-04T01:19:35.945Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3678,7 +3678,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.784Z",
+          "evaluatedAt": "2026-09-04T01:19:35.945Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3696,7 +3696,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.784Z",
+          "evaluatedAt": "2026-09-04T01:19:35.945Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3781,7 +3781,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.785Z",
+        "evaluatedAt": "2026-09-04T01:19:35.945Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -3854,7 +3854,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.785Z",
+          "evaluatedAt": "2026-09-04T01:19:35.945Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -3872,7 +3872,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.785Z",
+          "evaluatedAt": "2026-09-04T01:19:35.945Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -3957,7 +3957,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.791Z",
+        "evaluatedAt": "2026-09-04T01:19:35.952Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4030,7 +4030,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.791Z",
+          "evaluatedAt": "2026-09-04T01:19:35.953Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4048,7 +4048,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.791Z",
+          "evaluatedAt": "2026-09-04T01:19:35.953Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -4133,7 +4133,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.796Z",
+        "evaluatedAt": "2026-09-04T01:19:35.957Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4206,7 +4206,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.796Z",
+          "evaluatedAt": "2026-09-04T01:19:35.957Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4224,7 +4224,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.796Z",
+          "evaluatedAt": "2026-09-04T01:19:35.957Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -4309,7 +4309,7 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:55:45.796Z",
+        "evaluatedAt": "2026-09-04T01:19:35.957Z",
         "evaluatedVersion": "0.0.0"
       },
       "evalSummaries": {
@@ -4382,7 +4382,7 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.796Z",
+          "evaluatedAt": "2026-09-04T01:19:35.957Z",
           "evaluatedVersion": "0.0.0"
         },
         "skill-best-practice": {
@@ -4400,7 +4400,7 @@
               "max": 13
             }
           ],
-          "evaluatedAt": "2026-09-02T21:55:45.796Z",
+          "evaluatedAt": "2026-09-04T01:19:35.957Z",
           "evaluatedVersion": "0.0.0"
         }
       }
@@ -4412,7 +4412,7 @@
       "name": "addyosmani-agent-skills-data-ai",
       "description": "Data, analytics, AI, model, prompt, agent, and automation skills. Derived from addyosmani/agent-skills.",
       "author": "ASM (addyosmani/agent-skills)",
-      "createdAt": "2026-09-02T21:55:45.799Z",
+      "createdAt": "2026-09-04T01:19:35.961Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -4474,7 +4474,7 @@
         {
           "name": "deprecation-and-migration",
           "installUrl": "github:addyosmani/agent-skills:skills/deprecation-and-migration",
-          "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when deciding whether to maintain or sunset existing code.",
+          "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when migrating a database schema in production, such as renaming or dropping a column without downtime (expand/contract). Use when deciding whether to maintain or sunset existing code.",
           "version": "0.0.0"
         },
         {
@@ -4540,7 +4540,7 @@
         {
           "name": "security-and-hardening",
           "installUrl": "github:addyosmani/agent-skills:skills/security-and-hardening",
-          "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
+          "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when auditing dependencies for known vulnerabilities, triaging package-manager audit findings, or assessing supply-chain risk in a new package. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
           "version": "0.0.0"
         },
         {
@@ -4586,7 +4586,7 @@
       "name": "addyosmani-agent-skills-devops",
       "description": "Deployment, CI/CD, infrastructure, cloud, Docker, Kubernetes, and automation skills. Derived from addyosmani/agent-skills.",
       "author": "ASM (addyosmani/agent-skills)",
-      "createdAt": "2026-09-02T21:55:45.799Z",
+      "createdAt": "2026-09-04T01:19:35.961Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -4612,7 +4612,7 @@
         {
           "name": "deprecation-and-migration",
           "installUrl": "github:addyosmani/agent-skills:skills/deprecation-and-migration",
-          "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when deciding whether to maintain or sunset existing code.",
+          "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when migrating a database schema in production, such as renaming or dropping a column without downtime (expand/contract). Use when deciding whether to maintain or sunset existing code.",
           "version": "0.0.0"
         },
         {
@@ -4652,6 +4652,12 @@
           "version": "0.0.0"
         },
         {
+          "name": "security-and-hardening",
+          "installUrl": "github:addyosmani/agent-skills:skills/security-and-hardening",
+          "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when auditing dependencies for known vulnerabilities, triaging package-manager audit findings, or assessing supply-chain risk in a new package. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
+          "version": "0.0.0"
+        },
+        {
           "name": "shipping-and-launch",
           "installUrl": "github:addyosmani/agent-skills:skills/shipping-and-launch",
           "description": "Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy.",
@@ -4682,7 +4688,7 @@
       "name": "addyosmani-agent-skills-engineering",
       "description": "Coding, debugging, testing, architecture, review, and software engineering skills. Derived from addyosmani/agent-skills.",
       "author": "ASM (addyosmani/agent-skills)",
-      "createdAt": "2026-09-02T21:55:45.799Z",
+      "createdAt": "2026-09-04T01:19:35.961Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -4738,7 +4744,7 @@
         {
           "name": "deprecation-and-migration",
           "installUrl": "github:addyosmani/agent-skills:skills/deprecation-and-migration",
-          "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when deciding whether to maintain or sunset existing code.",
+          "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when migrating a database schema in production, such as renaming or dropping a column without downtime (expand/contract). Use when deciding whether to maintain or sunset existing code.",
           "version": "0.0.0"
         },
         {
@@ -4792,7 +4798,7 @@
         {
           "name": "security-and-hardening",
           "installUrl": "github:addyosmani/agent-skills:skills/security-and-hardening",
-          "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
+          "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when auditing dependencies for known vulnerabilities, triaging package-manager audit findings, or assessing supply-chain risk in a new package. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
           "version": "0.0.0"
         },
         {
@@ -4826,7 +4832,7 @@
       "name": "addyosmani-agent-skills-frontend-design",
       "description": "Frontend, UI, UX, visual design, component, theme, and landing-page skills. Derived from addyosmani/agent-skills.",
       "author": "ASM (addyosmani/agent-skills)",
-      "createdAt": "2026-09-02T21:55:45.799Z",
+      "createdAt": "2026-09-04T01:19:35.961Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -4894,7 +4900,7 @@
         {
           "name": "security-and-hardening",
           "installUrl": "github:addyosmani/agent-skills:skills/security-and-hardening",
-          "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
+          "description": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services. Use when auditing dependencies for known vulnerabilities, triaging package-manager audit findings, or assessing supply-chain risk in a new package. Use when personal data or privacy compliance (GDPR, CCPA) is involved.",
           "version": "0.0.0"
         },
         {
@@ -4922,7 +4928,7 @@
       "name": "addyosmani-agent-skills-marketing",
       "description": "Marketing, growth, SEO, ASO, affiliate, sales, and conversion skills. Derived from addyosmani/agent-skills.",
       "author": "ASM (addyosmani/agent-skills)",
-      "createdAt": "2026-09-02T21:55:45.799Z",
+      "createdAt": "2026-09-04T01:19:35.961Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -4964,7 +4970,7 @@
       "name": "addyosmani-agent-skills-product-business",
       "description": "Product, strategy, PRD, planning, finance, resume, and business workflow skills. Derived from addyosmani/agent-skills.",
       "author": "ASM (addyosmani/agent-skills)",
-      "createdAt": "2026-09-02T21:55:45.799Z",
+      "createdAt": "2026-09-04T01:19:35.961Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -4975,6 +4981,12 @@
         "agent-skills"
       ],
       "skills": [
+        {
+          "name": "deprecation-and-migration",
+          "installUrl": "github:addyosmani/agent-skills:skills/deprecation-and-migration",
+          "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when migrating a database schema in production, such as renaming or dropping a column without downtime (expand/contract). Use when deciding whether to maintain or sunset existing code.",
+          "version": "0.0.0"
+        },
         {
           "name": "doubt-driven-development",
           "installUrl": "github:addyosmani/agent-skills:skills/doubt-driven-development",
@@ -5018,7 +5030,7 @@
       "name": "addyosmani-agent-skills-research",
       "description": "Research, academic, literature-review, citation, paper, and analysis skills. Derived from addyosmani/agent-skills.",
       "author": "ASM (addyosmani/agent-skills)",
-      "createdAt": "2026-09-02T21:55:45.799Z",
+      "createdAt": "2026-09-04T01:19:35.961Z",
       "tags": [
         "repo-derived",
         "inferred",
@@ -5072,7 +5084,7 @@
       "name": "addyosmani-agent-skills-writing",
       "description": "Writing, editing, documentation, publishing, and content-production skills. Derived from addyosmani/agent-skills.",
       "author": "ASM (addyosmani/agent-skills)",
-      "createdAt": "2026-09-02T21:55:45.799Z",
+      "createdAt": "2026-09-04T01:19:35.961Z",
       "tags": [
         "repo-derived",
         "inferred",

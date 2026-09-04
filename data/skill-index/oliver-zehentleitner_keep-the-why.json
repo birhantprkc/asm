@@ -2,13 +2,13 @@
   "repoUrl": "https://github.com/oliver-zehentleitner/keep-the-why.git",
   "owner": "oliver-zehentleitner",
   "repo": "keep-the-why",
-  "updatedAt": "2026-09-02T21:57:39.820Z",
+  "updatedAt": "2026-09-04T01:21:16.601Z",
   "skillCount": 1,
   "skills": [
     {
       "name": "keep-the-why",
-      "description": "Extract and preserve the reasoning code cannot explain - decisions, rejected alternatives, workarounds, incidents, and constraints. Not for what changed (see Keep a Changelog) - only why.",
-      "version": "0.10.1",
+      "description": "Extract and preserve the reasoning code cannot explain - decisions, rejected alternatives, workarounds, incidents, constraints - plus project setup/decline and maintainer interviews. Not for what changed (see Keep a Changelog) - only why.",
+      "version": "0.11.0",
       "license": "MIT",
       "creator": "",
       "compatibility": "",
@@ -19,10 +19,10 @@
       "installUrl": "github:oliver-zehentleitner/keep-the-why:skills/keep-the-why",
       "relPath": "skills/keep-the-why",
       "verified": true,
-      "tokenCount": 4953,
+      "tokenCount": 6034,
       "evalSummary": {
-        "overallScore": 89,
-        "grade": "B",
+        "overallScore": 97,
+        "grade": "A",
         "categories": [
           {
             "id": "structure",
@@ -57,13 +57,13 @@
           {
             "id": "testability",
             "name": "Testability",
-            "score": 7,
+            "score": 10,
             "max": 10
           },
           {
             "id": "license",
             "name": "License verification",
-            "score": 5,
+            "score": 10,
             "max": 10
           },
           {
@@ -85,8 +85,8 @@
             "max": 10
           }
         ],
-        "evaluatedAt": "2026-09-02T21:57:39.815Z",
-        "evaluatedVersion": "0.10.1"
+        "evaluatedAt": "2026-09-04T01:21:16.596Z",
+        "evaluatedVersion": "0.11.0"
       },
       "evalSummaries": {
         "quality": {
@@ -94,8 +94,8 @@
           "providerVersion": "1.0.0",
           "schemaVersion": 1,
           "passed": true,
-          "overallScore": 87,
-          "grade": "B",
+          "overallScore": 95,
+          "grade": "A",
           "categories": [
             {
               "id": "structure",
@@ -130,13 +130,13 @@
             {
               "id": "testability",
               "name": "Testability",
-              "score": 7,
+              "score": 10,
               "max": 10
             },
             {
               "id": "license",
               "name": "License verification",
-              "score": 5,
+              "score": 10,
               "max": 10
             },
             {
@@ -158,8 +158,8 @@
               "max": 10
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:39.815Z",
-          "evaluatedVersion": "0.10.1"
+          "evaluatedAt": "2026-09-04T01:21:16.596Z",
+          "evaluatedVersion": "0.11.0"
         },
         "skill-best-practice": {
           "providerId": "skill-best-practice",
@@ -176,8 +176,8 @@
               "max": 14
             }
           ],
-          "evaluatedAt": "2026-09-02T21:57:39.815Z",
-          "evaluatedVersion": "0.10.1"
+          "evaluatedAt": "2026-09-04T01:21:16.596Z",
+          "evaluatedVersion": "0.11.0"
         }
       }
     }
