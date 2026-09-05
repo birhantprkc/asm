@@ -211,8 +211,17 @@ export async function resolveProvider(
 
   const pickerItems = config.providers.map((p) => ({
     label: `${p.label} (${p.name})`,
-    hint: p.global,
-    checked: savedSet ? savedSet.has(p.name) : p.name === "agents",
+    // The Claude Code exception leads so it survives hint truncation on
+    // narrow terminals (#617) — a 15–25 col hint still names the exception.
+    hint:
+      p.name === "agents"
+        ? `except Claude Code; most harnesses — ${p.global}`
+        : p.global,
+    // First-time setup pre-checks Agents + Claude Code (#617), but never a
+    // provider the user has disabled — a pre-checked row installs on Enter.
+    checked: savedSet
+      ? savedSet.has(p.name)
+      : p.enabled && (p.name === "agents" || p.name === "claude"),
   }));
 
   const selectedIndices = await checkboxPicker({ items: pickerItems });

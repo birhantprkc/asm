@@ -940,7 +940,7 @@ describe("resolveProvider", () => {
     );
   });
 
-  test("interactive picker: no saved tools defaults agents to checked", async () => {
+  test("interactive picker: no saved tools defaults agents + claude to checked", async () => {
     const agents: ProviderConfig = {
       name: "agents",
       label: "Agents",
@@ -961,9 +961,18 @@ describe("resolveProvider", () => {
     await resolveProvider(config, null, true);
 
     expect(capturedItems).toHaveLength(3);
-    expect((capturedItems[0] as { checked: boolean }).checked).toBe(false);
+    // claude + agents pre-checked on first-time setup (#617); codex is not.
+    expect((capturedItems[0] as { checked: boolean }).checked).toBe(true);
     expect((capturedItems[1] as { checked: boolean }).checked).toBe(true);
     expect((capturedItems[2] as { checked: boolean }).checked).toBe(false);
+    // The agents row leads with the Claude Code exception so it survives
+    // hint truncation on a narrow terminal (#617).
+    expect((capturedItems[1] as { hint: string }).hint).toBe(
+      "except Claude Code; most harnesses — ~/.agents/skills",
+    );
+    expect((capturedItems[0] as { hint: string }).hint).toBe(
+      "~/.claude/skills",
+    );
   });
 
   test("interactive picker: saved tools override default checked state", async () => {
@@ -1026,7 +1035,7 @@ describe("resolveProvider", () => {
     expect(savedNames).toEqual(["claude", "agents"]);
   });
 
-  test("interactive picker: empty saved tools array falls back to agents default", async () => {
+  test("interactive picker: empty saved tools array falls back to agents + claude default", async () => {
     let capturedItems: unknown[] = [];
     const agents: ProviderConfig = {
       name: "agents",
@@ -1050,19 +1059,19 @@ describe("resolveProvider", () => {
       preferences: {
         defaultScope: "both",
         defaultSort: "name",
-        selectedTools: [], // empty array — should fall back to agents default
+        selectedTools: [], // empty array — falls back to the first-run default
       },
     };
     await resolveProvider(config, null, true);
 
     expect(capturedItems).toHaveLength(3);
-    // Falls back to agents default
-    expect((capturedItems[0] as { checked: boolean }).checked).toBe(false);
+    // Falls back to the agents + claude first-run default (#617)
+    expect((capturedItems[0] as { checked: boolean }).checked).toBe(true);
     expect((capturedItems[1] as { checked: boolean }).checked).toBe(true);
     expect((capturedItems[2] as { checked: boolean }).checked).toBe(false);
   });
 
-  test("interactive picker: all items default to deselected when no agents and no saved", async () => {
+  test("interactive picker: only claude is pre-checked when no agents and no saved", async () => {
     let capturedItems: unknown[] = [];
     const pickerFn = vi.fn((opts: { items: unknown[] }) => {
       capturedItems = opts.items;
@@ -1076,7 +1085,8 @@ describe("resolveProvider", () => {
     await resolveProvider(config, null, true);
 
     expect(capturedItems).toHaveLength(3);
-    expect((capturedItems[0] as { checked: boolean }).checked).toBe(false);
+    // No agents provider present, so only claude is pre-checked (#617).
+    expect((capturedItems[0] as { checked: boolean }).checked).toBe(true);
     expect((capturedItems[1] as { checked: boolean }).checked).toBe(false);
     expect((capturedItems[2] as { checked: boolean }).checked).toBe(false);
   });
@@ -1099,6 +1109,8 @@ describe("resolveProvider", () => {
     const result = await resolveProvider(config, null, true);
     expect(result.provider.name).toBe("claude");
     expect(capturedItems).toHaveLength(2);
+    // Disabled providers still show, but the first-run pre-check never
+    // ticks one the user turned off (#617).
     expect((capturedItems[0] as { checked: boolean }).checked).toBe(false);
     expect((capturedItems[1] as { checked: boolean }).checked).toBe(false);
   });

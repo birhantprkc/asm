@@ -10,7 +10,7 @@ import { prefersReducedMotion } from "../lib/motion.js";
 
 const REPO_URL = "https://github.com/luongnv89/asm";
 const NPM_CMD = "npm install -g agent-skill-manager";
-const PROVIDER_COUNT = 19;
+const PROVIDER_COUNT = 21;
 
 /**
  * Marketing landing page (route `/`). The catalog lives at `/skills`.
@@ -376,7 +376,7 @@ function Solution() {
     {
       icon: "05",
       head: "Works with every major agent",
-      body: "19 providers built in: Claude Code, Codex, Cursor, Windsurf, Cline, Roo, Continue, Copilot, Aider, Zed, Gemini CLI, and more. Add custom ones in seconds.",
+      body: "21 providers built in: Agents, Claude Code, Pi, OpenCode, Codex, Oh My Pi, Grok CLI, Cursor, Windsurf, Cline, Gemini CLI, and more. Add custom ones in seconds.",
     },
     {
       icon: "06",
