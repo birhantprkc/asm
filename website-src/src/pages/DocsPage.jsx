@@ -373,7 +373,13 @@ asm search openspec --json        # Matches as JSON`}</CodeBlock>
           <p>
             Add or remove tags on installed skills without rewriting{" "}
             <code>SKILL.md</code>. Values are 1–32 lowercase letters, numbers,
-            hyphens, or underscores; arguments may be space- or comma-separated.
+            hyphens, or underscores; arguments may be space- or comma-separated.{" "}
+            <code>tag remove</code> prints the applied delta,{" "}
+            <code>
+              Removed tags from &lt;skill&gt;: &lt;removed&gt; — now:
+              &lt;remaining&gt;
+            </code>
+            , so the result reads as what changed.
           </p>
           <FlagTable
             rows={[
@@ -399,9 +405,9 @@ asm list --tag cli --tag testing`}</CodeBlock>
           </h3>
           <p>
             Shows version, description, file count, invocability (
-            <code>model</code>, <code>user</code>, or <code>both</code>), and
-            all provider installations. The <code>&lt;skill-name&gt;</code>{" "}
-            argument is the directory name.
+            <code>model</code>, <code>user</code>, or <code>both</code>), local
+            tags, and all provider installations. The{" "}
+            <code>&lt;skill-name&gt;</code> argument is the directory name.
           </p>
           <FlagTable
             rows={[
@@ -683,13 +689,18 @@ asm install ~/my-skills/awesome-skill`}</CodeBlock>
             rows={[
               [
                 "-p, --tool <name>",
-                "Provider to activate into / deactivate from (required)",
+                <>
+                  Provider to activate into / deactivate from — a TTY shows the
+                  tool picker; outside a terminal it is required unless exactly
+                  one tool is enabled
+                </>,
               ],
               [
                 "-s, --scope <scope>",
                 <>
-                  <code>global</code> or <code>project</code> (required; not{" "}
-                  <code>both</code>)
+                  <code>global</code> or <code>project</code> (not{" "}
+                  <code>both</code>) — a TTY shows the scope picker; non-TTY or{" "}
+                  <code>-y</code> defaults to <code>global</code>
                 </>,
               ],
               [
