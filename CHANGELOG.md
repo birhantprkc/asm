@@ -1,3 +1,15 @@
+## v2.20.1 — 2026-09-13
+
+### Bug Fixes
+
+- Correct four CLI defects found in the v2.20.0 end-to-end verification pass: `asm tag remove` now reports the applied delta (`Removed tags from x: a — now: b`) via a new `applied` field on `TagUpdateResult`, `asm activate`/`deactivate` resolve scope like install/link (explicit `--scope` wins, non-TTY/`-y` defaults to `global`, TTY shows the picker), bare `asm` on non-TTY exits 1 with a friendly message before any escape codes are emitted instead of dumping ink's raw-mode error, and `asm inspect` applies local `asm tag` edits with a `Tags:` line in both detail formatters ([#706](https://github.com/luongnv89/asm/issues/706)) ([#705](https://github.com/luongnv89/asm/pull/705)) — @luongnv89
+
+### Chores
+
+- Refresh indexed skill sources — re-ingested all enabled repos in `data/skill-index-resources.json` (77 updated, 0 unchanged, 0 failed, 0 skipped) ([#707](https://github.com/luongnv89/asm/pull/707)) — @luongnv89
+
+**Full Changelog**: https://github.com/luongnv89/asm/compare/v2.20.0...v2.20.1
+
 ## v2.20.0 — 2026-09-12
 
 ### Features

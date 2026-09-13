@@ -27,6 +27,53 @@ function issue(n) {
 
 const ENTRIES = [
   {
+    version: "2.20.1",
+    date: "2026-09-13",
+    sections: [
+      {
+        tag: "fixed",
+        items: [
+          <>
+            <code>asm tag remove</code> reports the applied delta — the{" "}
+            <code>Removed tags from</code> message printed the post-state tag
+            list, which looked like the wrong tag was removed; it now reads{" "}
+            <code>Removed tags from x: a — now: b</code>, and{" "}
+            <code>TagUpdateResult</code> gains an <code>applied</code> field for{" "}
+            <code>--json</code>/<code>--machine</code> output ({issue(706)},{" "}
+            {pr(705)})
+          </>,
+          <>
+            <code>asm activate</code>/<code>deactivate</code> no longer
+            hard-require <code>--scope</code> — scope now resolves like{" "}
+            <code>install</code>/<code>link</code>: an explicit flag wins,
+            non-TTY or <code>-y</code> defaults to <code>global</code>, and a
+            TTY shows the picker ({issue(706)}, {pr(705)})
+          </>,
+          <>
+            Bare <code>asm</code> on a non-TTY exits 1 with a friendly message
+            before any escape codes are emitted — no more raw ink error dumped
+            after entering the alternate screen ({issue(706)}, {pr(705)})
+          </>,
+          <>
+            <code>asm inspect</code> honors local <code>asm tag</code> edits
+            like list/search do, and both detail formatters now render tags (
+            {issue(706)}, {pr(705)})
+          </>,
+        ],
+      },
+      {
+        tag: "changed",
+        items: [
+          <>
+            Refresh indexed skill sources — re-ingested all enabled repos in{" "}
+            <code>data/skill-index-resources.json</code> (77 updated, 0
+            unchanged, 0 failed, 0 skipped) ({pr(707)})
+          </>,
+        ],
+      },
+    ],
+  },
+  {
     version: "2.20.0",
     date: "2026-09-12",
     sections: [
